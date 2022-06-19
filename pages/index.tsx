@@ -3,7 +3,7 @@ import Link from 'next/link';
 import { Truck } from '../types/common';
 import truckBloc from '../lib/truck';
 import { InferGetStaticPropsType, GetStaticPropsContext } from 'next';
-import Modal from '../components/modal';
+import AddTruckButton from '../components/truck/add-truck-button';
 
 export default function Home({
   trucks,
@@ -15,10 +15,8 @@ export default function Home({
       </Head>
       <div className="container mx-auto p-5">
         {/* <DataTable<DummyData> data={dummyData} headers={headerConfig} /> */}
-        <Modal
-          buttonConfig={{ text: 'Open Modal' }}
-          child={<div>modal content 123</div>}
-        />
+
+        <AddTruckButton />
         <h1>My Trucks</h1>
         <div className="grid grid-cols-4 gap-4">
           {trucks.map((truck) => (
