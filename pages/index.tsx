@@ -12,7 +12,7 @@ export default function Home({
   const [newTruck, setNewTruck] = useState({
     name: '',
     imageUrl: '',
-  });
+  } as Truck);
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
@@ -45,7 +45,8 @@ export default function Home({
 
         <Modal
           buttonConfig={{ text: 'Tambah Truck Baru' }}
-          addTruckFunction={addTruck}
+          confirmButtonConfig={{ text: 'Tambah Truck' }}
+          onConfirm={addTruck}
           child={
             <>
               <h1 className="text-2xl">Tambah Truck Baru</h1>
