@@ -6,6 +6,7 @@ import {
 } from 'next';
 import { Truck } from '../../types/common';
 import truckBloc from '../../lib/truck';
+import Modal from '../../components/modal';
 
 export default function TruckDetails({
   truckDetails,

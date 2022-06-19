@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Truck } from '../types/common';
 import truckBloc from '../lib/truck';
 import { InferGetStaticPropsType, GetStaticPropsContext } from 'next';
+import Modal from '../components/modal';
 
 export default function Home({
   trucks,
@@ -41,32 +42,38 @@ export default function Home({
       </Head>
       <div className="container mx-auto p-5">
         {/* <DataTable<DummyData> data={dummyData} headers={headerConfig} /> */}
-        <h1>Tambah Truck Baru</h1>
-        <form action="post">
-          <div className="form-group m-3">
-            <label className="me-2">Name: </label>
-            <input
-              className="me-2"
-              type="text"
-              value={newTruck.name}
-              name="name"
-              onChange={handleChange}
-            />
-          </div>
-          <div className="form-group m-3">
-            <label className="me-2">ImageURL: </label>
-            <input
-              className="me-2"
-              type="text"
-              value={newTruck.imageUrl}
-              name="imageUrl"
-              onChange={handleChange}
-            />
-          </div>
-        </form>
-        <button type="button" onClick={() => addTruck()}>
-          Add Truck
-        </button>
+
+        <Modal
+          buttonConfig={{ text: 'Tambah Truck Baru' }}
+          addTruckFunction={addTruck}
+          child={
+            <>
+              <h1 className="text-2xl">Tambah Truck Baru</h1>
+              <form action="post">
+                <div className="form-group m-3">
+                  <label>Name: </label>
+                  <input
+                    className="border-2"
+                    type="text"
+                    value={newTruck.name}
+                    name="name"
+                    onChange={handleChange}
+                  />
+                </div>
+                <div className="form-group m-3">
+                  <label>ImageURL: </label>
+                  <input
+                    className="border-2"
+                    type="text"
+                    value={newTruck.imageUrl}
+                    name="imageUrl"
+                    onChange={handleChange}
+                  />
+                </div>
+              </form>
+            </>
+          }
+        />
         <h1>My Trucks</h1>
         <div className="grid grid-cols-4 gap-4">
           {trucks.map((truck) => (
