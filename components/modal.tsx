@@ -5,17 +5,19 @@ interface ButtonConfig {
   text: string;
 }
 
+interface ModalConfig {
+  buttonConfig: ButtonConfig;
+  confirmButtonConfig: ButtonConfig;
+  onConfirm: () => void;
+  child: JSX.Element;
+}
+
 export default function Modal({
   buttonConfig,
   confirmButtonConfig,
   onConfirm,
   child,
-}: {
-  buttonConfig: ButtonConfig;
-  confirmButtonConfig: ButtonConfig;
-  onConfirm: () => void;
-  child: JSX.Element;
-}) {
+}: ModalConfig) {
   const [modalState, setModalState] = useState('hidden');
   const buttonClassName =
     buttonConfig.className ||
@@ -48,7 +50,7 @@ export default function Modal({
         id="my-modal"
       >
         <div className="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
-          <div className="mt-3 text-center">
+          <div className="mt-3">
             <div>{child}</div>
             <div className="items-center px-4 py-3">
               <button
