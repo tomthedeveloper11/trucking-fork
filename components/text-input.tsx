@@ -30,7 +30,7 @@ export default function TextInput({
             type="text"
             name={name}
             // id="price"
-            className="block w-full pl-7 pr-12 py-2 sm:text-sm border border-gray-300 rounded-md"
+            className="block w-full pl-7 pr-12 py-1 sm:text-sm border border-gray-300 rounded-md"
             placeholder={placeholder}
             onChange={onChange}
           />

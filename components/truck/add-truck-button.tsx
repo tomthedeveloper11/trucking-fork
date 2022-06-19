@@ -40,11 +40,11 @@ export default function AddTruckButton() {
           <>
             <h1 className="text-2xl">Tambah Truck Baru</h1>
             <form action="post">
-              <div className="grid grid-rows-3 grid-flow-col gap-4">
-                <div className="form-group">
+              <div className="grid grid-rows-2 grid-cols-3 grid-flow-row gap-4">
+                <div className="form-group row-span-1 col-span-3">
                   <TextInput label="Name" name="name" onChange={handleChange} />
                 </div>
-                <div className="form-group">
+                <div className="form-group row-span-1 col-span-3">
                   <TextInput
                     label="Image URL"
                     name="imageUrl"
