@@ -10,7 +10,6 @@ const transactionSchema = new Schema<any>(
     },
     details: {
       type: String,
-      required: true,
     },
     cost: {
       type: Number,
@@ -35,6 +34,10 @@ const transactionSchema = new Schema<any>(
     },
     customer: {
       type: String,
+    },
+    truckId: {
+      type: String,
+      required: true,
     },
   },
   { versionKey: false }

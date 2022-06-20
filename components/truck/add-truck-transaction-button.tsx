@@ -5,7 +5,7 @@ import TextInput from '../text-input';
 import { TransactionType, TruckTransaction } from '../../types/common';
 import { useRouterRefresh } from '../../hooks/hooks';
 
-export default function AddTruckTransactionButton() {
+export default function AddTruckTransactionButton({ truckId }) {
   const baseTruckTransaction: Omit<TruckTransaction, 'id' | 'date'> = {
     containerNo: '',
     invoiceNo: '',
@@ -15,7 +15,7 @@ export default function AddTruckTransactionButton() {
     customer: '',
     details: '',
     transactionType: TransactionType.TRUCK_TRANSACTION,
-    truckId: '',
+    truckId,
   };
   const [truckTransaction, setTruckTransaction] =
     useState(baseTruckTransaction);
@@ -32,6 +32,7 @@ export default function AddTruckTransactionButton() {
 
   async function addTruckTransaction() {
     // TODO: add API POST /api/transaction/{truckID}
+    console.log(truckTransaction);
     await axios({
       method: 'POST',
       url: 'http://localhost:3000/api/transaction',
