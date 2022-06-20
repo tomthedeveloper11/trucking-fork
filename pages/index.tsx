@@ -2,12 +2,12 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { Truck } from '../types/common';
 import truckBloc from '../lib/truck';
-import { InferGetStaticPropsType, GetStaticPropsContext } from 'next';
+import { InferGetServerSidePropsType } from 'next';
 import AddTruckButton from '../components/truck/add-truck-button';
 
 export default function Home({
   trucks,
-}: InferGetStaticPropsType<typeof getStaticProps>) {
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
       <Head>
@@ -19,7 +19,7 @@ export default function Home({
         <AddTruckButton />
         <h1>My Trucks</h1>
         <div className="grid grid-cols-4 gap-4">
-          {trucks.map((truck) => (
+          {trucks.map((truck: Truck) => (
             <Link href={`/trucks/${truck.id}`} key={truck.id}>
               <div className="border border-1 rounded p-2 hover:bg-gray-100 cursor-pointer">
                 {truck.name}
@@ -32,7 +32,7 @@ export default function Home({
   );
 }
 
-export const getStaticProps = async (_context: GetStaticPropsContext) => {
+export const getServerSideProps = async (_: any) => {
   const trucks: Truck[] = await truckBloc.getTrucks();
   return {
     props: {

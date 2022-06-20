@@ -1,7 +1,16 @@
-import '../styles/global.css'
+import '../styles/global.css';
 import { AppProps } from 'next/app';
-
+import { useState } from 'react';
+import TruckContext from '../components/context';
 
 export default function App({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  const [allTruckState, setAllTruckState] = useState([]);
+
+  return (
+    <>
+      <TruckContext.Provider value={{ allTruckState, setAllTruckState }}>
+        <Component {...pageProps} />
+      </TruckContext.Provider>
+    </>
+  );
 }

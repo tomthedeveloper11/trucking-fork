@@ -1,14 +1,16 @@
 import Modal from '../modal';
 import axios from 'axios';
 import { useState } from 'react';
-import { Truck } from '../../types/common';
 import TextInput from '../text-input';
+import { Truck } from '../../types/common';
+import { useRouterRefresh } from '../../hooks/hooks';
 
 export default function AddTruckButton() {
   const [newTruck, setNewTruck] = useState({
     name: '',
     imageUrl: '',
-  } as Truck);
+  } as Omit<Truck, 'id'>);
+  const refreshData = useRouterRefresh();
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
@@ -20,14 +22,13 @@ export default function AddTruckButton() {
   }
 
   async function addTruck() {
-    const response = await axios({
+    await axios({
       method: 'POST',
       url: 'http://localhost:3000/api/truck',
       data: newTruck,
     });
-
-    const data = response.data.data;
-    console.log(data);
+    setNewTruck({ name: '', imageUrl: '' });
+    refreshData();
   }
 
   return (
@@ -42,12 +43,18 @@ export default function AddTruckButton() {
             <form action="post">
               <div className="grid grid-rows-2 grid-cols-3 grid-flow-row gap-4">
                 <div className="form-group row-span-1 col-span-3">
-                  <TextInput label="Name" name="name" onChange={handleChange} />
+                  <TextInput
+                    label="Name"
+                    name="name"
+                    value={newTruck.name}
+                    onChange={handleChange}
+                  />
                 </div>
                 <div className="form-group row-span-1 col-span-3">
                   <TextInput
                     label="Image URL"
                     name="imageUrl"
+                    value={newTruck.imageUrl}
                     onChange={handleChange}
                   />
                 </div>
