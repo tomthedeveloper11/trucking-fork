@@ -1,30 +1,35 @@
 import Modal from '../modal';
 import axios from 'axios';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import TextInput from '../text-input';
 import TruckContext from '../context';
+import { Truck } from '../../types/common';
 
 export default function AddTruckButton() {
-  const { TruckState, setTruckState } = useContext(TruckContext);
+  const { allTruckState, setAllTruckState } = useContext(TruckContext);
+  const [newTruck, setNewTruck] = useState({
+    name: '',
+    imageUrl: '',
+  });
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
 
-    setTruckState((prevState) => ({
+    setNewTruck((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   }
 
   async function addTruck() {
-    const response = await axios({
+    await axios({
       method: 'POST',
       url: 'http://localhost:3000/api/truck',
-      data: TruckState,
+      data: newTruck,
     });
-
-    const data = response.data.data;
-    console.log(data);
+    const allTrucks = [...allTruckState, newTruck];
+    setAllTruckState(allTrucks);
+    setNewTruck({ name: '', imageUrl: '' });
   }
 
   return (
