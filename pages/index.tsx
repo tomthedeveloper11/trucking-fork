@@ -2,21 +2,12 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { Truck } from '../types/common';
 import truckBloc from '../lib/truck';
-import { InferGetStaticPropsType, GetStaticPropsContext } from 'next';
+import { InferGetServerSidePropsType } from 'next';
 import AddTruckButton from '../components/truck/add-truck-button';
-import { useContext, useEffect } from 'react';
-import TruckContext from '../components/context';
 
-export default function Home() {
-  const { allTruckState, setAllTruckState } = useContext(TruckContext);
-  useEffect(() => {
-    const trucks = truckBloc.getTrucks();
-
-    trucks.then((data) => {
-      setAllTruckState(data);
-    });
-  }, []);
-
+export default function Home({
+  trucks,
+}: InferGetServerSidePropsType<typeof getServerSideProps>) {
   return (
     <>
       <Head>
@@ -28,7 +19,7 @@ export default function Home() {
         <AddTruckButton />
         <h1>My Trucks</h1>
         <div className="grid grid-cols-4 gap-4">
-          {allTruckState.map((truck: Truck) => (
+          {trucks.map((truck: Truck) => (
             <Link href={`/trucks/${truck.id}`} key={truck.id}>
               <div className="border border-1 rounded p-2 hover:bg-gray-100 cursor-pointer">
                 {truck.name}
@@ -41,13 +32,11 @@ export default function Home() {
   );
 }
 
-// export const getStaticProps = async (_context: GetStaticPropsContext) => {
-//   const trucks: Truck[] = await truckBloc.getTrucks();
-//   const { allTruckState, setAllTruckState } = useContext(TruckContext);
-//   setAllTruckState(trucks);
-//   return {
-//     props: {
-//       allTruckState,
-//     },
-//   };
-// };
+export const getServerSideProps = async (_: any) => {
+  const trucks: Truck[] = await truckBloc.getTrucks();
+  return {
+    props: {
+      trucks,
+    },
+  };
+};
