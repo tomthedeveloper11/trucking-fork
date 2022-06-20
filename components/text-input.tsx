@@ -4,7 +4,7 @@ interface TextInputConfig {
   name: string;
   placeholder?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  value?: string;
+  value?: string | number;
 }
 
 export default function TextInput({
@@ -32,7 +32,7 @@ export default function TextInput({
             type="text"
             name={name}
             // id="price"
-            className="block w-full pl-7 pr-12 py-1 sm:text-sm border border-gray-300 rounded-md"
+            className="block w-full pl-8 pr-2 py-1 sm:text-sm border border-gray-300 rounded-md"
             placeholder={placeholder}
             onChange={onChange}
             value={value}

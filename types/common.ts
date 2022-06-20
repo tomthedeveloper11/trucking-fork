@@ -16,6 +16,7 @@ export interface Truck {
 }
 
 export interface Transaction {
+  id: string;
   date: Date;
   details: string;
   cost: number;
@@ -23,9 +24,11 @@ export interface Transaction {
 }
 
 export interface TruckTransaction extends Transaction {
+  truckId: string;
+  truckName?: string;
   containerNo: string;
   invoiceNo: string;
   destination: string;
-  price: number;
+  sellingPrice: number;
   customer: string;
 }
