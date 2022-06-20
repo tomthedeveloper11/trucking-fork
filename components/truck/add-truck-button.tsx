@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import TextInput from '../text-input';
 import { Truck } from '../../types/common';
-import useRouterRefresh from '../../hooks/refresh-route';
+import { useRouterRefresh } from '../../hooks/hooks';
 
 export default function AddTruckButton() {
   const [newTruck, setNewTruck] = useState({
