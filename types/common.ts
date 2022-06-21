@@ -17,7 +17,7 @@ export interface Truck {
 
 export interface Transaction {
   id: string;
-  date: Date;
+  date: Date | string;
   details: string;
   cost: number;
   transactionType: TransactionType;

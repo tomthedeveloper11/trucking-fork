@@ -5,7 +5,24 @@ import TextInput from '../text-input';
 import { TransactionType, TruckTransaction } from '../../types/common';
 import { useRouterRefresh } from '../../hooks/hooks';
 
-export default function AddTruckTransactionButton() {
+interface AddTruckTransactionButtonProps {
+  truckId: string;
+}
+
+export default function AddTruckTransactionButton({
+  truckId,
+}: AddTruckTransactionButtonProps) {
+  const placeHolderTransaction: Omit<TruckTransaction, 'id' | 'date'> = {
+    containerNo: 'TEGU3009038',
+    invoiceNo: '1671',
+    destination: ' AMPLAS/CATUR ',
+    cost: 385000,
+    sellingPrice: 700000,
+    customer: 'SKM',
+    details: '',
+    transactionType: TransactionType.TRUCK_TRANSACTION,
+    truckId,
+  };
   const baseTruckTransaction: Omit<TruckTransaction, 'id' | 'date'> = {
     containerNo: '',
     invoiceNo: '',
@@ -15,10 +32,11 @@ export default function AddTruckTransactionButton() {
     customer: '',
     details: '',
     transactionType: TransactionType.TRUCK_TRANSACTION,
-    truckId: '',
+    truckId,
   };
-  const [truckTransaction, setTruckTransaction] =
-    useState(baseTruckTransaction);
+  const [truckTransaction, setTruckTransaction] = useState(
+    placeHolderTransaction || baseTruckTransaction
+  );
   const refreshData = useRouterRefresh();
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -31,10 +49,9 @@ export default function AddTruckTransactionButton() {
   }
 
   async function addTruckTransaction() {
-    // TODO: add API POST /api/transaction/{truckID}
     await axios({
       method: 'POST',
-      url: 'http://localhost:3000/api/transaction',
+      url: `http://localhost:3000/api/transaction/${truckId}`,
       data: truckTransaction,
     });
     setTruckTransaction(baseTruckTransaction);
@@ -89,6 +106,7 @@ export default function AddTruckTransactionButton() {
                   <TextInput
                     label="Borongan"
                     name="cost"
+                    type="currency"
                     value={truckTransaction.cost}
                     prefix="Rp"
                     onChange={handleChange}

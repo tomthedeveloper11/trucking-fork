@@ -5,6 +5,7 @@ interface TextInputConfig {
   placeholder?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   value?: string | number;
+  type?: string;
 }
 
 export default function TextInput({
@@ -14,7 +15,23 @@ export default function TextInput({
   placeholder,
   onChange,
   value,
+  type = 'text',
 }: TextInputConfig) {
+  const valueFormat = (inputValue: any) => {
+    if (type === 'currency') {
+      const str = inputValue.toString().replace(/[A-Za-z,]/g, '');
+      return Number(str).toLocaleString();
+    }
+    return inputValue as string;
+  };
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (type === 'currency') {
+      e.target.value = e.target.value.toString().replace(/[A-Za-z,]/g, '');
+    }
+    onChange(e);
+  }
+
   return (
     <>
       <div>
@@ -29,13 +46,13 @@ export default function TextInput({
             <span className="text-gray-500 sm:text-sm"> {prefix} </span>
           </div>
           <input
-            type="text"
+            type={type}
             name={name}
             // id="price"
             className="block w-full pl-8 pr-2 py-1 sm:text-sm border border-gray-300 rounded-md"
             placeholder={placeholder}
-            onChange={onChange}
-            value={value}
+            onChange={handleChange}
+            value={valueFormat(value)}
           />
           <div className="absolute inset-y-0 right-0 flex items-center">
             <label htmlFor="currency" className="sr-only">
