@@ -6,6 +6,13 @@ import validateMiddleware from '../../../src/middlewares/validate-middleware';
 import { TruckTransaction } from '../../../types/common';
 import connectDb from '../../../src/mongodb/connection';
 
+interface TruckTransactionsAPIRequest extends NextApiRequest {
+  body: TruckTransaction;
+  query: {
+    truckId: string;
+  };
+}
+
 const createTruckTransactionValidator = initMiddleware(
   validateMiddleware(
     [
@@ -16,7 +23,7 @@ const createTruckTransactionValidator = initMiddleware(
       check('containerNo').isString().optional(),
       check('customer').isString().optional(),
       check('destination').isString().optional(),
-      check('sellingPrice').isString().optional(),
+      check('sellingPrice').isNumeric().optional(),
       check('details').isString().optional(),
     ],
     validationResult
@@ -24,7 +31,7 @@ const createTruckTransactionValidator = initMiddleware(
 );
 
 export default async function handler(
-  req: NextApiRequest,
+  req: TruckTransactionsAPIRequest,
   res: NextApiResponse
 ) {
   let conn;
@@ -33,7 +40,7 @@ export default async function handler(
       await createTruckTransactionValidator(req, res);
 
       conn = await connectDb();
-      const truckTransactionPayload = req.body as TruckTransaction;
+      const truckTransactionPayload = req.body;
       const truckTransaction = await transactionService.createTransaction(
         truckTransactionPayload
       );
@@ -44,7 +51,11 @@ export default async function handler(
 
     case 'GET':
       conn = await connectDb();
-      const transactions = await transactionService.getTransaction();
+
+      const truckId = req.query.truckId;
+      const transactions = await transactionService.getTruckTransactions(
+        truckId
+      );
       await conn.close();
       res.status(200).json({ data: transactions });
       break;

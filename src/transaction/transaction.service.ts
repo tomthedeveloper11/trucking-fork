@@ -9,14 +9,16 @@ const createTransaction = async (
   return newTruckTransaction;
 };
 
-const getTransaction = async () => {
-  const transactions = await transactionRepository.getTruckTransactions();
+const getTruckTransactions = async (truckId: string) => {
+  const transactions = await transactionRepository.getTruckTransactions(
+    truckId
+  );
   return transactions;
 };
 
 const transactionService = {
   createTransaction,
-  getTransaction,
+  getTruckTransactions,
 };
 
 export default transactionService;

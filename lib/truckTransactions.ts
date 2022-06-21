@@ -1,16 +1,16 @@
 import axios from 'axios';
 import { TruckTransaction } from '../types/common';
 
-const getTrucks = async () => {
+const getTruckTransactions = async (truckId: string) => {
   const response = await axios({
     method: 'GET',
-    url: 'http://localhost:3000/api/truck',
+    url: `http://localhost:3000/api/transaction/${truckId}`,
   });
   if (response && response.data) {
-    return response.data.data as Truck[];
+    return response.data.data as TruckTransaction[];
   }
   return [];
 };
-const truckBloc = { getTrucks };
+const truckTransactionBloc = { getTruckTransactions };
 
-export default truckBloc;
+export default truckTransactionBloc;
