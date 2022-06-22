@@ -16,13 +16,13 @@ interface TruckTransactionsAPIRequest extends NextApiRequest {
 const createTruckTransactionValidator = initMiddleware(
   validateMiddleware(
     [
-      check('truckId').isString().exists(),
-      check('transactionType').isString().exists(),
+      check('truckId').isString().isLength({ min: 2 }).exists(),
+      check('transactionType').isString().isLength({ min: 2 }).exists(),
       check('cost').isNumeric().exists(),
-      check('invoiceNo').isString().optional(),
-      check('containerNo').isString().optional(),
-      check('customer').isString().optional(),
-      check('destination').isString().optional(),
+      check('invoiceNo').isString().isLength({ min: 2 }).exists(),
+      check('containerNo').isString().isLength({ min: 2 }).exists(),
+      check('customer').isString().isLength({ min: 2 }).exists(),
+      check('destination').isString().isLength({ min: 2 }).exists(),
       check('sellingPrice').isNumeric().optional(),
       check('details').isString().optional(),
     ],

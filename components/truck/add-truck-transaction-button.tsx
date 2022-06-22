@@ -4,6 +4,8 @@ import { useState } from 'react';
 import TextInput from '../text-input';
 import { TransactionType, TruckTransaction } from '../../types/common';
 import { useRouterRefresh } from '../../hooks/hooks';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 interface AddTruckTransactionButtonProps {
   truckId: string;
@@ -37,6 +39,8 @@ export default function AddTruckTransactionButton({
   const [truckTransaction, setTruckTransaction] = useState(
     placeHolderTransaction || baseTruckTransaction
   );
+  const [startDate, setStartDate] = useState(new Date());
+
   const refreshData = useRouterRefresh();
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -129,6 +133,13 @@ export default function AddTruckTransactionButton({
                     name="details"
                     value={truckTransaction.details}
                     onChange={handleChange}
+                  />
+                </div>
+
+                <div className="form-group row-span-1 col-span-2">
+                  <DatePicker
+                    selected={startDate}
+                    onChange={(date: Date) => setStartDate(date)}
                   />
                 </div>
               </div>

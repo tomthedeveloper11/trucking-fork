@@ -50,6 +50,7 @@ export default function Modal({
       <div
         className={`fixed ${modalState} inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full`}
         id="my-modal"
+        style={{ zIndex: 1 }}
       >
         <div
           className={`relative top-20 mx-auto p-5 border ${width} shadow-lg rounded-md bg-white`}
