@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useToastContext } from '../lib/toast-context';
 
 interface ButtonConfig {
   className?: string;
@@ -8,7 +9,7 @@ interface ButtonConfig {
 interface ModalConfig {
   buttonConfig: ButtonConfig;
   confirmButtonConfig: ButtonConfig;
-  onConfirm: () => void;
+  onConfirm: () => Promise<void>;
   child: JSX.Element;
   width?: string;
 }
@@ -21,6 +22,7 @@ export default function Modal({
   width = 'w-96',
 }: ModalConfig) {
   const [modalState, setModalState] = useState('hidden');
+  const addToast = useToastContext();
   const buttonClassName =
     buttonConfig.className ||
     'bg-green-500 text-white rounded-md px-8 py-2 text-base font-medium hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300';
@@ -61,8 +63,12 @@ export default function Modal({
               <button
                 id="ok-btn"
                 onClick={() => {
-                  setModalState('hidden');
-                  onConfirm();
+                  onConfirm()
+                    .then(() => setModalState('hidden'))
+                    .catch((err) => {
+                      console.log(err);
+                      addToast(err.response.data.message);
+                    });
                 }}
                 className="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
               >

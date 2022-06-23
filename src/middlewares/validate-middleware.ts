@@ -9,6 +9,8 @@ export default function validateMiddleware(validations, validationResult) {
       return next();
     }
 
-    res.status(422).json({ errors: errors.array() });
+    res
+      .status(422)
+      .json({ errors: errors.array(), message: 'Input tidak benar' });
   };
 }

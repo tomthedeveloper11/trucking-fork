@@ -4,11 +4,15 @@ import AddTruckTransactionButton from '../../components/truck/add-truck-transact
 import truckTransactionBloc from '../../lib/truckTransactions';
 import { TruckTransaction } from '../../types/common';
 import DataTable from '../../components/data-table';
+import { Button } from 'flowbite-react';
+import { useToastContext } from '../../lib/toast-context';
 
 export default function TruckDetails({
   truckId,
   truckTransactions,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const addToast = useToastContext();
+
   const dataTableHeaders = {
     Tanggal: 'w-1/12',
     'No. Container': 'w-2/12',
@@ -33,6 +37,9 @@ export default function TruckDetails({
       details: truckTransaction.details,
     };
   };
+  function toast() {
+    addToast('asd');
+  }
 
   return (
     <>
@@ -42,6 +49,7 @@ export default function TruckDetails({
 
       <div className="px-32 py-14 w-">
         <div className="my-4">
+          <Button onClick={toast}>hello</Button>
           <AddTruckTransactionButton truckId={truckId} />
         </div>
         <DataTable
