@@ -3,6 +3,8 @@ import { Table } from 'flowbite-react';
 export default function DataTable<T>({
   headers,
   data,
+  editableRow,
+  onEdit,
 }: IDataTableProperties<T>) {
   return (
     <>
@@ -13,6 +15,7 @@ export default function DataTable<T>({
               {header}
             </Table.HeadCell>
           ))}
+          {editableRow ? <Table.HeadCell>Edit</Table.HeadCell> : null}
         </Table.Head>
         <Table.Body className="divide-y">
           {data.map((entry, index) => {
@@ -23,36 +26,24 @@ export default function DataTable<T>({
                     {val}
                   </Table.Cell>
                 ))}
+                {editableRow ? (
+                  <Table.Cell>
+                    <a
+                      href="#"
+                      className="font-medium text-blue-600 hover:underline dark:text-blue-500"
+                      onClick={() => {
+                        onEdit(entry);
+                      }}
+                    >
+                      Edit
+                    </a>
+                  </Table.Cell>
+                ) : null}
               </Table.Row>
             );
           })}
         </Table.Body>
       </Table>
-      {/*       
-      <table className="table-fixed border-collapse w-full text-sm divide-y bg-white">
-        <thead className="bg-white">
-          <tr>
-            {Object.entries(headers).map(([header, columnWidth], index) => (
-              <th key={index} className={`${columnWidth} capitalize text-left`}>
-                {header}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody className="divide-y">
-          {data.map((entry, index) => {
-            return (
-              <tr key={`tr-${index}`}>
-                {Object.values(entry).map((val, i) => (
-                  <td key={`td-${index}-${i}`} className="">
-                    {val}
-                  </td>
-                ))}
-              </tr>
-            );
-          })}
-        </tbody>
-      </table> */}
     </>
   );
 }
