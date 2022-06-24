@@ -39,7 +39,7 @@ export default function AddTruckTransactionButton({
   const [truckTransaction, setTruckTransaction] = useState(
     placeHolderTransaction || baseTruckTransaction
   );
-  const [startDate, setStartDate] = useState(new Date());
+  const [date, setDate] = useState(new Date());
 
   const refreshData = useRouterRefresh();
 
@@ -56,7 +56,7 @@ export default function AddTruckTransactionButton({
     await axios({
       method: 'POST',
       url: `http://localhost:3000/api/transaction/${truckId}`,
-      data: truckTransaction,
+      data: { ...truckTransaction, date },
     });
     setTruckTransaction(baseTruckTransaction);
     refreshData();
@@ -249,9 +249,10 @@ export default function AddTruckTransactionButton({
                 </div>
 
                 <div className="form-group row-span-1 col-span-2">
+                  <label>Tanggal</label>
                   <DatePicker
-                    selected={startDate}
-                    onChange={(date: Date) => setStartDate(date)}
+                    selected={date}
+                    onChange={(date: Date) => setDate(date)}
                   />
                 </div>
               </div>
