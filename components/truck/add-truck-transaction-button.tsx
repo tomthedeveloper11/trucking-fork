@@ -1,4 +1,4 @@
-import Modal from '../modal';
+import { Modal, Button } from 'flowbite-react';
 import axios from 'axios';
 import { useState } from 'react';
 import TextInput from '../text-input';
@@ -40,6 +40,7 @@ export default function AddTruckTransactionButton({
     placeHolderTransaction || baseTruckTransaction
   );
   const [date, setDate] = useState(new Date());
+  const [modal, setModal] = useState(false);
 
   const refreshData = useRouterRefresh();
 
@@ -64,91 +65,89 @@ export default function AddTruckTransactionButton({
 
   return (
     <>
-      <Modal
-        id="add-truck-transaction-button"
-        buttonConfig={{ text: 'Tambah Transaksi Baru' }}
-        confirmButtonConfig={{ text: 'Bikin Transaksi' }}
-        onConfirm={addTruckTransaction}
-        width="w-2/5"
-        child={
-          <>
-            <h1 className="text-2xl">Tambah Transaksi Baru</h1>
-            <form action="post">
-              <div className="grid grid-rows-2 grid-cols-5 grid-flow-row gap-4">
-                <div className="form-group row-span-1 col-span-2">
-                  <TextInput
-                    label="No. Container"
-                    name="containerNo"
-                    value={truckTransaction.containerNo}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="form-group row-span-1 col-span-2">
-                  <TextInput
-                    label="No. Invoice"
-                    name="invoiceNo"
-                    value={truckTransaction.invoiceNo}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="form-group row-span-1 col-span-1">
-                  <TextInput
-                    label="EMKL"
-                    name="customer"
-                    value={truckTransaction.customer}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="form-group row-span-1 col-span-3">
-                  <TextInput
-                    label="Tujuan"
-                    name="destination"
-                    value={truckTransaction.destination}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="form-group row-span-1 col-span-1">
-                  <TextInput
-                    label="Borongan"
-                    name="cost"
-                    type="currency"
-                    value={truckTransaction.cost}
-                    prefix="Rp"
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div className="form-group row-span-1 col-span-1">
-                  <TextInput
-                    label="Pembayaran"
-                    name="sellingPrice"
-                    value={truckTransaction.sellingPrice}
-                    prefix="Rp"
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div className="form-group row-span-1 col-span-5">
-                  <TextInput
-                    label="Deskripsi/Info Tambahan"
-                    name="details"
-                    value={truckTransaction.details}
-                    onChange={handleChange}
-                  />
-                </div>
-
-                <div className="form-group row-span-1 col-span-2">
-                  <label>Tanggal</label>
-                  <DatePicker
-                    selected={date}
-                    onChange={(date: Date) => setDate(date)}
-                  />
-                </div>
+      <Button onClick={() => setModal(true)}>Tambah Transaksi Baru</Button>
+      <Modal show={modal} onClose={() => setModal(false)}>
+        <Modal.Header>Tambah Transaksi Baru</Modal.Header>
+        <Modal.Body>
+          <form action="post">
+            <div className="grid grid-rows-2 grid-cols-5 grid-flow-row gap-4">
+              <div className="form-group row-span-1 col-span-2">
+                <TextInput
+                  label="No. Container"
+                  name="containerNo"
+                  value={truckTransaction.containerNo}
+                  onChange={handleChange}
+                />
               </div>
-            </form>
-          </>
-        }
-      />
+              <div className="form-group row-span-1 col-span-2">
+                <TextInput
+                  label="No. Invoice"
+                  name="invoiceNo"
+                  value={truckTransaction.invoiceNo}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group row-span-1 col-span-1">
+                <TextInput
+                  label="EMKL"
+                  name="customer"
+                  value={truckTransaction.customer}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group row-span-1 col-span-3">
+                <TextInput
+                  label="Tujuan"
+                  name="destination"
+                  value={truckTransaction.destination}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group row-span-1 col-span-1">
+                <TextInput
+                  label="Borongan"
+                  name="cost"
+                  type="currency"
+                  value={truckTransaction.cost}
+                  prefix="Rp"
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="form-group row-span-1 col-span-1">
+                <TextInput
+                  label="Pembayaran"
+                  name="sellingPrice"
+                  value={truckTransaction.sellingPrice}
+                  prefix="Rp"
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="form-group row-span-1 col-span-5">
+                <TextInput
+                  label="Deskripsi/Info Tambahan"
+                  name="details"
+                  value={truckTransaction.details}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="form-group row-span-1 col-span-2">
+                <label>Tanggal</label>
+                <DatePicker
+                  selected={date}
+                  onChange={(date: Date) => setDate(date)}
+                />
+              </div>
+            </div>
+          </form>
+        </Modal.Body>
+
+        <Modal.Footer>
+          <Button onClick={addTruckTransaction}>Bikin Transaksi</Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

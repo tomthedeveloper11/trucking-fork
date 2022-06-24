@@ -2,15 +2,14 @@ import Head from 'next/head';
 import { InferGetServerSidePropsType } from 'next';
 import AddTruckTransactionButton from '../../components/truck/add-truck-transaction-button';
 import truckTransactionBloc from '../../lib/truckTransactions';
-import { TransactionType, TruckTransaction } from '../../types/common';
+import { TruckTransaction } from '../../types/common';
 import DataTable from '../../components/data-table';
 import { Button } from 'flowbite-react';
 import { useToastContext } from '../../lib/toast-context';
-import { useState } from 'react';
 
 type RawTruckTransaction = Omit<
   TruckTransaction,
-  'transactionType' | 'truckId' | 'id'
+  'transactionType' | 'truckId'
 >;
 
 export default function TruckDetails({
@@ -18,10 +17,6 @@ export default function TruckDetails({
   truckTransactions,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const addToast = useToastContext();
-
-  const [existingTruckTransaction, setExistingTruckTransaction] = useState(
-    {} as Omit<TruckTransaction, 'id' | 'date'>
-  );
 
   const dataTableHeaders = {
     Tanggal: 'w-1/12',
@@ -37,6 +32,7 @@ export default function TruckDetails({
     truckTransaction: TruckTransaction
   ): RawTruckTransaction => {
     return {
+      id: truckTransaction.id,
       date: new Date(truckTransaction.date).toLocaleDateString(),
       containerNo: truckTransaction.containerNo,
       invoiceNo: truckTransaction.invoiceNo,
@@ -49,14 +45,6 @@ export default function TruckDetails({
   };
   function toast() {
     addToast('asd');
-  }
-  function editTransaction(transaction: RawTruckTransaction) {
-    console.log(transaction, 'halo123');
-    setExistingTruckTransaction({
-      ...transaction,
-      transactionType: TransactionType.TRUCK_TRANSACTION,
-      truckId,
-    });
   }
 
   return (
@@ -74,7 +62,6 @@ export default function TruckDetails({
           headers={dataTableHeaders}
           data={truckTransactions.map((t) => formatTruckTransaction(t))}
           editableRow={true}
-          onEdit={editTransaction}
         />
       </div>
     </>
@@ -86,6 +73,7 @@ export const getServerSideProps = async (context: any) => {
   const truckTransactions = await truckTransactionBloc.getTruckTransactions(
     truckId
   );
+  console.log(truckTransactions);
   return {
     props: { truckId, truckTransactions },
   };

@@ -34,8 +34,7 @@ export default function DataTable<T>({
                       key={`edit-modal-key${index}`}
                       existingTruckTransaction={{
                         ...entry,
-                        transactionType:
-                          TransactionType.TRUCK_ADDITIONAL_TRANSACTION,
+                        transactionType: TransactionType.TRUCK_TRANSACTION,
                       }}
                       truckId="asd"
                     />
