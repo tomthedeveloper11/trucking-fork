@@ -23,12 +23,20 @@ export default function TruckDetails({
     truckTransaction: TruckTransaction
   ): Omit<TruckTransaction, 'transactionType' | 'truckId' | 'id'> => {
     return {
-      date: new Date(truckTransaction.date).toLocaleDateString(),
+      date: new Date(truckTransaction.date).toLocaleDateString('id-ID'),
       containerNo: truckTransaction.containerNo,
       invoiceNo: truckTransaction.invoiceNo,
       destination: truckTransaction.destination,
-      cost: truckTransaction.cost,
-      sellingPrice: truckTransaction.sellingPrice,
+      cost: truckTransaction.cost.toLocaleString('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        maximumFractionDigits: 0,
+      }),
+      sellingPrice: truckTransaction.sellingPrice.toLocaleString('id-ID', {
+        style: 'currency',
+        currency: 'IDR',
+        maximumFractionDigits: 0,
+      }),
       customer: truckTransaction.customer,
       details: truckTransaction.details,
     };
