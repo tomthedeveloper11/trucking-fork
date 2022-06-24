@@ -7,6 +7,7 @@ interface ButtonConfig {
 }
 
 interface ModalConfig {
+  id: string;
   buttonConfig?: ButtonConfig;
   confirmButtonConfig: ButtonConfig;
   onConfirm: () => Promise<void>;
@@ -15,13 +16,14 @@ interface ModalConfig {
 }
 
 export default function Modal({
+  id,
   buttonConfig,
   confirmButtonConfig,
   onConfirm,
   child,
   width = 'w-96',
 }: ModalConfig) {
-  const [modalState, setModalState] = useState(buttonConfig ? false : true);
+  const [modalState, setModalState] = useState('hidden');
   const addToast = useToastContext();
   const buttonClassName =
     buttonConfig?.className ||
@@ -30,8 +32,10 @@ export default function Modal({
   useEffect(() => {
     if (typeof window !== 'undefined') {
       window.onclick = (e) => {
-        if (e.target === document.getElementById('my-modal')) {
-          setModalState(false);
+        console.log('helo123', e.target, `${id}-modal`);
+        if (e.target === document.getElementById(`${id}-modal`)) {
+          console.log('whatshappening');
+          setModalState('hidden');
         }
       };
     }
@@ -43,45 +47,43 @@ export default function Modal({
         <div className="w-80">
           <button
             className={buttonClassName}
-            id="open-btn"
-            onClick={() => setModalState(true)}
+            id={`${id}-open-btn`}
+            onClick={() => setModalState('block')}
           >
             {buttonConfig.text}
           </button>
         </div>
       ) : null}
 
-      {modalState ? (
+      <div
+        className={`fixed ${modalState} inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full`}
+        id={`${id}-modal`}
+        style={{ zIndex: 1 }}
+      >
         <div
-          className={`fixed block inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full`}
-          id="my-modal"
-          style={{ zIndex: 1 }}
+          className={`relative top-20 mx-auto p-5 border ${width} shadow-lg rounded-md bg-white`}
         >
-          <div
-            className={`relative top-20 mx-auto p-5 border ${width} shadow-lg rounded-md bg-white`}
-          >
-            <div className="mt-3">
-              <div>{child}</div>
-              <div className="items-center px-4 py-3">
-                <button
-                  id="ok-btn"
-                  onClick={() => {
-                    onConfirm()
-                      .then(() => setModalState(false))
-                      .catch((err) => {
-                        console.log(err);
-                        addToast(err.response.data.message);
-                      });
-                  }}
-                  className="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
-                >
-                  {confirmButtonConfig.text}
-                </button>
-              </div>
+          <div className="mt-3">
+            <div>{child}</div>
+            <div className="items-center px-4 py-3">
+              <button
+                id={`${id}-ok-btn`}
+                onClick={() => {
+                  onConfirm()
+                    .then(() => setModalState('hidden'))
+                    .catch((err) => {
+                      console.log(err);
+                      addToast(err.response.data.message);
+                    });
+                }}
+                className="px-4 py-2 bg-green-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"
+              >
+                {confirmButtonConfig.text}
+              </button>
             </div>
           </div>
         </div>
-      ) : null}
+      </div>
     </>
   );
 }

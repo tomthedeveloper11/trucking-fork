@@ -1,10 +1,12 @@
 import { IDataTableProperties } from '../types/component-props';
 import { Table } from 'flowbite-react';
+import EditTruckTransactionButton from '../components/truck/edit-truck-transaction-button';
+import { TransactionType } from '../types/common';
+
 export default function DataTable<T>({
   headers,
   data,
   editableRow,
-  onEdit,
 }: IDataTableProperties<T>) {
   return (
     <>
@@ -28,15 +30,15 @@ export default function DataTable<T>({
                 ))}
                 {editableRow ? (
                   <Table.Cell>
-                    <a
-                      href="#"
-                      className="font-medium text-blue-600 hover:underline dark:text-blue-500"
-                      onClick={() => {
-                        onEdit(entry);
+                    <EditTruckTransactionButton
+                      key={`edit-modal-key${index}`}
+                      existingTruckTransaction={{
+                        ...entry,
+                        transactionType:
+                          TransactionType.TRUCK_ADDITIONAL_TRANSACTION,
                       }}
-                    >
-                      Edit
-                    </a>
+                      truckId="asd"
+                    />
                   </Table.Cell>
                 ) : null}
               </Table.Row>

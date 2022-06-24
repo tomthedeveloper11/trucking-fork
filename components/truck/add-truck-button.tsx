@@ -34,6 +34,7 @@ export default function AddTruckButton() {
   return (
     <>
       <Modal
+        id='add-truck-button'
         buttonConfig={{ text: 'Tambah Truck Baru' }}
         confirmButtonConfig={{ text: 'Tambah Truck' }}
         onConfirm={addTruck}

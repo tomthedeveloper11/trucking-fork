@@ -7,8 +7,6 @@ import DataTable from '../../components/data-table';
 import { Button } from 'flowbite-react';
 import { useToastContext } from '../../lib/toast-context';
 import { useState } from 'react';
-import Modal from '../../components/modal';
-import EditTruckTransactionModal from '../../components/truck/edit-truck-transaction-form';
 
 type RawTruckTransaction = Omit<
   TruckTransaction,
@@ -21,7 +19,6 @@ export default function TruckDetails({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const addToast = useToastContext();
 
-  const [editModal, setEditModal] = useState(false);
   const [existingTruckTransaction, setExistingTruckTransaction] = useState(
     {} as Omit<TruckTransaction, 'id' | 'date'>
   );
@@ -60,7 +57,6 @@ export default function TruckDetails({
       transactionType: TransactionType.TRUCK_TRANSACTION,
       truckId,
     });
-    setEditModal(true);
   }
 
   return (
@@ -69,18 +65,10 @@ export default function TruckDetails({
         <title>Truck Details</title>
       </Head>
 
-      {editModal ? (
-        <EditTruckTransactionModal
-          truckId={truckId}
-          existingTruckTransaction={existingTruckTransaction}
-          setModal={setEditModal}
-        />
-      ) : null}
-
       <div className="px-32 py-14 w-">
         <div className="my-4">
           <Button onClick={toast}>hello</Button>
-          <AddTruckTransactionButton truckId={truckId} />
+          <AddTruckTransactionButton truckId={truckId} key="palsda" />
         </div>
         <DataTable
           headers={dataTableHeaders}

@@ -65,6 +65,7 @@ export default function AddTruckTransactionButton({
   return (
     <>
       <Modal
+        id="add-truck-transaction-button"
         buttonConfig={{ text: 'Tambah Transaksi Baru' }}
         confirmButtonConfig={{ text: 'Bikin Transaksi' }}
         onConfirm={addTruckTransaction}

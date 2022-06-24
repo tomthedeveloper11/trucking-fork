@@ -6,18 +6,17 @@ import { useRouterRefresh } from '../../hooks/hooks';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
-interface EditTruckTransactionModalProps {
+interface EditTruckTransactionButtonProps {
   truckId: string;
   existingTruckTransaction: Omit<TruckTransaction, 'id' | 'date'>;
-  setModal: (_: any) => void;
 }
 
-export default function EditTruckTransactionModal({
+export default function EditTruckTransactionButton({
   truckId,
   existingTruckTransaction,
-  setModal,
-}: EditTruckTransactionModalProps) {
-  const baseTruckTransaction: Omit<TruckTransaction, 'id' | 'date'> = {
+}: EditTruckTransactionButtonProps) {
+  const baseTruckTransaction: Omit<TruckTransaction, 'date'> = {
+    id: '',
     containerNo: '',
     invoiceNo: '',
     destination: '',
@@ -53,13 +52,14 @@ export default function EditTruckTransactionModal({
     //   data: { ...truckTransaction, date },
     // });
     setTruckTransaction(baseTruckTransaction);
-    setModal(false);
     refreshData();
   }
 
   return (
     <>
       <Modal
+        id="edit-truck-transaction-modal"
+        buttonConfig={{ text: 'Edit' }}
         confirmButtonConfig={{ text: 'Edit Transaksi' }}
         onConfirm={editTruckTransaction}
         width="w-2/5"
