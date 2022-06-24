@@ -1,13 +1,16 @@
 import { IDataTableProperties } from '../types/component-props';
 import { Table } from 'flowbite-react';
 import EditTruckTransactionButton from '../components/truck/edit-truck-transaction-button';
-import { TransactionType } from '../types/common';
+import { TransactionType, TruckTransaction } from '../types/common';
 
 export default function DataTable<T>({
   headers,
   data,
   editableRow,
 }: IDataTableProperties<T>) {
+  function isTruckTransaction(object: any): object is TruckTransaction {
+    return 'containerNo' in object;
+  }
   return (
     <>
       <Table hoverable={true}>
@@ -28,7 +31,7 @@ export default function DataTable<T>({
                     {val}
                   </Table.Cell>
                 ))}
-                {editableRow ? (
+                {editableRow && isTruckTransaction(entry) ? (
                   <Table.Cell>
                     <EditTruckTransactionButton
                       key={`edit-modal-key${index}`}
