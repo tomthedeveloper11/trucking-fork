@@ -3,6 +3,7 @@ import { AppProps } from 'next/app';
 import { TruckContext } from '../lib/context';
 import { ToastContextProvider } from '../lib/toast-context';
 
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
