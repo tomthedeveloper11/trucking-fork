@@ -1,4 +1,4 @@
-import Modal from '../modal';
+import { Modal, Button } from 'flowbite-react';
 import axios from 'axios';
 import { useState } from 'react';
 import TextInput from '../text-input';
@@ -10,6 +10,7 @@ export default function AddTruckButton() {
     name: '',
     imageUrl: '',
   } as Omit<Truck, 'id'>);
+  const [modal, setModal] = useState(false);
   const refreshData = useRouterRefresh();
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -33,37 +34,42 @@ export default function AddTruckButton() {
 
   return (
     <>
-      <Modal
-        id='add-truck-button'
-        buttonConfig={{ text: 'Tambah Truck Baru' }}
-        confirmButtonConfig={{ text: 'Tambah Truck' }}
-        onConfirm={addTruck}
-        child={
-          <>
-            <h1 className="text-2xl">Tambah Truck Baru</h1>
-            <form action="post">
-              <div className="grid grid-rows-2 grid-cols-3 grid-flow-row gap-4">
-                <div className="form-group row-span-1 col-span-3">
-                  <TextInput
-                    label="Name"
-                    name="name"
-                    value={newTruck.name}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div className="form-group row-span-1 col-span-3">
-                  <TextInput
-                    label="Image URL"
-                    name="imageUrl"
-                    value={newTruck.imageUrl}
-                    onChange={handleChange}
-                  />
-                </div>
+      <Button onClick={() => setModal(true)}>Tambah Truck</Button>
+      <Modal show={modal} onClose={() => setModal(false)}>
+        <Modal.Header>Tambah Truck</Modal.Header>
+        <Modal.Body>
+          <form action="post">
+            <div className="grid grid-rows-2 grid-cols-3 grid-flow-row gap-4">
+              <div className="form-group row-span-1 col-span-3">
+                <TextInput
+                  label="Name"
+                  name="name"
+                  value={newTruck.name}
+                  onChange={handleChange}
+                />
               </div>
-            </form>
-          </>
-        }
-      />
+              <div className="form-group row-span-1 col-span-3">
+                <TextInput
+                  label="Image URL"
+                  name="imageUrl"
+                  value={newTruck.imageUrl}
+                  onChange={handleChange}
+                />
+              </div>
+            </div>
+          </form>{' '}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            onClick={() => {
+              addTruck();
+              setModal(false);
+            }}
+          >
+            Tambah Truck
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }
