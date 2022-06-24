@@ -40,20 +40,12 @@ export default function TruckDetails({
     truckTransaction: TruckTransaction
   ): RawTruckTransaction => {
     return {
-      date: new Date(truckTransaction.date).toLocaleDateString('id-ID'),
+      date: new Date(truckTransaction.date).toLocaleDateString(),
       containerNo: truckTransaction.containerNo,
       invoiceNo: truckTransaction.invoiceNo,
       destination: truckTransaction.destination,
-      cost: truckTransaction.cost.toLocaleString('id-ID', {
-        style: 'currency',
-        currency: 'IDR',
-        maximumFractionDigits: 0,
-      }),
-      sellingPrice: truckTransaction.sellingPrice.toLocaleString('id-ID', {
-        style: 'currency',
-        currency: 'IDR',
-        maximumFractionDigits: 0,
-      }),
+      cost: truckTransaction.cost,
+      sellingPrice: truckTransaction.sellingPrice,
       customer: truckTransaction.customer,
       details: truckTransaction.details,
     };
