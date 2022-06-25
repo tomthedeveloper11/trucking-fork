@@ -1,16 +1,38 @@
-import { IDataTableProperties } from '../types/component-props';
 import { Table } from 'flowbite-react';
 import EditTruckTransactionButton from '../components/truck/edit-truck-transaction-button';
 import { TransactionType, TruckTransaction } from '../types/common';
+import { useRouter } from 'next/router';
+
+interface IDataTableProperties<T> {
+  headers: Record<string, string>;
+  data: T[];
+  editableRow: boolean;
+  hiddenFields?: string[];
+}
 
 export default function DataTable<T>({
   headers,
   data,
   editableRow,
+  hiddenFields,
 }: IDataTableProperties<T>) {
   function isTruckTransaction(object: any): object is TruckTransaction {
     return 'containerNo' in object;
   }
+
+  function buildTransactionRow(obj: T) {
+    const output = {};
+
+    for (const [key, value] of Object.entries(obj)) {
+      if (!hiddenFields?.includes(key)) {
+        output[key] = value;
+      }
+    }
+    console.log(output, '<<<<<<<');
+    return output;
+  }
+
+  const { id: truckId } = useRouter().query;
   return (
     <>
       <Table hoverable={true}>
@@ -26,7 +48,7 @@ export default function DataTable<T>({
           {data.map((entry, index) => {
             return (
               <Table.Row key={`tr-${index}`}>
-                {Object.values(entry).map((val, i) => (
+                {Object.values(buildTransactionRow(entry)).map((val, i) => (
                   <Table.Cell key={`td-${index}-${i}`} className="">
                     {val}
                   </Table.Cell>
@@ -38,8 +60,8 @@ export default function DataTable<T>({
                       existingTruckTransaction={{
                         ...entry,
                         transactionType: TransactionType.TRUCK_TRANSACTION,
+                        truckId,
                       }}
-                      truckId="asd"
                     />
                   </Table.Cell>
                 ) : null}

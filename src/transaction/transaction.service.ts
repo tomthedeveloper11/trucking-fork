@@ -16,9 +16,19 @@ const getTruckTransactions = async (truckId: string) => {
   return transactions;
 };
 
+const editTruckTransaction = async (
+  editTruckTransactionPayload: TruckTransaction
+) => {
+  const editTruckTransaction = await transactionRepository.editTruckTransaction(
+    editTruckTransactionPayload
+  );
+  return editTruckTransaction;
+};
+
 const transactionService = {
   createTransaction,
   getTruckTransactions,
+  editTruckTransaction,
 };
 
 export default transactionService;

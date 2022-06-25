@@ -5,14 +5,14 @@ import { TransactionType, TruckTransaction } from '../../types/common';
 import { useRouterRefresh } from '../../hooks/hooks';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import axios from 'axios';
+import { useToastContext } from '../../lib/toast-context';
 
 interface EditTruckTransactionButtonProps {
-  truckId: string;
   existingTruckTransaction: Omit<TruckTransaction, 'date'>;
 }
 
 export default function EditTruckTransactionButton({
-  truckId,
   existingTruckTransaction,
 }: EditTruckTransactionButtonProps) {
   const baseTruckTransaction: Omit<TruckTransaction, 'date'> = {
@@ -25,7 +25,7 @@ export default function EditTruckTransactionButton({
     customer: '',
     details: '',
     transactionType: TransactionType.TRUCK_TRANSACTION,
-    truckId,
+    truckId: '',
   };
   const [truckTransaction, setTruckTransaction] = useState(
     existingTruckTransaction
@@ -34,6 +34,7 @@ export default function EditTruckTransactionButton({
   const [date, setDate] = useState(new Date());
 
   const refreshData = useRouterRefresh();
+  const addToast = useToastContext();
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
@@ -45,14 +46,12 @@ export default function EditTruckTransactionButton({
   }
 
   async function editTruckTransaction() {
-    // TODO: EDIT TRANSACTION PLSSSSSSSS
-    console.log(truckTransaction);
-    // await axios({
-    //   method: 'POST',
-    //   url: `http://localhost:3000/api/transaction/${truckId}`,
-    //   data: { ...truckTransaction, date },
-    // });
-    setTruckTransaction(baseTruckTransaction);
+    await axios({
+      method: 'PUT',
+      url: `http://localhost:3000/api/transaction/truck/${truckTransaction.id}`,
+      data: { ...truckTransaction, date },
+    });
+
     refreshData();
   }
 
@@ -139,8 +138,9 @@ export default function EditTruckTransactionButton({
         <Modal.Footer>
           <Button
             onClick={() => {
-              editTruckTransaction();
-              setModal(false);
+              editTruckTransaction()
+                .then(() => setModal(false))
+                .catch((err) => addToast(err.message));
             }}
           >
             Edit Transaksi

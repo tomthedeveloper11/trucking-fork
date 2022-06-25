@@ -24,6 +24,21 @@ const createTruckTransaction = async (
   return truckTransaction;
 };
 
-const transactionRepository = { getTruckTransactions, createTruckTransaction };
+const editTruckTransaction = async (
+  editTruckTransactionPayload: TruckTransaction
+) => {
+  const document = await TransactionModel.findOneAndUpdate(
+    { _id: editTruckTransactionPayload.id },
+    editTruckTransactionPayload
+  );
+  const truckTransaction = convertDocumentToObject<TruckTransaction>(document);
+  return truckTransaction;
+};
+
+const transactionRepository = {
+  getTruckTransactions,
+  createTruckTransaction,
+  editTruckTransaction,
+};
 
 export default transactionRepository;

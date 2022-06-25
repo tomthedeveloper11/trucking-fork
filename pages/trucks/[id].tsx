@@ -33,7 +33,7 @@ export default function TruckDetails({
   ): RawTruckTransaction => {
     return {
       id: truckTransaction.id,
-      date: new Date(truckTransaction.date).toLocaleDateString(),
+      date: new Date(truckTransaction.date).toLocaleDateString('id-ID'),
       containerNo: truckTransaction.containerNo,
       invoiceNo: truckTransaction.invoiceNo,
       destination: truckTransaction.destination,
@@ -46,7 +46,6 @@ export default function TruckDetails({
   function toast() {
     addToast('asd');
   }
-
   return (
     <>
       <Head>
@@ -62,6 +61,7 @@ export default function TruckDetails({
           headers={dataTableHeaders}
           data={truckTransactions.map((t) => formatTruckTransaction(t))}
           editableRow={true}
+          hiddenFields={['id']}
         />
       </div>
     </>
@@ -73,7 +73,6 @@ export const getServerSideProps = async (context: any) => {
   const truckTransactions = await truckTransactionBloc.getTruckTransactions(
     truckId
   );
-  console.log(truckTransactions);
   return {
     props: { truckId, truckTransactions },
   };

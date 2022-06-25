@@ -4,7 +4,7 @@ import { TruckTransaction } from '../types/common';
 const getTruckTransactions = async (truckId: string) => {
   const response = await axios({
     method: 'GET',
-    url: `http://localhost:3000/api/transaction/${truckId}`,
+    url: `http://localhost:3000/api/truck/${truckId}`,
   });
   if (response && response.data) {
     return response.data.data as TruckTransaction[];
