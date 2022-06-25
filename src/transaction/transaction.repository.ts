@@ -35,10 +35,29 @@ const editTruckTransaction = async (
   return truckTransaction;
 };
 
+const getTruckTransactionAutoComplete = async (): Promise<
+  Record<string, string[]>
+> => {
+  const fields = ['destination', 'customer'];
+  const [destinations, customers] = await Promise.all(
+    fields.map((field) =>
+      TransactionModel.distinct(field, {
+        type: TransactionType.TRUCK_TRANSACTION,
+      })
+    )
+  );
+  const result = {
+    destinations: destinations.filter((_) => _),
+    customers: customers.filter((_) => _),
+  };
+  return result;
+};
+
 const transactionRepository = {
   getTruckTransactions,
   createTruckTransaction,
   editTruckTransaction,
+  getTruckTransactionAutoComplete,
 };
 
 export default transactionRepository;

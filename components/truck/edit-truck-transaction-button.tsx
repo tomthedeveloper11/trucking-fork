@@ -1,7 +1,7 @@
-import { Modal, Button } from 'flowbite-react';
+import { Modal, Button, ListGroup } from 'flowbite-react';
 import { useState } from 'react';
 import TextInput from '../text-input';
-import { TransactionType, TruckTransaction } from '../../types/common';
+import { TruckTransaction } from '../../types/common';
 import { useRouterRefresh } from '../../hooks/hooks';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -10,23 +10,13 @@ import { useToastContext } from '../../lib/toast-context';
 
 interface EditTruckTransactionButtonProps {
   existingTruckTransaction: Omit<TruckTransaction, 'date'>;
+  autoCompleteData: Record<string, string[]>;
 }
 
 export default function EditTruckTransactionButton({
   existingTruckTransaction,
+  autoCompleteData,
 }: EditTruckTransactionButtonProps) {
-  const baseTruckTransaction: Omit<TruckTransaction, 'date'> = {
-    id: '',
-    containerNo: '',
-    invoiceNo: '',
-    destination: '',
-    cost: 0,
-    sellingPrice: 0,
-    customer: '',
-    details: '',
-    transactionType: TransactionType.TRUCK_TRANSACTION,
-    truckId: '',
-  };
   const [truckTransaction, setTruckTransaction] = useState(
     existingTruckTransaction
   );
@@ -54,10 +44,16 @@ export default function EditTruckTransactionButton({
 
     refreshData();
   }
-
+  console.log('asd');
   return (
     <>
-      <Button onClick={() => setModal(true)}>Edit</Button>
+      <a
+        className="text-blue-500 hover:underline"
+        href={'#'}
+        onClick={() => setModal(true)}
+      >
+        Edit
+      </a>
       <Modal show={modal} onClose={() => setModal(false)}>
         <Modal.Header>Edit Transaksi</Modal.Header>
         <Modal.Body>
@@ -88,12 +84,30 @@ export default function EditTruckTransactionButton({
                 />
               </div>
               <div className="form-group row-span-1 col-span-3">
-                <TextInput
-                  label="Tujuan"
-                  name="destination"
-                  value={truckTransaction.destination}
-                  onChange={handleChange}
-                />
+                <div className="flex flex-row flex-wrap">
+                  <div className="relative w-full">
+                    <TextInput
+                      label="Tujuan"
+                      name="destination"
+                      value={truckTransaction.destination}
+                      onChange={handleChange}
+                    />
+                    <div
+                      className="absolute left-0 w-full"
+                      style={{ zIndex: 2 }}
+                    >
+                      <ListGroup>
+                        {autoCompleteData.destinations.map((destination, i) => {
+                          return (
+                            <ListGroup.Item key={`destination-auto-${i}`}>
+                              <div>{destination}</div>
+                            </ListGroup.Item>
+                          );
+                        })}
+                      </ListGroup>
+                    </div>
+                  </div>
+                </div>
               </div>
               <div className="form-group row-span-1 col-span-1">
                 <TextInput

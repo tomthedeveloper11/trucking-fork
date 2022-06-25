@@ -9,6 +9,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 interface AddTruckTransactionButtonProps {
   truckId: string;
+  autoCompleteData: Record<string, string[]>;
 }
 
 export default function AddTruckTransactionButton({
@@ -117,6 +118,7 @@ export default function AddTruckTransactionButton({
                 <TextInput
                   label="Pembayaran"
                   name="sellingPrice"
+                  type="currency"
                   value={truckTransaction.sellingPrice}
                   prefix="Rp"
                   onChange={handleChange}

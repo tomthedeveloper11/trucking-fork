@@ -1,35 +1,37 @@
 import { Table } from 'flowbite-react';
-import EditTruckTransactionButton from '../components/truck/edit-truck-transaction-button';
-import { TransactionType, TruckTransaction } from '../types/common';
+import EditTruckTransactionButton from './truck/edit-truck-transaction-button';
+import { DataTableTruckTransaction, TransactionType } from '../types/common';
 import { useRouter } from 'next/router';
 
-interface IDataTableProperties<T> {
+interface DataTableProperties {
   headers: Record<string, string>;
-  data: T[];
-  editableRow: boolean;
+  data: DataTableTruckTransaction[];
   hiddenFields?: string[];
+  autoCompleteData: Record<string, string[]>;
 }
 
-export default function DataTable<T>({
+export default function TruckTransactionDataTable({
   headers,
   data,
-  editableRow,
   hiddenFields,
-}: IDataTableProperties<T>) {
-  function isTruckTransaction(object: any): object is TruckTransaction {
-    return 'containerNo' in object;
-  }
+  autoCompleteData,
+}: DataTableProperties) {
+  function buildTransactionRow(obj: DataTableTruckTransaction) {
+    const tableTransaction: Record<string, string | number | Date> = { ...obj };
 
-  function buildTransactionRow(obj: T) {
-    const output = {};
-
-    for (const [key, value] of Object.entries(obj)) {
-      if (!hiddenFields?.includes(key)) {
-        output[key] = value;
+    if (hiddenFields) {
+      for (const field of hiddenFields) {
+        delete tableTransaction[field];
       }
     }
-    console.log(output, '<<<<<<<');
-    return output;
+
+    return (
+      <>
+        {Object.values(tableTransaction).map((val, i) => (
+          <Table.Cell key={`td-${obj.id}-${i}`}>{val}</Table.Cell>
+        ))}
+      </>
+    );
   }
 
   const { id: truckId } = useRouter().query;
@@ -42,29 +44,26 @@ export default function DataTable<T>({
               {header}
             </Table.HeadCell>
           ))}
-          {editableRow ? <Table.HeadCell>Edit</Table.HeadCell> : null}
+          <Table.HeadCell>Edit</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
-          {data.map((entry, index) => {
+          {data.map((truckTransaction, index) => {
             return (
               <Table.Row key={`tr-${index}`}>
-                {Object.values(buildTransactionRow(entry)).map((val, i) => (
-                  <Table.Cell key={`td-${index}-${i}`} className="">
-                    {val}
-                  </Table.Cell>
-                ))}
-                {editableRow && isTruckTransaction(entry) ? (
+                {buildTransactionRow(truckTransaction)}
+                {
                   <Table.Cell>
                     <EditTruckTransactionButton
                       key={`edit-modal-key${index}`}
                       existingTruckTransaction={{
-                        ...entry,
+                        ...truckTransaction,
                         transactionType: TransactionType.TRUCK_TRANSACTION,
                         truckId,
                       }}
+                      autoCompleteData={autoCompleteData}
                     />
                   </Table.Cell>
-                ) : null}
+                }
               </Table.Row>
             );
           })}

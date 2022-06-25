@@ -28,12 +28,14 @@ const transactionSchema = new Schema<any>(
     },
     destination: {
       type: String,
+      trim: true,
     },
     sellingPrice: {
       type: Number,
     },
     customer: {
       type: String,
+      trim: true,
     },
     truckId: {
       type: String,
