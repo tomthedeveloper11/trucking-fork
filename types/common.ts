@@ -32,3 +32,8 @@ export interface TruckTransaction extends Transaction {
   sellingPrice: number;
   customer: string;
 }
+
+export type DataTableTruckTransaction = Omit<
+  TruckTransaction,
+  'transactionType' | 'truckId'
+>;

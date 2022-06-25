@@ -14,8 +14,6 @@ export default function Home({
         <title>{'Home'}</title>
       </Head>
       <div className="container mx-auto p-5">
-        {/* <DataTable<DummyData> data={dummyData} headers={headerConfig} /> */}
-
         <AddTruckButton />
         <h1>My Trucks</h1>
         <div className="grid grid-cols-4 gap-4">

@@ -9,6 +9,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 
 interface AddTruckTransactionButtonProps {
   truckId: string;
+  autoCompleteData: Record<string, string[]>;
 }
 
 export default function AddTruckTransactionButton({
@@ -56,7 +57,7 @@ export default function AddTruckTransactionButton({
   async function addTruckTransaction() {
     await axios({
       method: 'POST',
-      url: `http://localhost:3000/api/transaction/${truckId}`,
+      url: `http://localhost:3000/api/transaction/truck`,
       data: { ...truckTransaction, date },
     });
     setTruckTransaction(baseTruckTransaction);
@@ -113,11 +114,11 @@ export default function AddTruckTransactionButton({
                   onChange={handleChange}
                 />
               </div>
-
               <div className="form-group row-span-1 col-span-1">
                 <TextInput
                   label="Pembayaran"
                   name="sellingPrice"
+                  type="currency"
                   value={truckTransaction.sellingPrice}
                   prefix="Rp"
                   onChange={handleChange}

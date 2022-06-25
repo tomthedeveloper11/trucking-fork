@@ -19,7 +19,7 @@ export default function TextInput({
 }: TextInputConfig) {
   const valueFormat = (inputValue: any) => {
     if (type === 'currency') {
-      const str = inputValue.toString().replace(/[A-Za-z,]/g, '');
+      const str = inputValue.toString().replace(/[A-Za-z,\-\_\+\=]/g, '');
       return Number(str).toLocaleString();
     }
     return inputValue as string;
@@ -27,7 +27,9 @@ export default function TextInput({
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     if (type === 'currency') {
-      e.target.value = e.target.value.toString().replace(/[A-Za-z,]/g, '');
+      e.target.value = e.target.value
+        .toString()
+        .replace(/[A-Za-z,\-\_\+\=]/g, '');
     }
     onChange(e);
   }
@@ -53,6 +55,7 @@ export default function TextInput({
             placeholder={placeholder}
             onChange={handleChange}
             value={valueFormat(value)}
+            autoComplete="off"
           />
           <div className="absolute inset-y-0 right-0 flex items-center">
             <label htmlFor="currency" className="sr-only">
