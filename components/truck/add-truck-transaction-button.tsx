@@ -1,4 +1,4 @@
-import { Modal, Button } from 'flowbite-react';
+import { Modal, Button, ListGroup } from 'flowbite-react';
 import axios from 'axios';
 import { useState } from 'react';
 import TextInput from '../text-input';
@@ -14,11 +14,12 @@ interface AddTruckTransactionButtonProps {
 
 export default function AddTruckTransactionButton({
   truckId,
+  autoCompleteData,
 }: AddTruckTransactionButtonProps) {
   const placeHolderTransaction: Omit<TruckTransaction, 'id' | 'date'> = {
     containerNo: 'TEGU3009038',
     invoiceNo: '1671',
-    destination: ' AMPLAS/CATUR ',
+    destination: 'AMPLAS/CATUR',
     cost: 385000,
     sellingPrice: 700000,
     customer: 'SKM',
@@ -37,13 +38,50 @@ export default function AddTruckTransactionButton({
     transactionType: TransactionType.TRUCK_TRANSACTION,
     truckId,
   };
+  const refreshData = useRouterRefresh();
   const [truckTransaction, setTruckTransaction] = useState(
     placeHolderTransaction || baseTruckTransaction
   );
   const [date, setDate] = useState(new Date());
   const [modal, setModal] = useState(false);
+  const [recommendation, setRecommendation] = useState({
+    destination: [],
+    customer: [],
+  });
 
-  const refreshData = useRouterRefresh();
+  function filterKeywords(field: string, keyword: string) {
+    const matchRegex = new RegExp(keyword, 'i');
+    const matchedKeywords = autoCompleteData[field].filter((d) =>
+      matchRegex.test(d)
+    );
+    return matchedKeywords;
+  }
+
+  function handleAutoComplete(
+    event: React.ChangeEvent<HTMLInputElement>,
+    field: string
+  ) {
+    const recommendations = filterKeywords(field, event.target.value);
+    setRecommendation((prevState) => ({
+      ...prevState,
+      [field]: recommendations,
+    }));
+    setTruckTransaction((p) => ({
+      ...p,
+      [field]: event.target.value,
+    }));
+  }
+
+  function selectAutocomplete(field: string, value: string) {
+    setTruckTransaction((prevState) => ({
+      ...prevState,
+      [field]: value,
+    }));
+    setRecommendation((p) => ({
+      ...p,
+      [field]: [],
+    }));
+  }
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
@@ -61,6 +99,7 @@ export default function AddTruckTransactionButton({
       data: { ...truckTransaction, date },
     });
     setTruckTransaction(baseTruckTransaction);
+    setModal(false);
     refreshData();
   }
 
@@ -89,20 +128,60 @@ export default function AddTruckTransactionButton({
                 />
               </div>
               <div className="form-group row-span-1 col-span-1">
-                <TextInput
-                  label="EMKL"
-                  name="customer"
-                  value={truckTransaction.customer}
-                  onChange={handleChange}
-                />
+                <div className="relative w-full">
+                  <TextInput
+                    label="EMKL"
+                    name="customer"
+                    value={truckTransaction.customer}
+                    onChange={(e) => handleAutoComplete(e, 'customer')}
+                  />
+                  {/* autoComplete customer */}
+                  <div className="absolute left-0 w-full" style={{ zIndex: 2 }}>
+                    <ListGroup>
+                      {recommendation.customer.map((customer, i) => {
+                        return (
+                          <ListGroup.Item
+                            key={`customer-auto-${i}`}
+                            onClick={() =>
+                              selectAutocomplete('customer', customer)
+                            }
+                          >
+                            <div>{customer}</div>
+                          </ListGroup.Item>
+                        );
+                      })}
+                    </ListGroup>
+                  </div>
+                  {/* autoComplete customer */}
+                </div>
               </div>
               <div className="form-group row-span-1 col-span-3">
-                <TextInput
-                  label="Tujuan"
-                  name="destination"
-                  value={truckTransaction.destination}
-                  onChange={handleChange}
-                />
+                <div className="relative w-full">
+                  <TextInput
+                    label="Tujuan"
+                    name="destination"
+                    value={truckTransaction.destination}
+                    onChange={(e) => handleAutoComplete(e, 'destination')}
+                  />
+                  {/* autoComplete destination */}
+                  <div className="absolute left-0 w-full" style={{ zIndex: 2 }}>
+                    <ListGroup>
+                      {recommendation.destination.map((destination, i) => {
+                        return (
+                          <ListGroup.Item
+                            key={`destination-auto-${i}`}
+                            onClick={() =>
+                              selectAutocomplete('destination', destination)
+                            }
+                          >
+                            <div>{destination}</div>
+                          </ListGroup.Item>
+                        );
+                      })}
+                    </ListGroup>
+                  </div>
+                  {/* autoComplete destination */}
+                </div>
               </div>
               <div className="form-group row-span-1 col-span-1">
                 <TextInput

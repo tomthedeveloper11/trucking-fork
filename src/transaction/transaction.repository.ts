@@ -47,8 +47,8 @@ const getTruckTransactionAutoComplete = async (): Promise<
     )
   );
   const result = {
-    destinations: destinations.filter((_) => _),
-    customers: customers.filter((_) => _),
+    destination: destinations.filter((_) => _),
+    customer: customers.filter((_) => _),
   };
   return result;
 };

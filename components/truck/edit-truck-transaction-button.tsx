@@ -1,5 +1,5 @@
 import { Modal, Button, ListGroup } from 'flowbite-react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import TextInput from '../text-input';
 import { TruckTransaction } from '../../types/common';
 import { useRouterRefresh } from '../../hooks/hooks';
@@ -22,6 +22,10 @@ export default function EditTruckTransactionButton({
   );
   const [modal, setModal] = useState(false);
   const [date, setDate] = useState(new Date());
+  const [recommendation, setRecommendation] = useState({
+    destination: [],
+    customer: [],
+  });
 
   const refreshData = useRouterRefresh();
   const addToast = useToastContext();
@@ -35,6 +39,40 @@ export default function EditTruckTransactionButton({
     }));
   }
 
+  function filterKeywords(field: string, keyword: string) {
+    const matchRegex = new RegExp(keyword, 'i');
+    const matchedKeywords = autoCompleteData[field].filter((d) =>
+      matchRegex.test(d)
+    );
+    return matchedKeywords;
+  }
+
+  function handleAutoComplete(
+    event: React.ChangeEvent<HTMLInputElement>,
+    field: string
+  ) {
+    const recommendations = filterKeywords(field, event.target.value);
+    setRecommendation((prevState) => ({
+      ...prevState,
+      [field]: recommendations,
+    }));
+    setTruckTransaction((p) => ({
+      ...p,
+      [field]: event.target.value,
+    }));
+  }
+
+  function selectAutocomplete(field: string, value: string) {
+    setTruckTransaction((prevState) => ({
+      ...prevState,
+      [field]: value,
+    }));
+    setRecommendation((p) => ({
+      ...p,
+      [field]: [],
+    }));
+  }
+
   async function editTruckTransaction() {
     await axios({
       method: 'PUT',
@@ -44,7 +82,6 @@ export default function EditTruckTransactionButton({
 
     refreshData();
   }
-  console.log('asd');
   return (
     <>
       <a
@@ -75,38 +112,62 @@ export default function EditTruckTransactionButton({
                   onChange={handleChange}
                 />
               </div>
+
               <div className="form-group row-span-1 col-span-1">
-                <TextInput
-                  label="EMKL"
-                  name="customer"
-                  value={truckTransaction.customer}
-                  onChange={handleChange}
-                />
-              </div>
-              <div className="form-group row-span-1 col-span-3">
-                <div className="flex flex-row flex-wrap">
-                  <div className="relative w-full">
-                    <TextInput
-                      label="Tujuan"
-                      name="destination"
-                      value={truckTransaction.destination}
-                      onChange={handleChange}
-                    />
-                    <div
-                      className="absolute left-0 w-full"
-                      style={{ zIndex: 2 }}
-                    >
-                      <ListGroup>
-                        {autoCompleteData.destinations.map((destination, i) => {
-                          return (
-                            <ListGroup.Item key={`destination-auto-${i}`}>
-                              <div>{destination}</div>
-                            </ListGroup.Item>
-                          );
-                        })}
-                      </ListGroup>
-                    </div>
+                <div className="relative w-full">
+                  <TextInput
+                    label="EMKL"
+                    name="customer"
+                    value={truckTransaction.customer}
+                    onChange={(e) => handleAutoComplete(e, 'customer')}
+                  />
+                  {/* autoComplete customer */}
+                  <div className="absolute left-0 w-full" style={{ zIndex: 2 }}>
+                    <ListGroup>
+                      {recommendation.customer.map((customer, i) => {
+                        return (
+                          <ListGroup.Item
+                            key={`customer-auto-${i}`}
+                            onClick={() =>
+                              selectAutocomplete('customer', customer)
+                            }
+                          >
+                            <div>{customer}</div>
+                          </ListGroup.Item>
+                        );
+                      })}
+                    </ListGroup>
                   </div>
+                  {/* autoComplete customer */}
+                </div>
+              </div>
+
+              <div className="form-group row-span-1 col-span-3">
+                <div className="relative w-full">
+                  <TextInput
+                    label="Tujuan"
+                    name="destination"
+                    value={truckTransaction.destination}
+                    onChange={(e) => handleAutoComplete(e, 'destination')}
+                  />
+                  {/* autoComplete destination */}
+                  <div className="absolute left-0 w-full" style={{ zIndex: 2 }}>
+                    <ListGroup>
+                      {recommendation.destination.map((destination, i) => {
+                        return (
+                          <ListGroup.Item
+                            key={`destination-auto-${i}`}
+                            onClick={() =>
+                              selectAutocomplete('destination', destination)
+                            }
+                          >
+                            <div>{destination}</div>
+                          </ListGroup.Item>
+                        );
+                      })}
+                    </ListGroup>
+                  </div>
+                  {/* autoComplete destination */}
                 </div>
               </div>
               <div className="form-group row-span-1 col-span-1">
@@ -124,6 +185,7 @@ export default function EditTruckTransactionButton({
                 <TextInput
                   label="Pembayaran"
                   name="sellingPrice"
+                  type="currency"
                   value={truckTransaction.sellingPrice}
                   prefix="Rp"
                   onChange={handleChange}
