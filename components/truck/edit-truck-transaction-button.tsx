@@ -7,6 +7,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 import { useToastContext } from '../../lib/toast-context';
+import { PencilAltIcon } from '@heroicons/react/solid';
 
 interface EditTruckTransactionButtonProps {
   existingTruckTransaction: Omit<TruckTransaction, 'date'>;
@@ -85,11 +86,11 @@ export default function EditTruckTransactionButton({
   return (
     <>
       <a
-        className="text-blue-500 hover:underline"
+        className="text-[#F5D558] hover:underline"
         href={'#'}
         onClick={() => setModal(true)}
       >
-        Edit
+        <PencilAltIcon />
       </a>
       <Modal show={modal} onClose={() => setModal(false)}>
         <Modal.Header>Edit Transaksi</Modal.Header>
@@ -212,7 +213,8 @@ export default function EditTruckTransactionButton({
           </form>
         </Modal.Body>
         <Modal.Footer>
-          <Button
+          <button
+            className="bg-[#F5D558] hover:bg-[#E3C652] text-white font-bold py-2 px-10 rounded w-full"
             onClick={() => {
               editTruckTransaction()
                 .then(() => setModal(false))
@@ -220,7 +222,7 @@ export default function EditTruckTransactionButton({
             }}
           >
             Edit Transaksi
-          </Button>
+          </button>
         </Modal.Footer>
       </Modal>
     </>

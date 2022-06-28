@@ -6,6 +6,7 @@ import { TransactionType, TruckTransaction } from '../../types/common';
 import { useRouterRefresh } from '../../hooks/hooks';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { PlusIcon } from '@heroicons/react/solid';
 
 interface AddTruckTransactionButtonProps {
   truckId: string;
@@ -39,9 +40,8 @@ export default function AddTruckTransactionButton({
     truckId,
   };
   const refreshData = useRouterRefresh();
-  const [truckTransaction, setTruckTransaction] = useState(
-    placeHolderTransaction || baseTruckTransaction
-  );
+  const [truckTransaction, setTruckTransaction] =
+    useState(baseTruckTransaction);
   const [date, setDate] = useState(new Date());
   const [modal, setModal] = useState(false);
   const [recommendation, setRecommendation] = useState({
@@ -99,13 +99,17 @@ export default function AddTruckTransactionButton({
       data: { ...truckTransaction, date },
     });
     setTruckTransaction(baseTruckTransaction);
-    setModal(false);
     refreshData();
   }
 
   return (
     <>
-      <Button onClick={() => setModal(true)}>Tambah Transaksi Baru</Button>
+      <button
+        className="z-10 fixed bottom-20 bg-green-400 hover:bg-green-500 text-white font-bold p-5 rounded-full"
+        onClick={() => setModal(true)}
+      >
+        <PlusIcon className="h-10 " />
+      </button>
       <Modal show={modal} onClose={() => setModal(false)}>
         <Modal.Header>Tambah Transaksi Baru</Modal.Header>
         <Modal.Body>
@@ -121,7 +125,7 @@ export default function AddTruckTransactionButton({
               </div>
               <div className="form-group row-span-1 col-span-2">
                 <TextInput
-                  label="No. Invoice"
+                  label="No. Bon"
                   name="invoiceNo"
                   value={truckTransaction.invoiceNo}
                   onChange={handleChange}
@@ -216,6 +220,7 @@ export default function AddTruckTransactionButton({
               <div className="form-group row-span-1 col-span-2">
                 <label>Tanggal</label>
                 <DatePicker
+                  dateFormat="dd/MM/yyyy"
                   selected={date}
                   onChange={(date: Date) => setDate(date)}
                 />
@@ -225,7 +230,13 @@ export default function AddTruckTransactionButton({
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={addTruckTransaction}>Bikin Transaksi</Button>
+          <button
+            className="bg-green-400
+            hover:bg-green-500 text-white font-bold py-2 px-10 rounded w-full"
+            onClick={addTruckTransaction}
+          >
+            Tambah Transaksi
+          </button>
         </Modal.Footer>
       </Modal>
     </>

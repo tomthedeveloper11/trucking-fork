@@ -51,7 +51,11 @@ export default function TextInput({
             type={type}
             name={name}
             // id="price"
-            className="block w-full pl-8 pr-2 py-1 sm:text-sm border border-gray-300 rounded-md"
+            className={
+              type == 'currency'
+                ? 'block w-full pl-8 pr-2 py-1 sm:text-sm border border-gray-300 rounded-md'
+                : 'block w-full pl-4 pr-2 py-1 sm:text-sm border border-gray-300 rounded-md'
+            }
             placeholder={placeholder}
             onChange={handleChange}
             value={valueFormat(value)}

@@ -28,7 +28,9 @@ export default function TruckTransactionDataTable({
     return (
       <>
         {Object.values(tableTransaction).map((val, i) => (
-          <Table.Cell key={`td-${obj.id}-${i}`}>{val}</Table.Cell>
+          <Table.Cell className="whitespace-nowrap" key={`td-${obj.id}-${i}`}>
+            {val}
+          </Table.Cell>
         ))}
       </>
     );
@@ -38,7 +40,7 @@ export default function TruckTransactionDataTable({
   return (
     <>
       <Table hoverable={true}>
-        <Table.Head>
+        <Table.Head className="whitespace-nowrap">
           {Object.entries(headers).map(([header, columnWidth], index) => (
             <Table.HeadCell key={index} className={`${columnWidth}`}>
               {header}

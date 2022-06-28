@@ -9,6 +9,7 @@ import {
 import TruckTransactionDataTable from '../../components/truck-transaction-data-table';
 
 export default function TruckDetails({
+  truckName,
   truckId,
   truckTransactions,
   autoCompleteData,
@@ -32,8 +33,10 @@ export default function TruckDetails({
       containerNo: truckTransaction.containerNo,
       invoiceNo: truckTransaction.invoiceNo,
       destination: truckTransaction.destination,
-      cost: truckTransaction.cost,
-      sellingPrice: truckTransaction.sellingPrice,
+      cost: `Rp. ${truckTransaction.cost.toLocaleString('id-ID')}`,
+      sellingPrice: `Rp. ${truckTransaction.sellingPrice.toLocaleString(
+        'id-ID'
+      )}`,
       customer: truckTransaction.customer,
       details: truckTransaction.details,
     };
@@ -45,8 +48,9 @@ export default function TruckDetails({
         <title>Truck Details</title>
       </Head>
 
-      <div className="px-32 py-14 w-">
-        <div className="my-4">
+      <div className="container p-10 mb-60 flex-col">
+        <h1 className="text-center text-7xl mb-5">{truckName}</h1>
+        <div className="flex justify-end mr-5 mb-3">
           <AddTruckTransactionButton
             truckId={truckId}
             autoCompleteData={autoCompleteData}
@@ -65,12 +69,13 @@ export default function TruckDetails({
 
 export const getServerSideProps = async (context: any) => {
   const truckId: string = context.params.id;
+  const truckName: string = context.query.truckName;
   const truckTransactions = await truckTransactionBloc.getTruckTransactions(
     truckId
   );
   const autoCompleteData =
     await truckTransactionBloc.getTruckTransactionAutoComplete();
   return {
-    props: { truckId, truckTransactions, autoCompleteData },
+    props: { truckName, truckId, truckTransactions, autoCompleteData },
   };
 };
