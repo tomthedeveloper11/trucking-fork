@@ -33,10 +33,8 @@ export default function TruckDetails({
       containerNo: truckTransaction.containerNo,
       invoiceNo: truckTransaction.invoiceNo,
       destination: truckTransaction.destination,
-      cost: `Rp. ${truckTransaction.cost.toLocaleString('id-ID')}`,
-      sellingPrice: `Rp. ${truckTransaction.sellingPrice.toLocaleString(
-        'id-ID'
-      )}`,
+      cost: truckTransaction.cost,
+      sellingPrice: truckTransaction.sellingPrice,
       customer: truckTransaction.customer,
       details: truckTransaction.details,
     };
