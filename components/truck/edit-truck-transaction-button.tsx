@@ -31,6 +31,9 @@ export default function EditTruckTransactionButton({
   const refreshData = useRouterRefresh();
   const addToast = useToastContext();
 
+  const [day, month, year] = truckTransaction.date.split('/');
+  const [newDate, setNewDate] = useState(new Date(year, month - 1, day));
+
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
 
@@ -214,8 +217,16 @@ export default function EditTruckTransactionButton({
               <div className="form-group row-span-1 col-span-2">
                 <label>Tanggal</label>
                 <DatePicker
-                  selected={date}
-                  onChange={(date: Date) => setDate(date)}
+                  selected={newDate ? newDate : date}
+                  dateFormat={'dd/M/yyyy'}
+                  onChange={
+                    newDate
+                      ? (date: Date) => {
+                          setNewDate(date);
+                          setDate(date);
+                        }
+                      : (date: Date) => setDate(date)
+                  }
                 />
               </div>
             </div>

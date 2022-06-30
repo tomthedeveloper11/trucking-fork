@@ -38,7 +38,7 @@ export default function TruckTransactionDataTable({
     );
   }
 
-  const { id: truckId } = useRouter().query;
+  const { id: querytruckId } = useRouter().query;
   return (
     <>
       <Table hoverable={true}>
@@ -52,6 +52,8 @@ export default function TruckTransactionDataTable({
         </Table.Head>
         <Table.Body className="divide-y">
           {data.map((truckTransaction, index) => {
+            const truckId = truckTransaction.truckId || querytruckId;
+
             return (
               <Table.Row key={`tr-${index}`}>
                 {buildTransactionRow(truckTransaction)}

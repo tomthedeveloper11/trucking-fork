@@ -43,5 +43,5 @@ export interface TruckTransaction extends Transaction {
 
 export type DataTableTruckTransaction = Omit<
   TruckTransaction,
-  'transactionType' | 'truckId'
+  'transactionType'
 >;

@@ -36,6 +36,7 @@ export default function CustomerDetails({
       customer: truckTransaction.customer,
       details: truckTransaction.details,
       isPrinted: truckTransaction.isPrinted,
+      truckId: truckTransaction.truckId,
     };
   };
 
@@ -51,7 +52,7 @@ export default function CustomerDetails({
         <TruckTransactionDataTable
           headers={dataTableHeaders}
           data={truckTransactions.map((t) => formatTruckTransaction(t))}
-          hiddenFields={['id', 'isPrinted']}
+          hiddenFields={['id', 'isPrinted', 'truckId']}
         />
       </div>
     </>
