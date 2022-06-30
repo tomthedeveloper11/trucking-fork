@@ -5,11 +5,34 @@ import { Document } from 'mongoose';
 const convertDocumentToObject = <T>(document: Document) =>
   document.toObject({ getters: true }) as T;
 
-const getTruckTransactions = async (truckId: string) => {
+const getTruckTransactions = async () => {
+  const documents = await TransactionModel.find({
+    type: TransactionType.TRUCK_TRANSACTION,
+  }).sort({ date: -1 });
+  const truckTransactions = documents.map((doc) =>
+    convertDocumentToObject<TruckTransaction>(doc)
+  );
+  return truckTransactions;
+};
+
+const getTruckTransactionsByCustomerInitial = async (
+  customerInitial: string
+) => {
+  const documents = await TransactionModel.find({
+    customer: customerInitial,
+    type: TransactionType.TRUCK_TRANSACTION,
+  }).sort({ date: -1 });
+  const truckTransactions = documents.map((doc) =>
+    convertDocumentToObject<TruckTransaction>(doc)
+  );
+  return truckTransactions;
+};
+
+const getTruckTransactionsByTruckId = async (truckId: string) => {
   const documents = await TransactionModel.find({
     truckId,
     type: TransactionType.TRUCK_TRANSACTION,
-  });
+  }).sort({ date: -1 });
   const truckTransactions = documents.map((doc) =>
     convertDocumentToObject<TruckTransaction>(doc)
   );
@@ -55,6 +78,8 @@ const getTruckTransactionAutoComplete = async (): Promise<
 
 const transactionRepository = {
   getTruckTransactions,
+  getTruckTransactionsByCustomerInitial,
+  getTruckTransactionsByTruckId,
   createTruckTransaction,
   editTruckTransaction,
   getTruckTransactionAutoComplete,

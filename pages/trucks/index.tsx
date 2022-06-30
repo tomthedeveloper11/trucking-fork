@@ -1,9 +1,9 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import { Truck } from '../types/common';
-import truckBloc from '../lib/truck';
+import { Truck } from '../../types/common';
+import truckBloc from '../../lib/truck';
 import { InferGetServerSidePropsType } from 'next';
-import AddTruckButton from '../components/truck/add-truck-button';
+import AddTruckButton from '../../components/truck/add-truck-button';
 
 export default function Home({
   trucks,

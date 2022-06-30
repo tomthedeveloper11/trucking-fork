@@ -10,7 +10,7 @@ import { useToastContext } from '../../lib/toast-context';
 import { PencilAltIcon } from '@heroicons/react/solid';
 
 interface EditTruckTransactionButtonProps {
-  existingTruckTransaction: Omit<TruckTransaction, 'date'>;
+  existingTruckTransaction: TruckTransaction;
   autoCompleteData: Record<string, string[]>;
 }
 
@@ -189,6 +189,15 @@ export default function EditTruckTransactionButton({
                   type="currency"
                   value={truckTransaction.sellingPrice}
                   prefix="Rp"
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="form-group row-span-1 col-span-5">
+                <TextInput
+                  label="Bon"
+                  name="invoices"
+                  // value={truckTransaction.details}
                   onChange={handleChange}
                 />
               </div>

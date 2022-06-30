@@ -210,6 +210,15 @@ export default function AddTruckTransactionButton({
 
               <div className="form-group row-span-1 col-span-5">
                 <TextInput
+                  label="Bon"
+                  name="details"
+                  value={truckTransaction.details}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="form-group row-span-1 col-span-5">
+                <TextInput
                   label="Deskripsi/Info Tambahan"
                   name="details"
                   value={truckTransaction.details}

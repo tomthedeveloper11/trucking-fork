@@ -36,6 +36,13 @@ export default async function handler(
 ) {
   let conn;
   switch (req.method) {
+    case 'GET':
+      conn = await connectDb();
+      const truckTransactions = await transactionService.getTruckTransactions();
+      await conn.close();
+      res.status(200).json({ data: truckTransactions });
+      break;
+
     case 'POST':
       await createTruckTransactionValidator(req, res);
 

@@ -8,7 +8,7 @@ import { useRouterRefresh } from '../../hooks/hooks';
 export default function AddTruckButton() {
   const [newTruck, setNewTruck] = useState({
     name: '',
-    imageUrl: '',
+    licenseNumber: '',
   } as Omit<Truck, 'id'>);
   const [modal, setModal] = useState(false);
   const refreshData = useRouterRefresh();
@@ -28,7 +28,7 @@ export default function AddTruckButton() {
       url: 'http://localhost:3000/api/truck',
       data: newTruck,
     });
-    setNewTruck({ name: '', imageUrl: '' });
+    setNewTruck({ name: '', licenseNumber: '' });
     refreshData();
   }
 
@@ -53,14 +53,14 @@ export default function AddTruckButton() {
                   onChange={handleChange}
                 />
               </div>
-              {/* <div className="form-group row-span-1 col-span-3">
+              <div className="form-group row-span-1 col-span-3">
                 <TextInput
-                  label="Image URL"
-                  name="imageUrl"
-                  value={newTruck.imageUrl}
+                  label="NoPol"
+                  name="licenseNumber"
+                  value={newTruck.licenseNumber}
                   onChange={handleChange}
                 />
-              </div> */}
+              </div>
             </div>
           </form>{' '}
         </Modal.Body>

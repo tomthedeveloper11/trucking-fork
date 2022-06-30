@@ -9,10 +9,17 @@ export enum TransactionType {
   TRUCK_ADDITIONAL_TRANSACTION = 'TRUCK_ADDITIONAL_TRANSACTION',
 }
 
+export interface Customer {
+  id: string;
+  initial: string;
+  name?: string;
+  address?: string;
+}
+
 export interface Truck {
   id: string;
   name: string;
-  imageUrl?: string;
+  licenseNumber?: string;
 }
 
 export interface Transaction {
@@ -21,6 +28,7 @@ export interface Transaction {
   details: string;
   cost: number;
   transactionType: TransactionType;
+  isPrinted: boolean;
 }
 
 export interface TruckTransaction extends Transaction {

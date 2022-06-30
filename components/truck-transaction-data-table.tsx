@@ -17,7 +17,9 @@ export default function TruckTransactionDataTable({
   autoCompleteData,
 }: DataTableProperties) {
   function buildTransactionRow(obj: DataTableTruckTransaction) {
-    const tableTransaction: Record<string, string | number | Date> = { ...obj };
+    const tableTransaction: Record<string, string | number | Date | boolean> = {
+      ...obj,
+    };
 
     if (hiddenFields) {
       for (const field of hiddenFields) {

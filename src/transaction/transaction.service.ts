@@ -9,10 +9,24 @@ const createTransaction = async (
   return newTruckTransaction;
 };
 
-const getTruckTransactions = async (truckId: string) => {
-  const transactions = await transactionRepository.getTruckTransactions(
-    truckId
-  );
+const getTruckTransactions = async () => {
+  const transactions = await transactionRepository.getTruckTransactions();
+  return transactions;
+};
+
+const getTruckTransactionsByCustomerInitial = async (
+  customerInitial: string
+) => {
+  const transactions =
+    await transactionRepository.getTruckTransactionsByCustomerInitial(
+      customerInitial
+    );
+  return transactions;
+};
+
+const getTruckTransactionsByTruckId = async (truckId: string) => {
+  const transactions =
+    await transactionRepository.getTruckTransactionsByTruckId(truckId);
   return transactions;
 };
 
@@ -35,6 +49,8 @@ const getTruckTransactionAutoComplete = async () => {
 const transactionService = {
   createTransaction,
   getTruckTransactions,
+  getTruckTransactionsByCustomerInitial,
+  getTruckTransactionsByTruckId,
   editTruckTransaction,
   getTruckTransactionAutoComplete,
 };
