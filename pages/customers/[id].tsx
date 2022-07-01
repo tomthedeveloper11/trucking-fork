@@ -11,6 +11,7 @@ import TruckTransactionDataTable from '../../components/truck-transaction-data-t
 export default function CustomerDetails({
   customerInitial,
   truckTransactions,
+  autoCompleteData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const dataTableHeaders = {
     Tanggal: 'w-1/12',
@@ -53,6 +54,7 @@ export default function CustomerDetails({
           headers={dataTableHeaders}
           data={truckTransactions.map((t) => formatTruckTransaction(t))}
           hiddenFields={['id', 'isPrinted', 'truckId']}
+          autoCompleteData={autoCompleteData}
         />
       </div>
     </>
@@ -65,8 +67,10 @@ export const getServerSideProps = async (context: any) => {
     await truckTransactionBloc.getTruckTransactionsByCustomerInitial(
       customerInitial
     );
+  const autoCompleteData =
+    await truckTransactionBloc.getTruckTransactionAutoComplete();
 
   return {
-    props: { customerInitial, truckTransactions },
+    props: { customerInitial, truckTransactions, autoCompleteData },
   };
 };

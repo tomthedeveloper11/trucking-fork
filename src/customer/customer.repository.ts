@@ -12,13 +12,22 @@ const createCustomer = async (customerPayload: Omit<Customer, 'id'>) => {
 
 const getCustomers = async () => {
   const customers = await CustomerModel.find({});
-  return customers.map((customer: Customer) =>
+  return customers.map((customer) =>
     convertDocumentToObject<Customer>(customer)
   );
+};
+
+const getCustomerByInitial = async (initial: string) => {
+  const customer = await CustomerModel.findOne({ initial });
+  if (customer) {
+    return convertDocumentToObject<Customer>(customer);
+  }
+  return null;
 };
 const customerRepository = {
   createCustomer,
   getCustomers,
+  getCustomerByInitial,
 };
 
 export default customerRepository;

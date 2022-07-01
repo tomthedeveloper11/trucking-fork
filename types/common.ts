@@ -45,3 +45,19 @@ export type DataTableTruckTransaction = Omit<
   TruckTransaction,
   'transactionType'
 >;
+export type TruckTransactionPayload = Omit<
+  TruckTransaction,
+  'id' | 'customer'
+> & {
+  customer: {
+    customerId: string;
+    initial: string;
+  };
+};
+
+export type EditTruckTransactionPayload = Omit<TruckTransaction, 'customer'> & {
+  customer: {
+    customerId: string;
+    initial: string;
+  };
+};

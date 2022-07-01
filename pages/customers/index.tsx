@@ -20,7 +20,7 @@ export default function Print({
           {Object.values(customers).map((customer) => (
             <Link
               href={{
-                pathname: `/customers/${customer.initial}`,
+                pathname: `/customers/${customer.id}`,
               }}
               key={customer.id}
             >

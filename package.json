@@ -15,6 +15,7 @@
     "flowbite": "^1.4.7",
     "flowbite-react": "0.0.27",
     "gray-matter": "^4.0.2",
+    "lodash": "^4.17.21",
     "mongoose": "^6.3.0",
     "next": "latest",
     "next-transpile-modules": "^9.0.0",
@@ -25,6 +26,7 @@
     "remark-html": "^15.0.0"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.182",
     "@types/mongoose": "^5.11.97",
     "@types/node": "^18.0.0",
     "@types/react": "^18.0.14",

@@ -4,7 +4,7 @@ import connectDb from '../../../../src/mongodb/connection';
 
 interface customerDetailProps extends NextApiRequest {
   query: {
-    customerInitial: string;
+    customerId: string;
   };
 }
 
@@ -17,11 +17,9 @@ export default async function handler(
     case 'GET':
       conn = await connectDb();
 
-      const customerInitial = req.query.customerInitial;
+      const customerId = req.query.customerId;
       const transactions =
-        await transactionService.getTruckTransactionsByCustomerInitial(
-          customerInitial
-        );
+        await transactionService.getTruckTransactionsByCustomerId(customerId);
       await conn.close();
       res.status(200).json({ data: transactions });
       break;

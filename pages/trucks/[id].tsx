@@ -38,6 +38,7 @@ export default function TruckDetails({
       customer: truckTransaction.customer,
       details: truckTransaction.details,
       isPrinted: truckTransaction.isPrinted,
+      truckId: truckTransaction.truckId,
     };
   };
 
@@ -58,7 +59,7 @@ export default function TruckDetails({
         <TruckTransactionDataTable
           headers={dataTableHeaders}
           data={truckTransactions.map((t) => formatTruckTransaction(t))}
-          hiddenFields={['id', 'isPrinted']}
+          hiddenFields={['id', 'isPrinted', 'truckId']}
           autoCompleteData={autoCompleteData}
         />
       </div>

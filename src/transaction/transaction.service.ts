@@ -1,11 +1,34 @@
-import { TruckTransaction } from '../../types/common';
+import { TruckTransaction, TruckTransactionPayload } from '../../types/common';
+import customerRepository from '../customer/customer.repository';
 import transactionRepository from './transaction.repository';
+
+const validateAndModifyPayload = async (
+  truckTransactionPayload: Omit<TruckTransaction, 'id'>
+) => {
+  const customer = await customerRepository.getCustomerByInitial(
+    truckTransactionPayload.customer
+  );
+  if (!customer) {
+    throw new Error('Customer tidak terdaftar');
+  }
+  const modifiedPayload: TruckTransactionPayload = {
+    ...truckTransactionPayload,
+    customer: {
+      customerId: customer.id,
+      initial: customer.initial,
+    },
+  };
+  return modifiedPayload;
+};
 
 const createTransaction = async (
   truckTransactionPayload: Omit<TruckTransaction, 'id'>
 ) => {
+  const modifiedPayload = await validateAndModifyPayload(
+    truckTransactionPayload
+  );
   const newTruckTransaction =
-    await transactionRepository.createTruckTransaction(truckTransactionPayload);
+    await transactionRepository.createTruckTransaction(modifiedPayload);
   return newTruckTransaction;
 };
 
@@ -14,13 +37,9 @@ const getTruckTransactions = async () => {
   return transactions;
 };
 
-const getTruckTransactionsByCustomerInitial = async (
-  customerInitial: string
-) => {
+const getTruckTransactionsByCustomerId = async (customerId: string) => {
   const transactions =
-    await transactionRepository.getTruckTransactionsByCustomerInitial(
-      customerInitial
-    );
+    await transactionRepository.getTruckTransactionsByCustomerId(customerId);
   return transactions;
 };
 
@@ -33,8 +52,12 @@ const getTruckTransactionsByTruckId = async (truckId: string) => {
 const editTruckTransaction = async (
   editTruckTransactionPayload: TruckTransaction
 ) => {
-  const editTruckTransaction = await transactionRepository.editTruckTransaction(
+  const modifiedPayload = await validateAndModifyPayload(
     editTruckTransactionPayload
+  );
+
+  const editTruckTransaction = await transactionRepository.editTruckTransaction(
+    { ...modifiedPayload, id: editTruckTransactionPayload.id }
   );
   return editTruckTransaction;
 };
@@ -49,7 +72,7 @@ const getTruckTransactionAutoComplete = async () => {
 const transactionService = {
   createTransaction,
   getTruckTransactions,
-  getTruckTransactionsByCustomerInitial,
+  getTruckTransactionsByCustomerId,
   getTruckTransactionsByTruckId,
   editTruckTransaction,
   getTruckTransactionAutoComplete,

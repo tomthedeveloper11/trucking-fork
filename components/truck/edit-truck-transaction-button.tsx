@@ -31,8 +31,10 @@ export default function EditTruckTransactionButton({
   const refreshData = useRouterRefresh();
   const addToast = useToastContext();
 
-  const [day, month, year] = truckTransaction.date.split('/');
-  const [newDate, setNewDate] = useState(new Date(year, month - 1, day));
+  const [day, month, year] = truckTransaction.date.toString().split('/');
+  const [newDate, setNewDate] = useState(
+    new Date(Number(year), Number(month) - 1, Number(day))
+  );
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
@@ -83,7 +85,6 @@ export default function EditTruckTransactionButton({
       url: `http://localhost:3000/api/transaction/truck/${truckTransaction.id}`,
       data: { ...truckTransaction, date },
     });
-
     refreshData();
   }
   return (
@@ -248,7 +249,7 @@ export default function EditTruckTransactionButton({
             onClick={() => {
               editTruckTransaction()
                 .then(() => setModal(false))
-                .catch((err) => addToast(err.message));
+                .catch((err) => addToast(err.response.data.message));
             }}
           >
             Edit Transaksi

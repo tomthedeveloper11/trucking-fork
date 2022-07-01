@@ -7,6 +7,7 @@ import { useRouterRefresh } from '../../hooks/hooks';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { PlusIcon } from '@heroicons/react/solid';
+import { useToastContext } from '../../lib/toast-context';
 
 interface AddTruckTransactionButtonProps {
   truckId: string;
@@ -17,6 +18,7 @@ export default function AddTruckTransactionButton({
   truckId,
   autoCompleteData,
 }: AddTruckTransactionButtonProps) {
+  const addToast = useToastContext();
   const placeHolderTransaction: Omit<TruckTransaction, 'id' | 'date'> = {
     containerNo: 'TEGU3009038',
     invoiceNo: '1671',
@@ -27,6 +29,7 @@ export default function AddTruckTransactionButton({
     details: '',
     transactionType: TransactionType.TRUCK_TRANSACTION,
     truckId,
+    isPrinted: false,
   };
   const baseTruckTransaction: Omit<TruckTransaction, 'id' | 'date'> = {
     containerNo: '',
@@ -38,6 +41,7 @@ export default function AddTruckTransactionButton({
     details: '',
     transactionType: TransactionType.TRUCK_TRANSACTION,
     truckId,
+    isPrinted: false,
   };
   const refreshData = useRouterRefresh();
   const [truckTransaction, setTruckTransaction] =
@@ -97,9 +101,15 @@ export default function AddTruckTransactionButton({
       method: 'POST',
       url: `http://localhost:3000/api/transaction/truck`,
       data: { ...truckTransaction, date },
-    });
-    setTruckTransaction(baseTruckTransaction);
-    refreshData();
+    })
+      .then(() => {
+        setTruckTransaction(baseTruckTransaction);
+        refreshData();
+        setModal(false);
+      })
+      .catch((err) => {
+        addToast(err.response.data.message);
+      });
   }
 
   return (

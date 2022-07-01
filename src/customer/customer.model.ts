@@ -6,6 +6,7 @@ const customerSchema = new Schema<Customer>(
     initial: {
       type: String,
       required: true,
+      unique: true,
     },
     name: {
       type: String,
