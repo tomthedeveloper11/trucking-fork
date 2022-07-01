@@ -126,7 +126,12 @@ export default function EditTruckTransactionButton({
                     onChange={(e) => handleAutoComplete(e, 'customer')}
                   />
                   {/* autoComplete customer */}
-                  <div className="absolute left-0 w-full" style={{ zIndex: 2 }}>
+                  <div
+                    className={`absolute left-0 w-full ${
+                      recommendation.customer.length ? '' : 'hidden'
+                    }`}
+                    style={{ zIndex: 2 }}
+                  >
                     <ListGroup>
                       {recommendation.customer.map((customer, i) => {
                         return (
@@ -155,7 +160,12 @@ export default function EditTruckTransactionButton({
                     onChange={(e) => handleAutoComplete(e, 'destination')}
                   />
                   {/* autoComplete destination */}
-                  <div className="absolute left-0 w-full" style={{ zIndex: 2 }}>
+                  <div
+                    className={`absolute left-0 w-full ${
+                      recommendation.destination.length ? '' : 'hidden'
+                    }`}
+                    style={{ zIndex: 2 }}
+                  >
                     <ListGroup>
                       {recommendation.destination.map((destination, i) => {
                         return (
