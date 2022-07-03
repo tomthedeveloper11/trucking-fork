@@ -23,6 +23,11 @@ export default function EditTruckTransactionButton({
   );
   const [modal, setModal] = useState(false);
   const [date, setDate] = useState(new Date());
+
+  const [day, month, year] = truckTransaction.date.toString().split('/');
+  const [newDate, setNewDate] = useState(
+    new Date(Number(year), Number(month) - 1, Number(day))
+  );
   const [recommendation, setRecommendation] = useState({
     destination: [],
     customer: [],
@@ -30,11 +35,6 @@ export default function EditTruckTransactionButton({
 
   const refreshData = useRouterRefresh();
   const addToast = useToastContext();
-
-  const [day, month, year] = truckTransaction.date.toString().split('/');
-  const [newDate, setNewDate] = useState(
-    new Date(Number(year), Number(month) - 1, Number(day))
-  );
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
@@ -230,14 +230,10 @@ export default function EditTruckTransactionButton({
                 <DatePicker
                   selected={newDate ? newDate : date}
                   dateFormat={'dd/M/yyyy'}
-                  onChange={
-                    newDate
-                      ? (date: Date) => {
-                          setNewDate(date);
-                          setDate(date);
-                        }
-                      : (date: Date) => setDate(date)
-                  }
+                  onChange={(date: Date) => {
+                    setNewDate(date);
+                    setDate(date);
+                  }}
                 />
               </div>
             </div>
