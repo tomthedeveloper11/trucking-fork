@@ -5,6 +5,7 @@ import initMiddleware from '../../src/middlewares/init-middleware';
 import validateMiddleware from '../../src/middlewares/validate-middleware';
 import { User } from '../../types/common';
 import connectDb from '../../src/mongodb/connection';
+import _ from 'lodash';
 
 import bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
@@ -53,7 +54,10 @@ export default async function handler(
         role: foundUser.role,
       };
 
-      const access_token = jwt.sign(payload, process.env.SECRET_KEY);
+      const access_token = jwt.sign(
+        payload,
+        _.get(process.env, 'SECRET_KEY', '')
+      );
 
       res.status(200).json({
         data: {
