@@ -1,4 +1,4 @@
-import { Modal, Button, ListGroup } from 'flowbite-react';
+import { Modal, ListGroup } from 'flowbite-react';
 import React, { useState } from 'react';
 import TextInput from '../text-input';
 import { TruckTransaction } from '../../types/common';

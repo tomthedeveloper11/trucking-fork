@@ -6,8 +6,6 @@ import validateMiddleware from '../../src/middlewares/validate-middleware';
 import { User } from '../../types/common';
 import connectDb from '../../src/mongodb/connection';
 
-import bcrypt from 'bcrypt';
-
 const createUserValidator = initMiddleware(
   validateMiddleware(
     [
@@ -32,12 +30,10 @@ export default async function handler(
 
       conn = await connectDb();
       const userPayload = req.body as User;
-      userPayload.password = bcrypt.hashSync(userPayload.password, 10);
-
-      const user = await userService.createUser(userPayload);
+      const user = await userService.register(userPayload);
       await conn.close();
 
-      res.status(200).json({ data: user });
+      res.status(200).json({ data: user, message: 'Account created!' });
       break;
   }
 }

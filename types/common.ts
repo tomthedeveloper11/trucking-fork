@@ -29,10 +29,10 @@ export interface Transaction {
   cost: number;
   transactionType: TransactionType;
   isPrinted: boolean;
+  truckId?: string;
 }
 
 export interface TruckTransaction extends Transaction {
-  truckId: string;
   truckName?: string;
   containerNo: string;
   invoiceNo: string;
@@ -40,6 +40,8 @@ export interface TruckTransaction extends Transaction {
   sellingPrice: number;
   customer: string;
 }
+
+export type DataTableTransaction = Omit<Transaction, 'transactionType' | 'id'>;
 
 export type DataTableTruckTransaction = Omit<
   TruckTransaction,

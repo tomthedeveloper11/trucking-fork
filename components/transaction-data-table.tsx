@@ -1,23 +1,20 @@
 import { Table } from 'flowbite-react';
 import EditTruckTransactionButton from './truck/edit-truck-transaction-button';
-import { DataTableTruckTransaction, TransactionType } from '../types/common';
+import { DataTableTransaction, TransactionType } from '../types/common';
 import { useRouter } from 'next/router';
-import React from 'react';
 
 interface DataTableProperties {
   headers: Record<string, string>;
-  data: DataTableTruckTransaction[];
+  data: DataTableTransaction[];
   hiddenFields?: string[];
-  autoCompleteData: Record<string, string[]>;
 }
 
-export default function TruckTransactionDataTable({
+export default function TransactionDataTable({
   headers,
   data,
   hiddenFields,
-  autoCompleteData,
 }: DataTableProperties) {
-  function buildTransactionRow(obj: DataTableTruckTransaction) {
+  function buildTransactionRow(obj: DataTableTransaction) {
     const tableTransaction: Record<string, string | number | Date | boolean> = {
       ...obj,
     };
@@ -52,23 +49,23 @@ export default function TruckTransactionDataTable({
           <Table.HeadCell>Edit</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
-          {data.map((truckTransaction, index) => {
-            const truckId = truckTransaction.truckId || querytruckId;
+          {data.map((transaction, index) => {
+            const truckId = transaction.truckId || querytruckId;
 
             return (
               <Table.Row key={`tr-${index}`}>
-                {buildTransactionRow(truckTransaction)}
+                {buildTransactionRow(transaction)}
                 {
                   <Table.Cell>
-                    <EditTruckTransactionButton
+                    {/* <EditTransactionButton
                       key={`edit-modal-key${index}`}
-                      existingTruckTransaction={{
-                        ...truckTransaction,
+                      existingTransaction={{
+                        ...transaction,
                         transactionType: TransactionType.TRUCK_TRANSACTION,
                         truckId,
                       }}
                       autoCompleteData={autoCompleteData}
-                    />
+                    /> */}
                   </Table.Cell>
                 }
               </Table.Row>

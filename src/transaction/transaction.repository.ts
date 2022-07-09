@@ -3,6 +3,7 @@ import {
   TransactionType,
   TruckTransaction,
   TruckTransactionPayload,
+  Transaction,
 } from '../../types/common';
 import { TransactionModel } from './transaction.model';
 import { Document } from 'mongoose';
@@ -22,7 +23,7 @@ const mapTruckTransaction = (document: Document) => {
 
 const getTruckTransactions = async () => {
   const documents = await TransactionModel.find({
-    type: TransactionType.TRUCK_TRANSACTION,
+    transactionType: TransactionType.TRUCK_TRANSACTION,
   }).sort({ date: -1 });
   const truckTransactions = documents.map((doc) =>
     convertDocumentToObject<TruckTransaction>(doc)
@@ -33,7 +34,7 @@ const getTruckTransactions = async () => {
 const getTruckTransactionsByCustomerId = async (customerId: string) => {
   const documents = await TransactionModel.find({
     'customer.customerId': customerId,
-    type: TransactionType.TRUCK_TRANSACTION,
+    transactionType: TransactionType.TRUCK_TRANSACTION,
   }).sort({ date: -1 });
   const truckTransactions = documents.map((doc) => mapTruckTransaction(doc));
   return truckTransactions;
@@ -42,7 +43,16 @@ const getTruckTransactionsByCustomerId = async (customerId: string) => {
 const getTruckTransactionsByTruckId = async (truckId: string) => {
   const documents = await TransactionModel.find({
     truckId,
-    type: TransactionType.TRUCK_TRANSACTION,
+    transactionType: TransactionType.TRUCK_TRANSACTION,
+  }).sort({ date: -1 });
+  const truckTransactions = documents.map((doc) => mapTruckTransaction(doc));
+  return truckTransactions;
+};
+
+const getMiscTruckTransactionsByTruckId = async (truckId: string) => {
+  const documents = await TransactionModel.find({
+    truckId,
+    transactionType: TransactionType.TRUCK_ADDITIONAL_TRANSACTION,
   }).sort({ date: -1 });
   const truckTransactions = documents.map((doc) => mapTruckTransaction(doc));
   return truckTransactions;
@@ -54,6 +64,12 @@ const createTruckTransaction = async (
   const document = await TransactionModel.create(truckTransactionPayload);
   const truckTransaction = convertDocumentToObject<TruckTransaction>(document);
   return truckTransaction;
+};
+
+const createTransaction = async (transactionPayload: Transaction) => {
+  const document = await TransactionModel.create(transactionPayload);
+  const transaction = convertDocumentToObject<Transaction>(document);
+  return transaction;
 };
 
 const editTruckTransaction = async (
@@ -88,9 +104,11 @@ const getTruckTransactionAutoComplete = async (): Promise<
 };
 
 const transactionRepository = {
+  createTransaction,
   getTruckTransactions,
   getTruckTransactionsByCustomerId,
   getTruckTransactionsByTruckId,
+  getMiscTruckTransactionsByTruckId,
   createTruckTransaction,
   editTruckTransaction,
   getTruckTransactionAutoComplete,

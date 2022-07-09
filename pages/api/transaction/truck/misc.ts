@@ -3,28 +3,23 @@ import { check, validationResult } from 'express-validator';
 import transactionService from '../../../../src/transaction/transaction.service';
 import initMiddleware from '../../../../src/middlewares/init-middleware';
 import validateMiddleware from '../../../../src/middlewares/validate-middleware';
-import { TruckTransaction } from '../../../../types/common';
+import { Transaction } from '../../../../types/common';
 import connectDb from '../../../../src/mongodb/connection';
 import _ from 'lodash';
 
-interface TruckTransactionsAPIRequest extends NextApiRequest {
-  body: TruckTransaction;
+interface TransactionsAPIRequest extends NextApiRequest {
+  body: Transaction;
   query: {
     transactionId: string;
   };
 }
 
-const createTruckTransactionValidator = initMiddleware(
+const createTransactionValidator = initMiddleware(
   validateMiddleware(
     [
       check('truckId').isString().isLength({ min: 2 }).exists(),
       check('transactionType').isString().isLength({ min: 2 }).exists(),
       check('cost').isNumeric().exists(),
-      check('invoiceNo').isString().isLength({ min: 2 }).exists(),
-      check('containerNo').isString().isLength({ min: 2 }).exists(),
-      check('customer').isString().isLength({ min: 2 }).exists(),
-      check('destination').isString().isLength({ min: 2 }).exists(),
-      check('sellingPrice').isNumeric().optional(),
       check('details').isString().optional(),
     ],
     validationResult
@@ -32,7 +27,7 @@ const createTruckTransactionValidator = initMiddleware(
 );
 
 export default async function handler(
-  req: TruckTransactionsAPIRequest,
+  req: TransactionsAPIRequest,
   res: NextApiResponse
 ) {
   let conn;
@@ -47,17 +42,16 @@ export default async function handler(
         break;
 
       case 'POST':
-        await createTruckTransactionValidator(req, res);
+        await createTransactionValidator(req, res);
 
         conn = await connectDb();
-        const truckTransactionPayload = req.body;
-        const truckTransaction =
-          await transactionService.createTruckTransaction(
-            truckTransactionPayload
-          );
+        const transactionPayload = req.body;
+        const transaction = await transactionService.createTransaction(
+          transactionPayload
+        );
         await conn.close();
 
-        res.status(200).json({ data: truckTransaction });
+        res.status(200).json({ data: transaction });
         break;
     }
   } catch (error) {

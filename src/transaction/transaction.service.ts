@@ -1,4 +1,8 @@
-import { TruckTransaction, TruckTransactionPayload } from '../../types/common';
+import {
+  TruckTransaction,
+  TruckTransactionPayload,
+  Transaction,
+} from '../../types/common';
 import customerRepository from '../customer/customer.repository';
 import transactionRepository from './transaction.repository';
 
@@ -21,7 +25,7 @@ const validateAndModifyPayload = async (
   return modifiedPayload;
 };
 
-const createTransaction = async (
+const createTruckTransaction = async (
   truckTransactionPayload: Omit<TruckTransaction, 'id'>
 ) => {
   const modifiedPayload = await validateAndModifyPayload(
@@ -30,6 +34,15 @@ const createTransaction = async (
   const newTruckTransaction =
     await transactionRepository.createTruckTransaction(modifiedPayload);
   return newTruckTransaction;
+};
+
+const createTransaction = async (
+  transactionPayload: Omit<Transaction, 'id' | 'customer'>
+) => {
+  const newTransaction = await transactionRepository.createTruckTransaction(
+    transactionPayload
+  );
+  return newTransaction;
 };
 
 const getTruckTransactions = async () => {
@@ -46,6 +59,12 @@ const getTruckTransactionsByCustomerId = async (customerId: string) => {
 const getTruckTransactionsByTruckId = async (truckId: string) => {
   const transactions =
     await transactionRepository.getTruckTransactionsByTruckId(truckId);
+  return transactions;
+};
+
+const getMiscTruckTransactionsByTruckId = async (truckId: string) => {
+  const transactions =
+    await transactionRepository.getMiscTruckTransactionsByTruckId(truckId);
   return transactions;
 };
 
@@ -70,10 +89,12 @@ const getTruckTransactionAutoComplete = async () => {
 };
 
 const transactionService = {
+  createTruckTransaction,
   createTransaction,
   getTruckTransactions,
   getTruckTransactionsByCustomerId,
   getTruckTransactionsByTruckId,
+  getMiscTruckTransactionsByTruckId,
   editTruckTransaction,
   getTruckTransactionAutoComplete,
 };

@@ -1,4 +1,4 @@
-import { Modal, Button, ListGroup } from 'flowbite-react';
+import { Modal, ListGroup } from 'flowbite-react';
 import axios from 'axios';
 import { useState } from 'react';
 import TextInput from '../text-input';
@@ -115,7 +115,7 @@ export default function AddTruckTransactionButton({
   return (
     <>
       <button
-        className="z-10 fixed bottom-20 bg-green-400 hover:bg-green-500 text-white font-bold p-5 rounded-full"
+        className="z-10 fixed bottom-32 bg-green-400 hover:bg-green-500 text-white p-5 rounded-full"
         onClick={() => setModal(true)}
       >
         <PlusIcon className="h-10 " />

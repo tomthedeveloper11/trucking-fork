@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import transactionService from '../../../src/transaction/transaction.service';
-import connectDb from '../../../src/mongodb/connection';
+import transactionService from '../../../../src/transaction/transaction.service';
+import connectDb from '../../../../src/mongodb/connection';
 
 interface TruckDetailProps extends NextApiRequest {
   query: {
@@ -18,10 +18,10 @@ export default async function handler(
       conn = await connectDb();
 
       const truckId = req.query.truckId;
-      const transactions =
-        await transactionService.getTruckTransactionsByTruckId(truckId);
+      const miscTransactions =
+        await transactionService.getMiscTruckTransactionsByTruckId(truckId);
       await conn.close();
-      res.status(200).json({ data: transactions });
+      res.status(200).json({ data: miscTransactions });
       break;
   }
 }

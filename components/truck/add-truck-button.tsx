@@ -1,4 +1,4 @@
-import { Modal, Button } from 'flowbite-react';
+import { Modal } from 'flowbite-react';
 import axios from 'axios';
 import { useState } from 'react';
 import TextInput from '../text-input';

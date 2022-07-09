@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { TruckTransaction } from '../types/common';
+import { TruckTransaction, Transaction } from '../types/common';
 
 const getTruckTransactions = async () => {
   const response = await axios({
@@ -36,6 +36,17 @@ const getTruckTransactionsByTruckId = async (truckId: string) => {
   return [];
 };
 
+const getMiscTruckTransactionsByTruckId = async (truckId: string) => {
+  const response = await axios({
+    method: 'GET',
+    url: `http://localhost:3000/api/truck/misc/${truckId}`,
+  });
+  if (response && response.data) {
+    return response.data.data as Transaction[];
+  }
+  return [];
+};
+
 const getTruckTransactionAutoComplete = async (): Promise<
   Record<string, string[]>
 > => {
@@ -52,6 +63,7 @@ const truckTransactionBloc = {
   getTruckTransactions,
   getTruckTransactionsByCustomerInitial,
   getTruckTransactionsByTruckId,
+  getMiscTruckTransactionsByTruckId,
   getTruckTransactionAutoComplete,
 };
 

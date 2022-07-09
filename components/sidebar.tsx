@@ -1,6 +1,5 @@
 import {
   HomeIcon,
-  PrinterIcon,
   TruckIcon,
   ClipboardIcon,
   ViewGridIcon,

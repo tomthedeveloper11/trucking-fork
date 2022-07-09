@@ -1,6 +1,5 @@
 import Head from 'next/head';
 import { InferGetServerSidePropsType } from 'next';
-import AddTruckTransactionButton from '../../components/truck/add-truck-transaction-button';
 import truckTransactionBloc from '../../lib/truckTransactions';
 import {
   DataTableTruckTransaction,
