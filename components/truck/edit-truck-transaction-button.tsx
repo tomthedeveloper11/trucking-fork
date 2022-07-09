@@ -12,11 +12,13 @@ import { PencilAltIcon } from '@heroicons/react/solid';
 interface EditTruckTransactionButtonProps {
   existingTruckTransaction: TruckTransaction;
   autoCompleteData: Record<string, string[]>;
+  disabled?: boolean;
 }
 
 export default function EditTruckTransactionButton({
   existingTruckTransaction,
   autoCompleteData,
+  disabled = false,
 }: EditTruckTransactionButtonProps) {
   const [truckTransaction, setTruckTransaction] = useState(
     existingTruckTransaction
@@ -89,13 +91,18 @@ export default function EditTruckTransactionButton({
   }
   return (
     <>
-      <a
-        className="text-[#F5D558] hover:underline"
+      <PencilAltIcon
+        className={`${
+          disabled ? 'text-gray-200' : 'text-yellow-200'
+        } cursor-pointer`}
         href={'#'}
-        onClick={() => setModal(true)}
-      >
-        <PencilAltIcon />
-      </a>
+        onClick={() => {
+          if (!disabled) {
+            setModal(true);
+          }
+        }}
+      />
+
       <Modal show={modal} onClose={() => setModal(false)}>
         <Modal.Header>Edit Transaksi</Modal.Header>
         <Modal.Body>

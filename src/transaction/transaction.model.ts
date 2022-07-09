@@ -52,6 +52,10 @@ const transactionSchema = new Schema<any>(
       type: String,
       required: true,
     },
+    isPrinted: {
+      type: Boolean,
+      default: false,
+    },
   },
   { versionKey: false }
 );
