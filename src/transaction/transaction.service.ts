@@ -27,6 +27,7 @@ const createTransaction = async (
   const modifiedPayload = await validateAndModifyPayload(
     truckTransactionPayload
   );
+  console.log(modifiedPayload, 'modifiedPayload');
   const newTruckTransaction =
     await transactionRepository.createTruckTransaction(modifiedPayload);
   return newTruckTransaction;
@@ -69,6 +70,10 @@ const getTruckTransactionAutoComplete = async () => {
   return truckTransactionAutoComplete;
 };
 
+const printTransaction = async (transactionIds: string[]) => {
+  await transactionRepository.printTransaction(transactionIds);
+};
+
 const transactionService = {
   createTransaction,
   getTruckTransactions,
@@ -76,6 +81,7 @@ const transactionService = {
   getTruckTransactionsByTruckId,
   editTruckTransaction,
   getTruckTransactionAutoComplete,
+  printTransaction,
 };
 
 export default transactionService;

@@ -62,6 +62,8 @@ export type EditTruckTransactionPayload = Omit<TruckTransaction, 'customer'> & {
   };
 };
 
+export type UITruckTransaction = TruckTransaction & { selected: boolean };
+
 export interface User {
   id: string;
   username: string;

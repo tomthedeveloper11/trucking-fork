@@ -7,6 +7,7 @@ import {
   TruckTransaction,
 } from '../../types/common';
 import TruckTransactionDataTable from '../../components/truck-transaction-data-table';
+import { useState } from 'react';
 
 export default function TruckDetails({
   truckName,

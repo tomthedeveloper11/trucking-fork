@@ -87,6 +87,13 @@ const getTruckTransactionAutoComplete = async (): Promise<
   return result;
 };
 
+const printTransaction = async (transactionIds: string[]) => {
+  await TransactionModel.updateMany(
+    { _id: { $in: transactionIds } },
+    { isPrinted: true }
+  );
+};
+
 const transactionRepository = {
   getTruckTransactions,
   getTruckTransactionsByCustomerId,
@@ -94,6 +101,7 @@ const transactionRepository = {
   createTruckTransaction,
   editTruckTransaction,
   getTruckTransactionAutoComplete,
+  printTransaction,
 };
 
 export default transactionRepository;
