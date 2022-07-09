@@ -7,11 +7,9 @@ import {
   TruckTransaction,
 } from '../../types/common';
 import TruckTransactionDataTable from '../../components/truck-transaction-data-table';
-import { useState } from 'react';
 
-export default function TruckDetails({
-  truckName,
-  truckId,
+export default function CustomerDetails({
+  customerInitial,
   truckTransactions,
   autoCompleteData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
@@ -50,13 +48,8 @@ export default function TruckDetails({
       </Head>
 
       <div className="container p-10 mb-60 flex-col">
-        <h1 className="text-center text-7xl mb-5">{truckName}</h1>
-        <div className="flex justify-end mr-5 mb-3">
-          <AddTruckTransactionButton
-            truckId={truckId}
-            autoCompleteData={autoCompleteData}
-          />
-        </div>
+        <h1 className="text-center text-7xl mb-5">{customerInitial}</h1>
+
         <TruckTransactionDataTable
           headers={dataTableHeaders}
           data={truckTransactions.map((t) => formatTruckTransaction(t))}
@@ -69,13 +62,15 @@ export default function TruckDetails({
 }
 
 export const getServerSideProps = async (context: any) => {
-  const truckId: string = context.params.id;
-  const truckName: string = context.query.truckName;
+  const customerInitial: string = context.params.id;
   const truckTransactions =
-    await truckTransactionBloc.getTruckTransactionsByTruckId(truckId);
+    await truckTransactionBloc.getTruckTransactionsByCustomerInitial(
+      customerInitial
+    );
   const autoCompleteData =
     await truckTransactionBloc.getTruckTransactionAutoComplete();
+
   return {
-    props: { truckName, truckId, truckTransactions, autoCompleteData },
+    props: { customerInitial, truckTransactions, autoCompleteData },
   };
 };

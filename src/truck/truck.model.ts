@@ -7,7 +7,7 @@ const truckSchema = new Schema<Truck>(
       type: String,
       required: true,
     },
-    imageUrl: {
+    licenseNumber: {
       type: String,
     },
   },

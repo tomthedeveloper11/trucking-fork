@@ -1,16 +1,17 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { check, validationResult } from 'express-validator';
-import truckService from '../../../src/truck/truck.service';
+import customerService from '../../../src/customer/customer.service';
 import initMiddleware from '../../../src/middlewares/init-middleware';
 import validateMiddleware from '../../../src/middlewares/validate-middleware';
-import { Truck } from '../../../types/common';
+import { Customer } from '../../../types/common';
 import connectDb from '../../../src/mongodb/connection';
 
-const createTruckValidator = initMiddleware(
+const createCustomerValidator = initMiddleware(
   validateMiddleware(
     [
-      check('name').isString().exists(),
-      check('licenseNumber').isString().optional(),
+      check('initial').isString().exists(),
+      check('name').isString().optional(),
+      check('address').isString().optional(),
     ],
     validationResult
   )
@@ -23,21 +24,21 @@ export default async function handler(
   let conn;
   switch (req.method) {
     case 'POST':
-      await createTruckValidator(req, res);
+      await createCustomerValidator(req, res);
 
       conn = await connectDb();
-      const truckPayload = req.body as Truck;
-      const truck = await truckService.createTruck(truckPayload);
+      const customerPayload = req.body as Customer;
+      const customer = await customerService.createCustomer(customerPayload);
       await conn.close();
 
-      res.status(200).json({ data: truck });
+      res.status(200).json({ data: customer });
       break;
 
     case 'GET':
       conn = await connectDb();
-      const trucks = await truckService.getTrucks();
+      const customers = await customerService.getCustomers();
       await conn.close();
-      res.status(200).json({ data: trucks });
+      res.status(200).json({ data: customers });
       break;
   }
 }

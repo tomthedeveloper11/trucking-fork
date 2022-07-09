@@ -5,6 +5,7 @@ import initMiddleware from '../../../../src/middlewares/init-middleware';
 import validateMiddleware from '../../../../src/middlewares/validate-middleware';
 import { TruckTransaction } from '../../../../types/common';
 import connectDb from '../../../../src/mongodb/connection';
+import _ from 'lodash';
 
 interface TruckTransactionsAPIRequest extends NextApiRequest {
   body: TruckTransaction;
@@ -35,18 +36,30 @@ export default async function handler(
   res: NextApiResponse
 ) {
   let conn;
-  switch (req.method) {
-    case 'POST':
-      await createTruckTransactionValidator(req, res);
+  try {
+    switch (req.method) {
+      case 'GET':
+        conn = await connectDb();
+        const truckTransactions =
+          await transactionService.getTruckTransactions();
+        await conn.close();
+        res.status(200).json({ data: truckTransactions });
+        break;
 
-      conn = await connectDb();
-      const truckTransactionPayload = req.body;
-      const truckTransaction = await transactionService.createTransaction(
-        truckTransactionPayload
-      );
-      await conn.close();
+      case 'POST':
+        await createTruckTransactionValidator(req, res);
 
-      res.status(200).json({ data: truckTransaction });
-      break;
+        conn = await connectDb();
+        const truckTransactionPayload = req.body;
+        const truckTransaction = await transactionService.createTransaction(
+          truckTransactionPayload
+        );
+        await conn.close();
+
+        res.status(200).json({ data: truckTransaction });
+        break;
+    }
+  } catch (error) {
+    res.status(500).json({ message: _.get(error, 'message') });
   }
 }

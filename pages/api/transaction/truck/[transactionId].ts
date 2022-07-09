@@ -5,6 +5,7 @@ import initMiddleware from '../../../../src/middlewares/init-middleware';
 import validateMiddleware from '../../../../src/middlewares/validate-middleware';
 import { TruckTransaction } from '../../../../types/common';
 import connectDb from '../../../../src/mongodb/connection';
+import _ from 'lodash';
 
 interface TruckTransactionsAPIRequest extends NextApiRequest {
   body: TruckTransaction;
@@ -34,18 +35,24 @@ export default async function handler(
   res: NextApiResponse
 ) {
   let conn;
-  switch (req.method) {
-    case 'PUT':
-      await createTruckTransactionValidator(req, res);
-      conn = await connectDb();
-      const editTruckTransactionPayload = req.body;
-      const editTruckTransaction =
-        await transactionService.editTruckTransaction(
-          editTruckTransactionPayload
-        );
-      await conn.close();
+  try {
+    switch (req.method) {
+      case 'PUT':
+        await createTruckTransactionValidator(req, res);
+        conn = await connectDb();
+        const editTruckTransactionPayload = req.body;
+        const editTruckTransaction =
+          await transactionService.editTruckTransaction(
+            editTruckTransactionPayload
+          );
+        await conn.close();
 
-      res.status(200).json({ data: editTruckTransaction, message: 'helllow' });
-      break;
+        res
+          .status(200)
+          .json({ data: editTruckTransaction, message: 'helllow' });
+        break;
+    }
+  } catch (error) {
+    res.status(500).json({ message: _.get(error, 'message') });
   }
 }

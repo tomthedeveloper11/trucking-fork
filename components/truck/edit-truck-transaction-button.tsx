@@ -7,21 +7,29 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 import { useToastContext } from '../../lib/toast-context';
+import { PencilAltIcon } from '@heroicons/react/solid';
 
 interface EditTruckTransactionButtonProps {
-  existingTruckTransaction: Omit<TruckTransaction, 'date'>;
+  existingTruckTransaction: TruckTransaction;
   autoCompleteData: Record<string, string[]>;
+  disabled?: boolean;
 }
 
 export default function EditTruckTransactionButton({
   existingTruckTransaction,
   autoCompleteData,
+  disabled = false,
 }: EditTruckTransactionButtonProps) {
   const [truckTransaction, setTruckTransaction] = useState(
     existingTruckTransaction
   );
   const [modal, setModal] = useState(false);
   const [date, setDate] = useState(new Date());
+
+  const [day, month, year] = truckTransaction.date.toString().split('/');
+  const [newDate, setNewDate] = useState(
+    new Date(Number(year), Number(month) - 1, Number(day))
+  );
   const [recommendation, setRecommendation] = useState({
     destination: [],
     customer: [],
@@ -79,18 +87,22 @@ export default function EditTruckTransactionButton({
       url: `http://localhost:3000/api/transaction/truck/${truckTransaction.id}`,
       data: { ...truckTransaction, date },
     });
-
     refreshData();
   }
   return (
     <>
-      <a
-        className="text-blue-500 hover:underline"
+      <PencilAltIcon
+        className={`${
+          disabled ? 'text-gray-200' : 'text-yellow-200'
+        } cursor-pointer`}
         href={'#'}
-        onClick={() => setModal(true)}
-      >
-        Edit
-      </a>
+        onClick={() => {
+          if (!disabled) {
+            setModal(true);
+          }
+        }}
+      />
+
       <Modal show={modal} onClose={() => setModal(false)}>
         <Modal.Header>Edit Transaksi</Modal.Header>
         <Modal.Body>
@@ -122,7 +134,12 @@ export default function EditTruckTransactionButton({
                     onChange={(e) => handleAutoComplete(e, 'customer')}
                   />
                   {/* autoComplete customer */}
-                  <div className="absolute left-0 w-full" style={{ zIndex: 2 }}>
+                  <div
+                    className={`absolute left-0 w-full ${
+                      recommendation.customer.length ? '' : 'hidden'
+                    }`}
+                    style={{ zIndex: 2 }}
+                  >
                     <ListGroup>
                       {recommendation.customer.map((customer, i) => {
                         return (
@@ -151,7 +168,12 @@ export default function EditTruckTransactionButton({
                     onChange={(e) => handleAutoComplete(e, 'destination')}
                   />
                   {/* autoComplete destination */}
-                  <div className="absolute left-0 w-full" style={{ zIndex: 2 }}>
+                  <div
+                    className={`absolute left-0 w-full ${
+                      recommendation.destination.length ? '' : 'hidden'
+                    }`}
+                    style={{ zIndex: 2 }}
+                  >
                     <ListGroup>
                       {recommendation.destination.map((destination, i) => {
                         return (
@@ -194,6 +216,15 @@ export default function EditTruckTransactionButton({
 
               <div className="form-group row-span-1 col-span-5">
                 <TextInput
+                  label="Bon"
+                  name="invoices"
+                  // value={truckTransaction.details}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="form-group row-span-1 col-span-5">
+                <TextInput
                   label="Deskripsi/Info Tambahan"
                   name="details"
                   value={truckTransaction.details}
@@ -204,23 +235,28 @@ export default function EditTruckTransactionButton({
               <div className="form-group row-span-1 col-span-2">
                 <label>Tanggal</label>
                 <DatePicker
-                  selected={date}
-                  onChange={(date: Date) => setDate(date)}
+                  selected={newDate ? newDate : date}
+                  dateFormat={'dd/M/yyyy'}
+                  onChange={(date: Date) => {
+                    setNewDate(date);
+                    setDate(date);
+                  }}
                 />
               </div>
             </div>
           </form>
         </Modal.Body>
         <Modal.Footer>
-          <Button
+          <button
+            className="bg-[#F5D558] hover:bg-[#E3C652] text-white font-bold py-2 px-10 rounded w-full"
             onClick={() => {
               editTruckTransaction()
                 .then(() => setModal(false))
-                .catch((err) => addToast(err.message));
+                .catch((err) => addToast(err.response.data.message));
             }}
           >
             Edit Transaksi
-          </Button>
+          </button>
         </Modal.Footer>
       </Modal>
     </>

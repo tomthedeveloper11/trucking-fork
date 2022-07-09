@@ -6,6 +6,8 @@ import { TransactionType, TruckTransaction } from '../../types/common';
 import { useRouterRefresh } from '../../hooks/hooks';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { PlusIcon } from '@heroicons/react/solid';
+import { useToastContext } from '../../lib/toast-context';
 
 interface AddTruckTransactionButtonProps {
   truckId: string;
@@ -16,6 +18,7 @@ export default function AddTruckTransactionButton({
   truckId,
   autoCompleteData,
 }: AddTruckTransactionButtonProps) {
+  const addToast = useToastContext();
   const placeHolderTransaction: Omit<TruckTransaction, 'id' | 'date'> = {
     containerNo: 'TEGU3009038',
     invoiceNo: '1671',
@@ -26,6 +29,7 @@ export default function AddTruckTransactionButton({
     details: '',
     transactionType: TransactionType.TRUCK_TRANSACTION,
     truckId,
+    isPrinted: false,
   };
   const baseTruckTransaction: Omit<TruckTransaction, 'id' | 'date'> = {
     containerNo: '',
@@ -37,10 +41,11 @@ export default function AddTruckTransactionButton({
     details: '',
     transactionType: TransactionType.TRUCK_TRANSACTION,
     truckId,
+    isPrinted: false,
   };
   const refreshData = useRouterRefresh();
   const [truckTransaction, setTruckTransaction] = useState(
-    placeHolderTransaction || baseTruckTransaction
+    placeHolderTransaction
   );
   const [date, setDate] = useState(new Date());
   const [modal, setModal] = useState(false);
@@ -97,15 +102,25 @@ export default function AddTruckTransactionButton({
       method: 'POST',
       url: `http://localhost:3000/api/transaction/truck`,
       data: { ...truckTransaction, date },
-    });
-    setTruckTransaction(baseTruckTransaction);
-    setModal(false);
-    refreshData();
+    })
+      .then(() => {
+        setTruckTransaction(baseTruckTransaction);
+        refreshData();
+        setModal(false);
+      })
+      .catch((err) => {
+        addToast(err.response.data.message);
+      });
   }
 
   return (
     <>
-      <Button onClick={() => setModal(true)}>Tambah Transaksi Baru</Button>
+      <button
+        className="z-10 fixed bottom-20 bg-green-400 hover:bg-green-500 text-white font-bold p-5 rounded-full"
+        onClick={() => setModal(true)}
+      >
+        <PlusIcon className="h-10 " />
+      </button>
       <Modal show={modal} onClose={() => setModal(false)}>
         <Modal.Header>Tambah Transaksi Baru</Modal.Header>
         <Modal.Body>
@@ -121,7 +136,7 @@ export default function AddTruckTransactionButton({
               </div>
               <div className="form-group row-span-1 col-span-2">
                 <TextInput
-                  label="No. Invoice"
+                  label="No. Bon"
                   name="invoiceNo"
                   value={truckTransaction.invoiceNo}
                   onChange={handleChange}
@@ -136,7 +151,12 @@ export default function AddTruckTransactionButton({
                     onChange={(e) => handleAutoComplete(e, 'customer')}
                   />
                   {/* autoComplete customer */}
-                  <div className="absolute left-0 w-full" style={{ zIndex: 2 }}>
+                  <div
+                    className={`absolute left-0 w-full ${
+                      recommendation.customer.length ? '' : 'hidden'
+                    }`}
+                    style={{ zIndex: 2 }}
+                  >
                     <ListGroup>
                       {recommendation.customer.map((customer, i) => {
                         return (
@@ -164,7 +184,12 @@ export default function AddTruckTransactionButton({
                     onChange={(e) => handleAutoComplete(e, 'destination')}
                   />
                   {/* autoComplete destination */}
-                  <div className="absolute left-0 w-full" style={{ zIndex: 2 }}>
+                  <div
+                    className={`absolute left-0 w-full ${
+                      recommendation.destination.length ? '' : 'hidden'
+                    }`}
+                    style={{ zIndex: 2 }}
+                  >
                     <ListGroup>
                       {recommendation.destination.map((destination, i) => {
                         return (
@@ -206,6 +231,15 @@ export default function AddTruckTransactionButton({
 
               <div className="form-group row-span-1 col-span-5">
                 <TextInput
+                  label="Bon"
+                  name="details"
+                  value={truckTransaction.details}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="form-group row-span-1 col-span-5">
+                <TextInput
                   label="Deskripsi/Info Tambahan"
                   name="details"
                   value={truckTransaction.details}
@@ -216,6 +250,7 @@ export default function AddTruckTransactionButton({
               <div className="form-group row-span-1 col-span-2">
                 <label>Tanggal</label>
                 <DatePicker
+                  dateFormat="dd/MM/yyyy"
                   selected={date}
                   onChange={(date: Date) => setDate(date)}
                 />
@@ -225,7 +260,13 @@ export default function AddTruckTransactionButton({
         </Modal.Body>
 
         <Modal.Footer>
-          <Button onClick={addTruckTransaction}>Bikin Transaksi</Button>
+          <button
+            className="bg-green-400
+            hover:bg-green-500 text-white font-bold py-2 px-10 rounded w-full"
+            onClick={addTruckTransaction}
+          >
+            Tambah Transaksi
+          </button>
         </Modal.Footer>
       </Modal>
     </>

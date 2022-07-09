@@ -1,6 +1,18 @@
 import mongoose, { Schema } from 'mongoose';
 import { TransactionType } from '../../types/common';
 
+const customerTransactionSchema = new Schema(
+  {
+    customerId: {
+      type: String,
+    },
+    initial: {
+      type: String,
+    },
+  },
+  { _id: false, versionKey: false }
+);
+
 const transactionSchema = new Schema<any>(
   {
     date: {
@@ -34,12 +46,15 @@ const transactionSchema = new Schema<any>(
       type: Number,
     },
     customer: {
-      type: String,
-      trim: true,
+      type: customerTransactionSchema,
     },
     truckId: {
       type: String,
       required: true,
+    },
+    isPrinted: {
+      type: Boolean,
+      default: false,
     },
   },
   { versionKey: false }

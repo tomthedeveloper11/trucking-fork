@@ -8,7 +8,7 @@ import { useRouterRefresh } from '../../hooks/hooks';
 export default function AddTruckButton() {
   const [newTruck, setNewTruck] = useState({
     name: '',
-    imageUrl: '',
+    licenseNumber: '',
   } as Omit<Truck, 'id'>);
   const [modal, setModal] = useState(false);
   const refreshData = useRouterRefresh();
@@ -28,21 +28,26 @@ export default function AddTruckButton() {
       url: 'http://localhost:3000/api/truck',
       data: newTruck,
     });
-    setNewTruck({ name: '', imageUrl: '' });
+    setNewTruck({ name: '', licenseNumber: '' });
     refreshData();
   }
 
   return (
     <>
-      <Button onClick={() => setModal(true)}>Tambah Truck</Button>
+      <button
+        className="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-10 rounded"
+        onClick={() => setModal(true)}
+      >
+        Tambah Truk
+      </button>
       <Modal show={modal} onClose={() => setModal(false)}>
-        <Modal.Header>Tambah Truck</Modal.Header>
+        <Modal.Header>Tambah Truk Baru</Modal.Header>
         <Modal.Body>
           <form action="post">
             <div className="grid grid-rows-2 grid-cols-3 grid-flow-row gap-4">
               <div className="form-group row-span-1 col-span-3">
                 <TextInput
-                  label="Name"
+                  label="Nama"
                   name="name"
                   value={newTruck.name}
                   onChange={handleChange}
@@ -50,9 +55,9 @@ export default function AddTruckButton() {
               </div>
               <div className="form-group row-span-1 col-span-3">
                 <TextInput
-                  label="Image URL"
-                  name="imageUrl"
-                  value={newTruck.imageUrl}
+                  label="NoPol"
+                  name="licenseNumber"
+                  value={newTruck.licenseNumber}
                   onChange={handleChange}
                 />
               </div>
@@ -60,14 +65,16 @@ export default function AddTruckButton() {
           </form>{' '}
         </Modal.Body>
         <Modal.Footer>
-          <Button
+          <button
+            className="bg-green-400
+            hover:bg-green-500 text-white font-bold py-2 px-10 rounded w-full"
             onClick={() => {
               addTruck();
               setModal(false);
             }}
           >
-            Tambah Truck
-          </Button>
+            Tambah Truk
+          </button>
         </Modal.Footer>
       </Modal>
     </>
