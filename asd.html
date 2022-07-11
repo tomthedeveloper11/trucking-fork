@@ -1,5 +1,10 @@
 <html lang="en">
   <head>
+    <style>
+      .new-page {
+        page-break-after: always;
+      }
+    </style>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -7,7 +12,9 @@
   </head>
   <body>
     {{#each .}}
-    <h1>{{name}}</h1>
+    <div class="new-page">
+      <h1>{{name}}</h1>
+    </div>
     {{/each}}
   </body>
 </html>
