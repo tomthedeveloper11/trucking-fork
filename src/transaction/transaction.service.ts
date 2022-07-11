@@ -37,10 +37,8 @@ const createTruckTransaction = async (
   return newTruckTransaction;
 };
 
-const createTransaction = async (
-  transactionPayload: Omit<Transaction, 'id' | 'customer'>
-) => {
-  const newTransaction = await transactionRepository.createTruckTransaction(
+const createTransaction = async (transactionPayload) => {
+  const newTransaction = await transactionRepository.createTransaction(
     transactionPayload
   );
   return newTransaction;
@@ -48,6 +46,12 @@ const createTransaction = async (
 
 const getTruckTransactions = async () => {
   const transactions = await transactionRepository.getTruckTransactions();
+  return transactions;
+};
+
+const getGroupedTruckTransactions = async () => {
+  const transactions =
+    await transactionRepository.getGroupedTruckTransactions();
   return transactions;
 };
 
@@ -97,6 +101,7 @@ const transactionService = {
   createTruckTransaction,
   createTransaction,
   getTruckTransactions,
+  getGroupedTruckTransactions,
   getTruckTransactionsByCustomerId,
   getTruckTransactionsByTruckId,
   getMiscTruckTransactionsByTruckId,

@@ -10,6 +10,11 @@ import { Document } from 'mongoose';
 import _ from 'lodash';
 import { CustomerModel } from '../customer/customer.model';
 
+import puppeteer from 'puppeteer';
+import fs from 'fs-extra';
+import hbs from 'handlebars';
+import path from 'path';
+
 const convertDocumentToObject = <T>(document: Document) =>
   document.toObject({ getters: true }) as T;
 
@@ -28,6 +33,18 @@ const getTruckTransactions = async () => {
   const truckTransactions = documents.map((doc) =>
     convertDocumentToObject<TruckTransaction>(doc)
   );
+  return truckTransactions;
+};
+
+const getGroupedTruckTransactions = async () => {
+  const documents = await TransactionModel.find({
+    transactionType: TransactionType.TRUCK_TRANSACTION,
+  }).sort({ date: -1 });
+  const truckTransactions = documents.map((doc) =>
+    convertDocumentToObject<TruckTransaction>(doc)
+  );
+
+  console.log(truckTransactions);
   return truckTransactions;
 };
 
@@ -103,7 +120,44 @@ const getTruckTransactionAutoComplete = async (): Promise<
   return result;
 };
 
+const templatePath = '../../public/templates/';
+const tempFilePath = '../../public/temp/';
+
+const compileHandlebars = (data) => {
+  const file_path = 'E:/Personal Projects/trucking/public/templates/asd.hbs';
+  const html = fs.readFileSync(file_path, 'utf-8');
+  return hbs.compile(html)(JSON.parse(JSON.stringify(data)));
+};
+
 const printTransaction = async (transactionIds: string[]) => {
+  const documents = await TransactionModel.find({
+    id: transactionIds[0],
+  });
+  const truckTransaction = documents.map((doc) =>
+    convertDocumentToObject<TruckTransaction>(doc)
+  );
+
+  const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
+  const page = await browser.newPage();
+  const content = await compileHandlebars(truckTransaction[0]);
+
+  await Promise.all([
+    page.setContent(content),
+    page.emulateMediaType('screen'),
+    page.waitForNavigation({
+      waitUntil: 'networkidle0',
+    }),
+  ]);
+
+  await Promise.all([
+    page.pdf({
+      path: `${tempFilePath}-asd.pdf`,
+      format: 'A4',
+      printBackground: true,
+    }),
+  ]);
+  console.log('kepanggil');
+
   await TransactionModel.updateMany(
     { _id: { $in: transactionIds } },
     { isPrinted: true }
@@ -113,6 +167,7 @@ const printTransaction = async (transactionIds: string[]) => {
 const transactionRepository = {
   createTransaction,
   getTruckTransactions,
+  getGroupedTruckTransactions,
   getTruckTransactionsByCustomerId,
   getTruckTransactionsByTruckId,
   getMiscTruckTransactionsByTruckId,
