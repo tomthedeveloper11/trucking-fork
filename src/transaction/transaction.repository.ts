@@ -1,3 +1,4 @@
+import { indexPlusOne } from './../../helpers/hbsHelpers';
 import {
   EditTruckTransactionPayload,
   TransactionType,
@@ -13,6 +14,8 @@ import { CustomerModel } from '../customer/customer.model';
 import fs from 'fs';
 import puppeteer from 'puppeteer';
 import handlers from 'handlebars';
+
+import { formatRupiah, formatDate } from '../../helpers/hbsHelpers';
 
 const convertDocumentToObject = <T>(document: Document) =>
   document.toObject({ getters: true }) as T;
@@ -120,6 +123,10 @@ const getTruckTransactionAutoComplete = async (): Promise<
 };
 
 const printTransaction = async (transactionIds: string[]) => {
+  handlers.registerHelper('formatRupiah', formatRupiah);
+  handlers.registerHelper('formatDate', formatDate);
+  handlers.registerHelper('indexPlusOne', indexPlusOne);
+
   const documents = await TransactionModel.find({
     _id: { $in: transactionIds },
   });

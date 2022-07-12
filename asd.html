@@ -1,25 +1,109 @@
 <html lang="en">
   <head>
     <style>
-      .new-page {
-        page-break-after: always;
-      }
+      body {
+            background-color: white;
+            color: #050504;
+            font-family: Montserrat,
+                sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        *,
+        *::after,
+        *::before {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+       @page {
+            size: A4 portrait;
+            margin: 1.3rem;
+        } 
+
+      .container {
+            min-height: 100%;
+            position: relative;
+        } 
+
+        .table {
+            border-collapse: collapse;
+            margin-bottom: 21px;
+            text-align: center;
+        }
+
+        .table__head {
+            background-color: #477e5e;
+            color: #ffffff;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border: 1px solid #050504;
+        }
+
+        .table__head__row {
+            break-inside: avoid;
+        }
+
+        .table__head__col {
+            padding: 14px 7px;
+        }
+
+        .table__body {
+            font-size: 10px;
+        }
+
+        .table__body__row {
+            break-inside: avoid;
+        }
+
+        .table__body__col {
+            border: 1px solid #050504;
+            padding: 14px 7px;
+        }
     </style>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
   </head>
   <body>
-    <!-- <div class="new-page"> -->
-    <h1>{{main.currentDate}}</h1>
-    <h1>{{main.customerName}}</h1>
+    <div class="container">
+    <h1 class="">{{main.customerName}}</h1>
+    <h1>Perincian Bon</h1>
+    <h1>Tanggal {{formatDate main.currentDate}}</h1>
+    <br><br>
 
-    {{#each transactions}}
-    <p>{{this.invoiceNo}}</p>
-    <p>{{this.containerNo}}</p>
-    <p>{{this.destination}}</p>
-    {{/each}}
-    <!-- </div> -->
+
+    <table class="table" border="1">
+      <thead class="table_head">
+        <tr class="table_head_row">
+          <td class="table__head__col">NO</td>
+          <td class="table__head__col">TGL BON</td>
+          <td class="table__head__col">NO. CONTAINER</td>
+          <td class="table__head__col">NO. BON</td>
+          <td class="table__head__col">TUJUAN</td>
+          <td class="table__head__col">NOPOL</td>
+          <td class="table__head__col">KETERANGAN</td>
+        </tr>
+        
+      </thead>
+      <tbody class="table_body">
+        {{#each transactions}}
+        <tr class="table_body_row">
+          <td class="table__body__col">{{indexPlusOne @index}}</td>
+          <td class="table__body__col">{{formatDate this.date}}</td>
+          <td class="table__body__col">{{this.containerNo}}</td>
+          <td class="table__body__col">{{this.invoiceNo}}</td>
+          <td class="table__body__col">{{this.destination}}</p>
+          <td class="table__body__col">.....</td>
+          <td class="table__body__col">{{this.details}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+      
+    </table>
+    </div>
   </body>
 </html>

@@ -26,8 +26,6 @@ export default async function handler(
         console.log(err);
         res.status(500).json({ message: err.message });
       }
-
-    // res.status(200).json({ data: 'Print Successful', fuck: 'u' });
-    // break;
+      break;
   }
 }
