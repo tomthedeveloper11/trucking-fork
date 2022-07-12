@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { check, validationResult } from 'express-validator';
-import transactionService from '../../../../src/transaction/transaction.service';
-import initMiddleware from '../../../../src/middlewares/init-middleware';
-import validateMiddleware from '../../../../src/middlewares/validate-middleware';
-import { Transaction } from '../../../../types/common';
-import connectDb from '../../../../src/mongodb/connection';
+import transactionService from '../../../../../src/transaction/transaction.service';
+import initMiddleware from '../../../../../src/middlewares/init-middleware';
+import validateMiddleware from '../../../../../src/middlewares/validate-middleware';
+import { Transaction } from '../../../../../types/common';
+import connectDb from '../../../../../src/mongodb/connection';
 import _ from 'lodash';
 
 interface TransactionsAPIRequest extends NextApiRequest {

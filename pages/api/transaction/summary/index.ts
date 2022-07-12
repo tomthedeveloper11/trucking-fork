@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import transactionService from '../../../../src/transaction/transaction.service';
+import truckService from '../../../../src/truck/truck.service';
 import connectDb from '../../../../src/mongodb/connection';
 import _ from 'lodash';
 

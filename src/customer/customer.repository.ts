@@ -24,10 +24,20 @@ const getCustomerByInitial = async (initial: string) => {
   }
   return null;
 };
+
+const getCustomerByCustomerId = async (customerId: string) => {
+  const customer = await CustomerModel.findOne({ _id: customerId });
+  if (customer) {
+    return convertDocumentToObject<Customer>(customer);
+  }
+  return null;
+};
+
 const customerRepository = {
   createCustomer,
   getCustomers,
   getCustomerByInitial,
+  getCustomerByCustomerId,
 };
 
 export default customerRepository;

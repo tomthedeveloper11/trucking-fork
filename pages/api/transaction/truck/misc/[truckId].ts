@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import transactionService from '../../../../src/transaction/transaction.service';
-import connectDb from '../../../../src/mongodb/connection';
+import transactionService from '../../../../../src/transaction/transaction.service';
+import connectDb from '../../../../../src/mongodb/connection';
 
 interface TruckDetailProps extends NextApiRequest {
   query: {

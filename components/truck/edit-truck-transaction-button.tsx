@@ -94,7 +94,7 @@ export default function EditTruckTransactionButton({
       <PencilAltIcon
         className={`${
           disabled ? 'text-gray-200' : 'text-yellow-200'
-        } cursor-pointer`}
+        } cursor-pointer h-8`}
         href={'#'}
         onClick={() => {
           if (!disabled) {

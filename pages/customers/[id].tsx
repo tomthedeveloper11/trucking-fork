@@ -6,11 +6,12 @@ import {
   TruckTransaction,
 } from '../../types/common';
 import TruckTransactionDataTable from '../../components/truck-transaction-data-table';
+import customerBloc from '../../lib/customer';
 
 export default function CustomerDetails({
-  customerInitial,
   truckTransactions,
   autoCompleteData,
+  customer,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const dataTableHeaders = {
     Tanggal: 'w-1/12',
@@ -47,13 +48,14 @@ export default function CustomerDetails({
       </Head>
 
       <div className="container p-10 mb-60 flex-col">
-        <h1 className="text-center text-7xl mb-5">{customerInitial}</h1>
+        <h1 className="text-center text-7xl mb-5">{customer.initial}</h1>
 
         <TruckTransactionDataTable
           headers={dataTableHeaders}
           data={truckTransactions.map((t) => formatTruckTransaction(t))}
           hiddenFields={['id', 'isPrinted', 'truckId']}
           autoCompleteData={autoCompleteData}
+          emkl={true}
         />
       </div>
     </>
@@ -61,15 +63,14 @@ export default function CustomerDetails({
 }
 
 export const getServerSideProps = async (context: any) => {
-  const customerInitial: string = context.params.id;
+  const customerId: string = context.params.id;
+  const customer = await customerBloc.getCustomerByCustomerId(customerId);
   const truckTransactions =
-    await truckTransactionBloc.getTruckTransactionsByCustomerInitial(
-      customerInitial
-    );
+    await truckTransactionBloc.getTruckTransactionsByCustomerId(customerId);
   const autoCompleteData =
     await truckTransactionBloc.getTruckTransactionAutoComplete();
 
   return {
-    props: { customerInitial, truckTransactions, autoCompleteData },
+    props: { truckTransactions, autoCompleteData, customer },
   };
 };

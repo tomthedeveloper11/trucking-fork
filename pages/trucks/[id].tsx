@@ -68,7 +68,6 @@ export default function TruckDetails({
   };
 
   const [table, setTable] = useState('trip');
-
   return (
     <>
       <Head>

@@ -34,7 +34,7 @@
             text-align: center;
         }
 
-        .table__head {
+        .tableHead {
             background-color: #477e5e;
             color: #ffffff;
             font-size: 11px;
@@ -43,23 +43,23 @@
             border: 1px solid #050504;
         }
 
-        .table__head__row {
+        .tableHeadRow {
             break-inside: avoid;
         }
 
-        .table__head__col {
+        .tableHeadCol {
             padding: 14px 7px;
         }
 
-        .table__body {
+        .tableBody {
             font-size: 10px;
         }
 
-        .table__body__row {
+        .tableBodyRow {
             break-inside: avoid;
         }
 
-        .table__body__col {
+        .tableBodyCol { 
             border: 1px solid #050504;
             padding: 14px 7px;
         }
@@ -77,28 +77,28 @@
 
 
     <table class="table" border="1">
-      <thead class="table_head">
-        <tr class="table_head_row">
-          <td class="table__head__col">NO</td>
-          <td class="table__head__col">TGL BON</td>
-          <td class="table__head__col">NO. CONTAINER</td>
-          <td class="table__head__col">NO. BON</td>
-          <td class="table__head__col">TUJUAN</td>
-          <td class="table__head__col">NOPOL</td>
-          <td class="table__head__col">KETERANGAN</td>
+      <thead class="tableHead">
+        <tr class="tableHeadRow">
+          <td class="tableHeadCol">NO</td>
+          <td class="tableHeadCol">TGL BON</td>
+          <td class="tableHeadCol">NO. CONTAINER</td>
+          <td class="tableHeadCol">NO. BON</td>
+          <td class="tableHeadCol">TUJUAN</td>
+          <td class="tableHeadCol">NOPOL</td>
+          <td class="tableHeadCol">KETERANGAN</td>
         </tr>
         
       </thead>
-      <tbody class="table_body">
+      <tbody class="tableBody">
         {{#each transactions}}
-        <tr class="table_body_row">
-          <td class="table__body__col">{{indexPlusOne @index}}</td>
-          <td class="table__body__col">{{formatDate this.date}}</td>
-          <td class="table__body__col">{{this.containerNo}}</td>
-          <td class="table__body__col">{{this.invoiceNo}}</td>
-          <td class="table__body__col">{{this.destination}}</p>
-          <td class="table__body__col">.....</td>
-          <td class="table__body__col">{{this.details}}</td>
+        <tr class="tableBodyRow">
+          <td class="tableBodyCol">{{indexPlusOne @index}}</td>
+          <td class="tableBodyCol">{{formatDate this.date}}</td>
+          <td class="tableBodyCol">{{this.containerNo}}</td>
+          <td class="tableBodyCol">{{this.invoiceNo}}</td>
+          <td class="tableBodyCol">{{this.destination}}</p>
+          <td class="tableBodyCol">.....</td>
+          <td class="tableBodyCol">{{this.details}}</td>
         </tr>
         {{/each}}
       </tbody>

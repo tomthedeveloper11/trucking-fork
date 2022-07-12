@@ -11,9 +11,15 @@ const getCustomers = async () => {
   return customers;
 };
 
+const getCustomerByCustomerId = async (customerId: string) => {
+  const customer = await customerRepository.getCustomerByCustomerId(customerId);
+  return customer;
+};
+
 const customerService = {
   createCustomer,
   getCustomers,
+  getCustomerByCustomerId,
 };
 
 export default customerService;

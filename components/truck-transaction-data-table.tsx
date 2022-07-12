@@ -15,6 +15,7 @@ interface DataTableProperties {
   data: DataTableTruckTransaction[];
   hiddenFields?: string[];
   autoCompleteData: Record<string, string[]>;
+  emkl: boolean;
 }
 
 function buildTransactionRow(
@@ -59,6 +60,7 @@ export default function TruckTransactionDataTable({
   data,
   hiddenFields,
   autoCompleteData,
+  emkl,
 }: DataTableProperties) {
   const baseTruckTransactions: TruckTransaction[] = [];
   const [truckTransactions, setTruckTransactions] = useState(
@@ -91,13 +93,15 @@ export default function TruckTransactionDataTable({
             return (
               <Table.Row key={`tr-${index}`}>
                 <Table.Cell>
-                  <Checkbox
-                    onClick={() => {
-                      truckTransactions[index].selected =
-                        !truckTransactions[index].selected;
-                      setTruckTransactions([...truckTransactions]);
-                    }}
-                  ></Checkbox>
+                  {emkl && (
+                    <Checkbox
+                      onClick={() => {
+                        truckTransactions[index].selected =
+                          !truckTransactions[index].selected;
+                        setTruckTransactions([...truckTransactions]);
+                      }}
+                    ></Checkbox>
+                  )}
                 </Table.Cell>
                 {buildTransactionRow(truckTransaction, hiddenFields)}
                 {
@@ -109,10 +113,12 @@ export default function TruckTransactionDataTable({
                         autoCompleteData={autoCompleteData}
                         disabled={truckTransactions[index].selected}
                       />
-                      <PrinterIcon
-                        className="cursor-pointer"
-                        onClick={() => print(truckTransactions[index].id)}
-                      />
+                      {emkl && (
+                        <PrinterIcon
+                          className="cursor-pointer"
+                          onClick={() => print(truckTransactions[index].id)}
+                        />
+                      )}
                     </div>
                   </Table.Cell>
                 }

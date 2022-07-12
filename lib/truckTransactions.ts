@@ -12,12 +12,21 @@ const getTruckTransactions = async () => {
   return [];
 };
 
-const getTruckTransactionsByCustomerInitial = async (
-  customerInitial: string
-) => {
+const getGroupedTruckTransactions = async () => {
   const response = await axios({
     method: 'GET',
-    url: `http://localhost:3000/api/transaction/customer/${customerInitial}`,
+    url: `http://localhost:3000/api/transaction/summary`,
+  });
+  if (response && response.data) {
+    return response.data.data;
+  }
+  return [];
+};
+
+const getTruckTransactionsByCustomerId = async (customerId: string) => {
+  const response = await axios({
+    method: 'GET',
+    url: `http://localhost:3000/api/transaction/customer/${customerId}`,
   });
   if (response && response.data) {
     return response.data.data as TruckTransaction[];
@@ -39,7 +48,7 @@ const getTruckTransactionsByTruckId = async (truckId: string) => {
 const getMiscTruckTransactionsByTruckId = async (truckId: string) => {
   const response = await axios({
     method: 'GET',
-    url: `http://localhost:3000/api/truck/misc/${truckId}`,
+    url: `http://localhost:3000/api/transaction/truck/misc/${truckId}`,
   });
   if (response && response.data) {
     return response.data.data as Transaction[];
@@ -84,7 +93,8 @@ const printTransactions = async (transactionIds: string[]) => {
 };
 const truckTransactionBloc = {
   getTruckTransactions,
-  getTruckTransactionsByCustomerInitial,
+  getGroupedTruckTransactions,
+  getTruckTransactionsByCustomerId,
   getTruckTransactionsByTruckId,
   getMiscTruckTransactionsByTruckId,
   getTruckTransactionAutoComplete,

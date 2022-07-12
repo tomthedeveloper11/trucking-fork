@@ -10,7 +10,7 @@ import { TransactionModel } from './transaction.model';
 import { Document } from 'mongoose';
 import _ from 'lodash';
 import { CustomerModel } from '../customer/customer.model';
-
+import truckService from '../truck/truck.service';
 import fs from 'fs';
 import puppeteer from 'puppeteer';
 import handlers from 'handlebars';
@@ -39,15 +39,34 @@ const getTruckTransactions = async () => {
 };
 
 const getGroupedTruckTransactions = async () => {
+  const output = {};
+
   const documents = await TransactionModel.find({
     transactionType: TransactionType.TRUCK_TRANSACTION,
-  }).sort({ date: -1 });
+  });
   const truckTransactions = documents.map((doc) =>
     convertDocumentToObject<TruckTransaction>(doc)
   );
 
-  console.log(truckTransactions);
-  return truckTransactions;
+  const trucks = await truckService.getTrucks();
+
+  truckTransactions.forEach((transaction) => {
+    if (!output[transaction.truckId]) {
+      trucks.forEach((truck) => {
+        if (transaction.truckId === truck.id) {
+          output[truck.name] = transaction.cost;
+        }
+      });
+    } else {
+      trucks.forEach((truck) => {
+        if (transaction.truckId === truck.id) {
+          output[truck.name] += transaction.cost;
+        }
+      });
+    }
+  });
+
+  return output;
 };
 
 const getTruckTransactionsByCustomerId = async (customerId: string) => {
@@ -144,7 +163,7 @@ const printTransaction = async (transactionIds: string[]) => {
   };
 
   // read our invoice-template.html file using node fs module
-  const file = fs.readFileSync('./asd.html', 'utf8');
+  const file = fs.readFileSync('./bon.html', 'utf8');
 
   // compile the file with handlebars and inject the customerName variable
   const template = handlers.compile(`${file}`);
