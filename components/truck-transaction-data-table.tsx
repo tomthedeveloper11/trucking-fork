@@ -54,30 +54,6 @@ function prepareTruckTransactions(
   });
 }
 
-const generateInvoice = (e) => {
-  e.preventDefault();
-  // send a post request with the name to our API endpoint
-  const fetchData = async () => {
-    const data = await fetch('http://localhost:3000/api/transaction/print', {
-      method: 'POST',
-      body: JSON.stringify([{ name: 'Tommy LIEEEE' }, { name: 'Tommy ' }]),
-    });
-    // convert the response into an array Buffer
-    return data.arrayBuffer();
-  };
-
-  const saveAsPDF = async () => {
-    const buffer = await fetchData();
-    const blob = new Blob([buffer]);
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'invoice.pdf';
-    link.click();
-  };
-
-  saveAsPDF();
-};
-
 export default function TruckTransactionDataTable({
   headers,
   data,
@@ -135,8 +111,7 @@ export default function TruckTransactionDataTable({
                       />
                       <PrinterIcon
                         className="cursor-pointer"
-                        // onClick={() => print(truckTransactions[index].id)}
-                        onClick={generateInvoice}
+                        onClick={() => print(truckTransactions[index].id)}
                       />
                     </div>
                   </Table.Cell>

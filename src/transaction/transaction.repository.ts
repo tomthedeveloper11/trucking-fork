@@ -10,10 +10,9 @@ import { Document } from 'mongoose';
 import _ from 'lodash';
 import { CustomerModel } from '../customer/customer.model';
 
+import fs from 'fs';
 import puppeteer from 'puppeteer';
-import fs from 'fs-extra';
-import hbs from 'handlebars';
-import path from 'path';
+import handlers from 'handlebars';
 
 const convertDocumentToObject = <T>(document: Document) =>
   document.toObject({ getters: true }) as T;
@@ -120,48 +119,46 @@ const getTruckTransactionAutoComplete = async (): Promise<
   return result;
 };
 
-const templatePath = '../../public/templates/';
-const tempFilePath = '../../public/temp/';
-
-const compileHandlebars = (data) => {
-  const file_path = 'E:/Personal Projects/trucking/public/templates/asd.hbs';
-  const html = fs.readFileSync(file_path, 'utf-8');
-  return hbs.compile(html)(JSON.parse(JSON.stringify(data)));
-};
-
 const printTransaction = async (transactionIds: string[]) => {
   const documents = await TransactionModel.find({
-    id: transactionIds[0],
+    _id: { $in: transactionIds },
   });
-  const truckTransaction = documents.map((doc) =>
+
+  const truckTransactions = documents.map((doc) =>
     convertDocumentToObject<TruckTransaction>(doc)
   );
 
-  const browser = await puppeteer.launch({ args: ['--no-sandbox'] });
+  const content = {
+    main: {
+      currentDate: new Date(),
+      customerName: truckTransactions[0].customer.initial,
+    },
+    transactions: truckTransactions,
+  };
+
+  // read our invoice-template.html file using node fs module
+  const file = fs.readFileSync('./asd.html', 'utf8');
+
+  // compile the file with handlebars and inject the customerName variable
+  const template = handlers.compile(`${file}`);
+  const html = template(content);
+
+  // simulate a chrome browser with puppeteer and navigate to a new page
+  const browser = await puppeteer.launch();
   const page = await browser.newPage();
-  const content = await compileHandlebars(truckTransaction[0]);
+  // set our compiled html template as the pages content
+  // then waitUntil the network is idle to make sure the content has been loaded
+  await page.setContent(html, { waitUntil: 'networkidle0' });
 
-  await Promise.all([
-    page.setContent(content),
-    page.emulateMediaType('screen'),
-    page.waitForNavigation({
-      waitUntil: 'networkidle0',
-    }),
-  ]);
-
-  await Promise.all([
-    page.pdf({
-      path: `${tempFilePath}-asd.pdf`,
-      format: 'A4',
-      printBackground: true,
-    }),
-  ]);
-  console.log('kepanggil');
+  // convert the page to pdf with the .pdf() method
+  const pdf = await page.pdf({ format: 'A4' });
 
   await TransactionModel.updateMany(
     { _id: { $in: transactionIds } },
     { isPrinted: true }
   );
+
+  return pdf;
 };
 
 const transactionRepository = {

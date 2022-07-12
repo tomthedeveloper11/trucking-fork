@@ -11,10 +11,15 @@
     <title>Document</title>
   </head>
   <body>
-    {{#each .}}
-    <div class="new-page">
-      <h1>{{name}}</h1>
-    </div>
+    <!-- <div class="new-page"> -->
+    <h1>{{main.currentDate}}</h1>
+    <h1>{{main.customerName}}</h1>
+
+    {{#each transactions}}
+    <p>{{this.invoiceNo}}</p>
+    <p>{{this.containerNo}}</p>
+    <p>{{this.destination}}</p>
     {{/each}}
+    <!-- </div> -->
   </body>
 </html>

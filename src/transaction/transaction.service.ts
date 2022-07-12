@@ -94,7 +94,7 @@ const getTruckTransactionAutoComplete = async () => {
 };
 
 const printTransaction = async (transactionIds: string[]) => {
-  await transactionRepository.printTransaction(transactionIds);
+  return await transactionRepository.printTransaction(transactionIds);
 };
 
 const transactionService = {

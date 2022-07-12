@@ -61,13 +61,26 @@ const getTruckTransactionAutoComplete = async (): Promise<
 };
 
 const printTransactions = async (transactionIds: string[]) => {
-  await axios({
-    method: 'POST',
-    url: `http://localhost:3000/api/transaction/print`,
-    data: {
-      transactionIds,
-    },
-  });
+  const fetchData = async () => {
+    const data = await fetch('http://localhost:3000/api/transaction/print', {
+      method: 'POST',
+      body: JSON.stringify({
+        transactionIds,
+      }),
+    });
+    return data.arrayBuffer();
+  };
+
+  const saveAsPDF = async () => {
+    const buffer = await fetchData();
+    const blob = new Blob([buffer]);
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'invoice.pdf';
+    link.click();
+  };
+
+  saveAsPDF();
 };
 const truckTransactionBloc = {
   getTruckTransactions,
