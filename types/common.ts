@@ -29,10 +29,10 @@ export interface Transaction {
   cost: number;
   transactionType: TransactionType;
   isPrinted: boolean;
-  truckId?: string;
 }
 
 export interface TruckTransaction extends Transaction {
+  truckId: string;
   truckName?: string;
   containerNo: string;
   invoiceNo: string;
@@ -41,7 +41,14 @@ export interface TruckTransaction extends Transaction {
   customer: string;
 }
 
-export type DataTableTransaction = Omit<Transaction, 'transactionType' | 'id'>;
+export interface AdditionalTruckTransaction extends Transaction {
+  truckId: string;
+}
+
+export type DataTableAdditionalTransaction = Omit<
+  AdditionalTruckTransaction,
+  'transactionType'
+>;
 
 export type DataTableTruckTransaction = Omit<
   TruckTransaction,
@@ -65,6 +72,27 @@ export type EditTruckTransactionPayload = Omit<TruckTransaction, 'customer'> & {
 };
 
 export type UITruckTransaction = TruckTransaction & { selected: boolean };
+
+export interface FilterTransactionsQuery {
+  customer: string;
+  startDate?: string;
+  endDate?: string;
+  containerNo?: string;
+  invoiceNo?: string;
+  destination?: string;
+}
+
+export interface TransactionSummaryQuery {
+  month: string;
+  year: string;
+}
+
+export interface TransactionSummary {
+  [truckName: string]: {
+    cost: number;
+    sellingPrice: number;
+  };
+}
 
 export interface User {
   id: string;

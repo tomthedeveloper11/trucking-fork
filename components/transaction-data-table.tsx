@@ -1,11 +1,13 @@
 import { Table } from 'flowbite-react';
 import EditTransactionButton from './truck/edit-transaction-button';
-import { DataTableTransaction, TransactionType } from '../types/common';
-import { useRouter } from 'next/router';
+import {
+  DataTableAdditionalTransaction,
+  TransactionType,
+} from '../types/common';
 
 interface DataTableProperties {
   headers: Record<string, string>;
-  data: DataTableTransaction[];
+  data: DataTableAdditionalTransaction[];
   hiddenFields?: string[];
 }
 
@@ -14,7 +16,7 @@ export default function TransactionDataTable({
   data,
   hiddenFields,
 }: DataTableProperties) {
-  function buildTransactionRow(obj: DataTableTransaction) {
+  function buildTransactionRow(obj: DataTableAdditionalTransaction) {
     const tableTransaction: Record<string, string | number | Date | boolean> = {
       ...obj,
     };
@@ -29,14 +31,13 @@ export default function TransactionDataTable({
       <>
         {Object.values(tableTransaction).map((val, i) => (
           <Table.Cell className="whitespace-nowrap" key={`td-${obj.id}-${i}`}>
-            {val}
+            {val ? val.toString() : ''}
           </Table.Cell>
         ))}
       </>
     );
   }
 
-  const { id: querytruckId } = useRouter().query;
   return (
     <>
       <Table hoverable={true}>
@@ -50,8 +51,6 @@ export default function TransactionDataTable({
         </Table.Head>
         <Table.Body className="divide-y">
           {data.map((transaction, index) => {
-            const truckId = transaction.truckId || querytruckId;
-
             return (
               <Table.Row key={`tr-${index}`}>
                 {buildTransactionRow(transaction)}
@@ -63,7 +62,6 @@ export default function TransactionDataTable({
                         ...transaction,
                         transactionType:
                           TransactionType.TRUCK_ADDITIONAL_TRANSACTION,
-                        truckId,
                       }}
                     />
                   </Table.Cell>

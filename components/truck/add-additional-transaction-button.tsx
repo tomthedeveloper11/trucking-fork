@@ -2,22 +2,25 @@ import { Modal } from 'flowbite-react';
 import axios from 'axios';
 import { useState } from 'react';
 import TextInput from '../text-input';
-import { TransactionType, Transaction } from '../../types/common';
+import {
+  TransactionType,
+  AdditionalTruckTransaction,
+} from '../../types/common';
 import { useRouterRefresh } from '../../hooks/hooks';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { PlusIcon } from '@heroicons/react/solid';
 import { useToastContext } from '../../lib/toast-context';
 
-interface AddTransactionButtonProps {
+interface AddAdditionalTransactionButtonProps {
   truckId: string;
 }
 
-export default function AddTransactionButton({
+export default function AddAdditionalTransactionButton({
   truckId,
-}: AddTransactionButtonProps) {
+}: AddAdditionalTransactionButtonProps) {
   const addToast = useToastContext();
-  const baseTransaction: Omit<Transaction, 'id' | 'date'> = {
+  const baseTransaction: Omit<AdditionalTruckTransaction, 'id' | 'date'> = {
     details: '',
     cost: 0,
     transactionType: TransactionType.TRUCK_ADDITIONAL_TRANSACTION,

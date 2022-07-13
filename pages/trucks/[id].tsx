@@ -1,13 +1,13 @@
 import Head from 'next/head';
 import { InferGetServerSidePropsType } from 'next';
 import AddTruckTransactionButton from '../../components/truck/add-truck-transaction-button';
-import AddTransactionButton from '../../components/truck/add-transaction-button';
+import AddAdditionalTransactionButton from '../../components/truck/add-additional-transaction-button';
 import truckTransactionBloc from '../../lib/truckTransactions';
 import {
   DataTableTruckTransaction,
-  DataTableTransaction,
+  DataTableAdditionalTransaction,
   TruckTransaction,
-  Transaction,
+  AdditionalTruckTransaction,
 } from '../../types/common';
 import TruckTransactionDataTable from '../../components/truck-transaction-data-table';
 import TransactionDataTable from '../../components/transaction-data-table';
@@ -56,9 +56,10 @@ export default function TruckDetails({
   };
 
   const formatMiscTransaction = (
-    transaction: Transaction
-  ): DataTableTransaction => {
+    transaction: AdditionalTruckTransaction
+  ): DataTableAdditionalTransaction => {
     return {
+      id: transaction.id,
       date: new Date(transaction.date).toLocaleDateString('id-ID'),
       details: transaction.details,
       cost: transaction.cost,
@@ -96,7 +97,7 @@ export default function TruckDetails({
           />
         </div>
         <div className="flex justify-end mr-5 mb-3">
-          <AddTransactionButton truckId={truckId} />
+          <AddAdditionalTransactionButton truckId={truckId} />
         </div>
         {table === 'trip' ? (
           <TruckTransactionDataTable

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { TruckTransaction, Transaction } from '../types/common';
+import { TruckTransaction, AdditionalTruckTransaction } from '../types/common';
 
 const getTruckTransactions = async () => {
   const response = await axios({
@@ -51,7 +51,7 @@ const getMiscTruckTransactionsByTruckId = async (truckId: string) => {
     url: `http://localhost:3000/api/transaction/truck/misc/${truckId}`,
   });
   if (response && response.data) {
-    return response.data.data as Transaction[];
+    return response.data.data as AdditionalTruckTransaction[];
   }
   return [];
 };
@@ -70,26 +70,24 @@ const getTruckTransactionAutoComplete = async (): Promise<
 };
 
 const printTransactions = async (transactionIds: string[]) => {
-  const fetchData = async () => {
-    const data = await fetch('http://localhost:3000/api/transaction/print', {
-      method: 'POST',
-      body: JSON.stringify({
-        transactionIds,
-      }),
-    });
-    return data.arrayBuffer();
-  };
+  const response = await axios({
+    method: 'POST',
+    url: 'http://localhost:3000/api/transaction/print',
+    data: {
+      transactionIds,
+    },
+    responseType: 'blob',
+  });
 
-  const saveAsPDF = async () => {
-    const buffer = await fetchData();
-    const blob = new Blob([buffer]);
+  const saveAsPDF = async (response: any) => {
+    const blob = new Blob([response]);
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
     link.download = 'invoice.pdf';
     link.click();
   };
 
-  saveAsPDF();
+  saveAsPDF(response.data);
 };
 const truckTransactionBloc = {
   getTruckTransactions,

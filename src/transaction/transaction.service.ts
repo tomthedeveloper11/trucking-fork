@@ -1,10 +1,14 @@
 import {
   TruckTransaction,
   TruckTransactionPayload,
-  Transaction,
+  FilterTransactionsQuery,
+  AdditionalTruckTransaction,
+  TransactionSummaryQuery,
+  TransactionSummary,
 } from '../../types/common';
 import customerRepository from '../customer/customer.repository';
 import transactionRepository from './transaction.repository';
+import truckRepository from '../truck/truck.repository';
 
 const validateAndModifyPayload = async (
   truckTransactionPayload: Omit<TruckTransaction, 'id'>
@@ -37,10 +41,13 @@ const createTruckTransaction = async (
   return newTruckTransaction;
 };
 
-const createTransaction = async (transactionPayload) => {
-  const newTransaction = await transactionRepository.createTransaction(
-    transactionPayload
-  );
+const createAdditionalTruckTransaction = async (
+  transactionPayload: AdditionalTruckTransaction
+) => {
+  const newTransaction =
+    await transactionRepository.createAdditionalTruckTransaction(
+      transactionPayload
+    );
   return newTransaction;
 };
 
@@ -49,10 +56,35 @@ const getTruckTransactions = async () => {
   return transactions;
 };
 
-const getGroupedTruckTransactions = async () => {
-  const transactions =
-    await transactionRepository.getGroupedTruckTransactions();
-  return transactions;
+const getGroupedTruckTransactions = async (date: TransactionSummaryQuery) => {
+  const transactions = await transactionRepository.getGroupedTruckTransactions(
+    date
+  );
+  const trucks = await truckRepository.getTrucks();
+
+  const summary: TransactionSummary = {};
+  for (const transaction of transactions) {
+    const truckName = trucks.find((t) => t.id === transaction.truckId)?.name;
+    if (!truckName) {
+      console.log(`Truck id not found ${transaction.truckId}`);
+      continue;
+    }
+
+    if (!summary[truckName]) {
+      summary[truckName] = {
+        cost: transaction.cost,
+        sellingPrice: transaction.sellingPrice,
+      };
+    } else {
+      summary[truckName] = {
+        cost: summary[truckName].cost + transaction.cost,
+        sellingPrice:
+          summary[truckName].sellingPrice + transaction.sellingPrice,
+      };
+    }
+  }
+
+  return summary;
 };
 
 const getTruckTransactionsByCustomerId = async (customerId: string) => {
@@ -97,9 +129,14 @@ const printTransaction = async (transactionIds: string[]) => {
   return await transactionRepository.printTransaction(transactionIds);
 };
 
+const filterTruckTransactions = async (query: FilterTransactionsQuery) => {
+  // TODO
+  transactionRepository.filterTruckTransactions(query);
+};
+
 const transactionService = {
   createTruckTransaction,
-  createTransaction,
+  createAdditionalTruckTransaction,
   getTruckTransactions,
   getGroupedTruckTransactions,
   getTruckTransactionsByCustomerId,
@@ -108,6 +145,7 @@ const transactionService = {
   editTruckTransaction,
   getTruckTransactionAutoComplete,
   printTransaction,
+  filterTruckTransactions,
 };
 
 export default transactionService;

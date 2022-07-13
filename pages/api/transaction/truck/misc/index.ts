@@ -3,12 +3,12 @@ import { check, validationResult } from 'express-validator';
 import transactionService from '../../../../../src/transaction/transaction.service';
 import initMiddleware from '../../../../../src/middlewares/init-middleware';
 import validateMiddleware from '../../../../../src/middlewares/validate-middleware';
-import { Transaction } from '../../../../../types/common';
+import { AdditionalTruckTransaction } from '../../../../../types/common';
 import connectDb from '../../../../../src/mongodb/connection';
 import _ from 'lodash';
 
 interface TransactionsAPIRequest extends NextApiRequest {
-  body: Transaction;
+  body: AdditionalTruckTransaction;
   query: {
     transactionId: string;
   };
@@ -46,9 +46,10 @@ export default async function handler(
 
         conn = await connectDb();
         const transactionPayload = req.body;
-        const transaction = await transactionService.createTransaction(
-          transactionPayload
-        );
+        const transaction =
+          await transactionService.createAdditionalTruckTransaction(
+            transactionPayload
+          );
         await conn.close();
 
         res.status(200).json({ data: transaction });

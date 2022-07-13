@@ -15,7 +15,7 @@ interface DataTableProperties {
   data: DataTableTruckTransaction[];
   hiddenFields?: string[];
   autoCompleteData: Record<string, string[]>;
-  emkl: boolean;
+  emkl?: boolean;
 }
 
 function buildTransactionRow(
@@ -36,7 +36,7 @@ function buildTransactionRow(
     <>
       {Object.values(tableTransaction).map((val, i) => (
         <Table.Cell className="whitespace-nowrap" key={`td-${obj.id}-${i}`}>
-          {val}
+          {val ? val.toString() : ''}
         </Table.Cell>
       ))}
     </>
@@ -60,7 +60,7 @@ export default function TruckTransactionDataTable({
   data,
   hiddenFields,
   autoCompleteData,
-  emkl,
+  emkl = false,
 }: DataTableProperties) {
   const baseTruckTransactions: TruckTransaction[] = [];
   const [truckTransactions, setTruckTransactions] = useState(

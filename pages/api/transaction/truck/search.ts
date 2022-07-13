@@ -1,41 +1,42 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import { check, validationResult } from 'express-validator';
 import transactionService from '../../../../src/transaction/transaction.service';
+import initMiddleware from '../../../../src/middlewares/init-middleware';
+import validateMiddleware from '../../../../src/middlewares/validate-middleware';
 import connectDb from '../../../../src/mongodb/connection';
 import _ from 'lodash';
-import initMiddleware from '../../../../src/middlewares/init-middleware';
-import { check, validationResult } from 'express-validator';
-import validateMiddleware from '../../../../src/middlewares/validate-middleware';
 
-interface TransactionSummaryRequest extends NextApiRequest {
+interface SearchTruckTransactionsAPIRequest extends NextApiRequest {
   query: {
-    month: string;
-    year: string;
+    customer: string;
+    startDate?: string;
+    endDate?: string;
+    containerNo?: string;
+    invoiceNo?: string;
+    destination?: string;
   };
 }
 
-const transactionSummaryValidator = initMiddleware(
+const searchTruckTransactionValidator = initMiddleware(
   validateMiddleware(
-    [
-      check('month').isString().isLength({ min: 1 }).exists(),
-      check('year').isString().isLength({ min: 4 }).exists(),
-    ],
+    [check('customer').isString().isLength({ min: 2 }).exists()],
     validationResult
   )
 );
 
 export default async function handler(
-  req: NextApiRequest,
+  req: SearchTruckTransactionsAPIRequest,
   res: NextApiResponse
 ) {
   let conn;
   try {
     switch (req.method) {
       case 'GET':
+        await searchTruckTransactionValidator(req, res);
         conn = await connectDb();
         const truckTransactions =
-          await transactionService.getGroupedTruckTransactions(req.query);
+          await transactionService.filterTruckTransactions(req.query);
         await conn.close();
-
         res.status(200).json({ data: truckTransactions });
         break;
     }

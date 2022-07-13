@@ -4,16 +4,18 @@ import {
   TransactionType,
   TruckTransaction,
   TruckTransactionPayload,
-  Transaction,
+  AdditionalTruckTransaction,
+  TransactionSummaryQuery,
+  FilterTransactionsQuery,
 } from '../../types/common';
 import { TransactionModel } from './transaction.model';
 import { Document } from 'mongoose';
 import _ from 'lodash';
 import { CustomerModel } from '../customer/customer.model';
-import truckService from '../truck/truck.service';
 import fs from 'fs';
 import puppeteer from 'puppeteer';
 import handlers from 'handlebars';
+import moment from 'moment';
 
 import { formatRupiah, formatDate } from '../../helpers/hbsHelpers';
 
@@ -38,35 +40,23 @@ const getTruckTransactions = async () => {
   return truckTransactions;
 };
 
-const getGroupedTruckTransactions = async () => {
-  const output = {};
-
+const getGroupedTruckTransactions = async ({
+  year,
+  month,
+}: TransactionSummaryQuery) => {
+  const startDate = moment(`${year}-${month}-01`).startOf('month').toDate();
+  const endDate = moment(`${year}-${month}-01`).endOf('month').toDate();
   const documents = await TransactionModel.find({
-    transactionType: TransactionType.TRUCK_TRANSACTION,
+    date: {
+      $gte: startDate,
+      $lte: endDate,
+    },
   });
   const truckTransactions = documents.map((doc) =>
     convertDocumentToObject<TruckTransaction>(doc)
   );
 
-  const trucks = await truckService.getTrucks();
-
-  truckTransactions.forEach((transaction) => {
-    if (!output[transaction.truckId]) {
-      trucks.forEach((truck) => {
-        if (transaction.truckId === truck.id) {
-          output[truck.name] = transaction.cost;
-        }
-      });
-    } else {
-      trucks.forEach((truck) => {
-        if (transaction.truckId === truck.id) {
-          output[truck.name] += transaction.cost;
-        }
-      });
-    }
-  });
-
-  return output;
+  return truckTransactions;
 };
 
 const getTruckTransactionsByCustomerId = async (customerId: string) => {
@@ -104,9 +94,12 @@ const createTruckTransaction = async (
   return truckTransaction;
 };
 
-const createTransaction = async (transactionPayload: Transaction) => {
+const createAdditionalTruckTransaction = async (
+  transactionPayload: AdditionalTruckTransaction
+) => {
   const document = await TransactionModel.create(transactionPayload);
-  const transaction = convertDocumentToObject<Transaction>(document);
+  const transaction =
+    convertDocumentToObject<AdditionalTruckTransaction>(document);
   return transaction;
 };
 
@@ -150,14 +143,12 @@ const printTransaction = async (transactionIds: string[]) => {
     _id: { $in: transactionIds },
   });
 
-  const truckTransactions = documents.map((doc) =>
-    convertDocumentToObject<TruckTransaction>(doc)
-  );
+  const truckTransactions = documents.map((doc) => mapTruckTransaction(doc));
 
   const content = {
     main: {
       currentDate: new Date(),
-      customerName: truckTransactions[0].customer.initial,
+      customerName: truckTransactions[0].customer,
     },
     transactions: truckTransactions,
   };
@@ -187,8 +178,12 @@ const printTransaction = async (transactionIds: string[]) => {
   return pdf;
 };
 
+const filterTruckTransactions = async (query: FilterTransactionsQuery) => {
+  // TODO
+};
+
 const transactionRepository = {
-  createTransaction,
+  createAdditionalTruckTransaction,
   getTruckTransactions,
   getGroupedTruckTransactions,
   getTruckTransactionsByCustomerId,
@@ -198,6 +193,7 @@ const transactionRepository = {
   editTruckTransaction,
   getTruckTransactionAutoComplete,
   printTransaction,
+  filterTruckTransactions,
 };
 
 export default transactionRepository;
