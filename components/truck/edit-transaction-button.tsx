@@ -20,10 +20,8 @@ export default function EditTransactionButton({
 }: EditTransactionButtonProps) {
   const [transaction, setTransaction] = useState(existingTransaction);
   const [modal, setModal] = useState(false);
-  const [date, setDate] = useState(new Date());
-
   const [day, month, year] = transaction.date.toString().split('/');
-  const [newDate, setNewDate] = useState(
+  const [date, setDate] = useState(
     new Date(Number(year), Number(month) - 1, Number(day))
   );
 
@@ -89,10 +87,9 @@ export default function EditTransactionButton({
               <div className="form-group row-span-1 col-span-2">
                 <label>Tanggal</label>
                 <DatePicker
-                  selected={newDate ? newDate : date}
+                  selected={date}
                   dateFormat={'dd/M/yyyy'}
                   onChange={(date: Date) => {
-                    setNewDate(date);
                     setDate(date);
                   }}
                 />

@@ -1,16 +1,19 @@
 import axios from 'axios';
-import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { User } from '../types/common';
 
-export default function Login() {
-  const router = useRouter();
+export default function Register() {
   const [user, setUser] = useState({
     username: '',
     password: '',
-  } as Omit<User, 'id' | 'role'>);
+    role: '',
+  } as Omit<User, 'id'>);
 
-  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+  function handleChange(
+    event:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLSelectElement>
+  ) {
     const { name, value } = event.target;
 
     setUser((prevState) => ({
@@ -19,28 +22,27 @@ export default function Login() {
     }));
   }
 
-  async function loginFunction() {
+  async function registerFunction() {
     window.event?.preventDefault();
+    console.log(user);
     const response = await axios({
       method: 'POST',
-      url: 'http://localhost:3000/api/login',
+      url: 'http://localhost:3000/api/register',
       data: user,
     });
-    console.log('🚀 ~ file: login.tsx ~ line 28 ~ login ~ response', response);
-    router.push('/');
-    // setUser({ username: '', password: '' });
+    setUser({ username: '', password: '', role: 'user' });
   }
 
   return (
-    <div className="flex text-center ">
-      <form className="flex-col" action="post" onSubmit={loginFunction}>
+    <div className="flex text-center m-auto">
+      <form className="mt-[22vh]" action="post" onSubmit={registerFunction}>
         <div>
-          <h1 className="text-2xl font-bold">Login to your account</h1>
+          <h1 className="text-2xl font-bold">Tambah Pengguna Baru</h1>
         </div>
         <div className="my-3">
           <label className="block text-md mb-2">Username</label>
           <input
-            className="px-4 w-full border-2 py-2 rounded-md text-sm outline-none"
+            className="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-6"
             type="username"
             name="username"
             placeholder="Username"
@@ -51,7 +53,7 @@ export default function Login() {
         <div className="mt-5">
           <label className="block text-md mb-2">Password</label>
           <input
-            className="px-4 w-full border-2 py-2 rounded-md text-sm outline-none"
+            className="block appearance-none w-full border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-6"
             type="password"
             name="password"
             placeholder="Password"
@@ -59,13 +61,29 @@ export default function Login() {
             onChange={handleChange}
           />
         </div>
+        <div className="mt-5">
+          <label className="block text-md mb-2">Role</label>
+          <select
+            className="w-full border box-border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-6"
+            name="role"
+            value={user.role}
+            onChange={handleChange}
+          >
+            <option value="" selected disabled>
+              Pilih role pengguna baru
+            </option>
+            <option value="admin">Admin</option>
+            <option value="user">User</option>
+            <option value="guest">Guest</option>
+          </select>
+        </div>
 
         <div className="">
           <button
-            className="mt-4 mb-3 w-full bg-green-500 hover:bg-green-400 text-white py-2 rounded-md transition duration-100"
+            className="mt-4 mb-3 w-full bg-green-400 hover:bg-green-500 text-white py-2 rounded transition duration-100"
             type="submit"
           >
-            Log in
+            Tambah
           </button>
           {/* <div className="flex  space-x-2 justify-center items-end bg-gray-700 hover:bg-gray-600 text-white py-2 rounded-md transition duration-100">
             <Image

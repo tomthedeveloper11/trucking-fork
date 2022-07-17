@@ -7,6 +7,7 @@ export interface DummyData {
 export enum TransactionType {
   TRUCK_TRANSACTION = 'TRUCK_TRANSACTION',
   TRUCK_ADDITIONAL_TRANSACTION = 'TRUCK_ADDITIONAL_TRANSACTION',
+  ADDITIONAL_TRANSACTION = 'ADDITIONAL_TRANSACTION',
 }
 
 export interface Customer {
@@ -89,9 +90,17 @@ export interface TransactionSummaryQuery {
 
 export interface TransactionSummary {
   [truckName: string]: {
+    truckId: string;
     cost: number;
     sellingPrice: number;
+    margin: number;
   };
+}
+
+export interface TotalSummary {
+  cost: number;
+  sellingPrice: number;
+  margin: number;
 }
 
 export interface User {

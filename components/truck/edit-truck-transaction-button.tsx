@@ -24,10 +24,8 @@ export default function EditTruckTransactionButton({
     existingTruckTransaction
   );
   const [modal, setModal] = useState(false);
-  const [date, setDate] = useState(new Date());
-
   const [day, month, year] = truckTransaction.date.toString().split('/');
-  const [newDate, setNewDate] = useState(
+  const [date, setDate] = useState(
     new Date(Number(year), Number(month) - 1, Number(day))
   );
   const [recommendation, setRecommendation] = useState({
@@ -235,10 +233,9 @@ export default function EditTruckTransactionButton({
               <div className="form-group row-span-1 col-span-2">
                 <label>Tanggal</label>
                 <DatePicker
-                  selected={newDate ? newDate : date}
+                  selected={date}
                   dateFormat={'dd/M/yyyy'}
                   onChange={(date: Date) => {
-                    setNewDate(date);
                     setDate(date);
                   }}
                 />

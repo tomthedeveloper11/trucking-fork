@@ -13,9 +13,6 @@ export default function Print({
         <title>{'Print'}</title>
       </Head>
       <div className="container p-10">
-        <div className="flex justify-end mr-5 mb-3">
-          <AddTruckButton />
-        </div>
         <div className="grid grid-cols-4 gap-4 ml-17">
           {Object.values(customers).map((customer) => (
             <Link
@@ -24,7 +21,7 @@ export default function Print({
               }}
               key={customer.id}
             >
-              <div className="w-64 h-64 border border-1 rounded hover:bg-gray-100 cursor-pointer">
+              <div className="w-64 h-64 rounded-lg border border-gray-200 shadow-md hover:bg-gray-100">
                 <h1 className="text-7xl text-center mt-20">
                   {customer.initial}
                 </h1>

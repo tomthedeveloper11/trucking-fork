@@ -38,9 +38,15 @@ const login = async (userPayload: Omit<User, 'id'>) => {
   return access_token;
 };
 
+const getUser = async (username: string) => {
+  const user = await userRepository.getUser(username);
+  return user;
+};
+
 const userService = {
   register,
   login,
+  getUser,
 };
 
 export default userService;

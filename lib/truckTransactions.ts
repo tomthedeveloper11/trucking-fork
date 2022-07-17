@@ -15,12 +15,23 @@ const getTruckTransactions = async () => {
 const getGroupedTruckTransactions = async () => {
   const response = await axios({
     method: 'GET',
+    url: `http://localhost:3000/api/transaction/summary/trucks`,
+  });
+  if (response && response.data) {
+    return response.data.data;
+  }
+  return {};
+};
+
+const getTotalSummary = async () => {
+  const response = await axios({
+    method: 'GET',
     url: `http://localhost:3000/api/transaction/summary`,
   });
   if (response && response.data) {
     return response.data.data;
   }
-  return [];
+  return {};
 };
 
 const getTruckTransactionsByCustomerId = async (customerId: string) => {
@@ -92,6 +103,7 @@ const printTransactions = async (transactionIds: string[]) => {
 const truckTransactionBloc = {
   getTruckTransactions,
   getGroupedTruckTransactions,
+  getTotalSummary,
   getTruckTransactionsByCustomerId,
   getTruckTransactionsByTruckId,
   getMiscTruckTransactionsByTruckId,

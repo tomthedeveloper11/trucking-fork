@@ -40,9 +40,9 @@ const getTruckTransactions = async () => {
   return truckTransactions;
 };
 
-const getGroupedTruckTransactions = async ({
-  year,
-  month,
+const getAllTransactions = async ({
+  year = new Date().getFullYear().toString(),
+  month = (new Date().getMonth() + 1).toString(),
 }: TransactionSummaryQuery) => {
   const startDate = moment(`${year}-${month}-01`).startOf('month').toDate();
   const endDate = moment(`${year}-${month}-01`).endOf('month').toDate();
@@ -52,11 +52,11 @@ const getGroupedTruckTransactions = async ({
       $lte: endDate,
     },
   });
-  const truckTransactions = documents.map((doc) =>
+  const allTransactions = documents.map((doc) =>
     convertDocumentToObject<TruckTransaction>(doc)
   );
 
-  return truckTransactions;
+  return allTransactions;
 };
 
 const getTruckTransactionsByCustomerId = async (customerId: string) => {
@@ -144,6 +144,10 @@ const printTransaction = async (transactionIds: string[]) => {
   });
 
   const truckTransactions = documents.map((doc) => mapTruckTransaction(doc));
+  console.log(
+    '🚀 ~ file: transaction.repository.ts ~ line 147 ~ printTransaction ~ truckTransactions',
+    truckTransactions
+  );
 
   const content = {
     main: {
@@ -185,7 +189,7 @@ const filterTruckTransactions = async (query: FilterTransactionsQuery) => {
 const transactionRepository = {
   createAdditionalTruckTransaction,
   getTruckTransactions,
-  getGroupedTruckTransactions,
+  getAllTransactions,
   getTruckTransactionsByCustomerId,
   getTruckTransactionsByTruckId,
   getMiscTruckTransactionsByTruckId,

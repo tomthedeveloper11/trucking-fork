@@ -5,7 +5,6 @@ import _ from 'lodash';
 import initMiddleware from '../../../../src/middlewares/init-middleware';
 import { check, validationResult } from 'express-validator';
 import validateMiddleware from '../../../../src/middlewares/validate-middleware';
-import userAuthenticationMiddleware from '../../../../src/middlewares/user-authentication-middleware';
 
 interface TransactionSummaryRequest extends NextApiRequest {
   query: {
@@ -24,8 +23,6 @@ const transactionSummaryValidator = initMiddleware(
   )
 );
 
-const userAuthentication = initMiddleware(userAuthenticationMiddleware());
-
 export default async function handler(
   req: TransactionSummaryRequest,
   res: NextApiResponse
@@ -34,15 +31,12 @@ export default async function handler(
   try {
     switch (req.method) {
       case 'GET':
-        // await userAuthentication(req, res);
-
         conn = await connectDb();
-        const transactions = await transactionService.getTotalSummary(
-          req.query
-        );
+        const truckTransactions =
+          await transactionService.getGroupedTruckTransactions(req.query);
         await conn.close();
 
-        res.status(200).json({ data: transactions });
+        res.status(200).json({ data: truckTransactions });
         break;
     }
   } catch (error) {

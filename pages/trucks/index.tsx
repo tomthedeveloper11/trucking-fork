@@ -28,9 +28,9 @@ export default function Home({
               }}
               key={truck.id}
             >
-              <div className="w-64 h-64 border border-1 rounded hover:bg-gray-100 cursor-pointer">
+              <a className="w-64 h-64 rounded-lg border border-gray-200 shadow-md hover:bg-gray-100">
                 <h1 className="text-7xl text-center mt-20">{truck.name}</h1>
-              </div>
+              </a>
             </Link>
           ))}
         </div>

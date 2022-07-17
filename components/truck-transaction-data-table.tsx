@@ -9,6 +9,7 @@ import {
 import React, { useState } from 'react';
 import { PrinterIcon } from '@heroicons/react/solid';
 import truckTransactionBloc from '../lib/truckTransactions';
+import { formatRupiah } from '../helpers/hbsHelpers';
 
 interface DataTableProperties {
   headers: Record<string, string>;
@@ -111,7 +112,7 @@ export default function TruckTransactionDataTable({
                         key={`edit-modal-key${index}`}
                         existingTruckTransaction={truckTransactions[index]}
                         autoCompleteData={autoCompleteData}
-                        disabled={truckTransactions[index].selected}
+                        disabled={truckTransactions[index]?.selected}
                       />
                       {emkl && (
                         <PrinterIcon

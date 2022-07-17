@@ -5,6 +5,7 @@ import {
   AdditionalTruckTransaction,
   TransactionSummaryQuery,
   TransactionSummary,
+  TotalSummary,
 } from '../../types/common';
 import customerRepository from '../customer/customer.repository';
 import transactionRepository from './transaction.repository';
@@ -57,9 +58,7 @@ const getTruckTransactions = async () => {
 };
 
 const getGroupedTruckTransactions = async (date: TransactionSummaryQuery) => {
-  const transactions = await transactionRepository.getGroupedTruckTransactions(
-    date
-  );
+  const transactions = await transactionRepository.getAllTransactions(date);
   const trucks = await truckRepository.getTrucks();
 
   const summary: TransactionSummary = {};
@@ -72,16 +71,45 @@ const getGroupedTruckTransactions = async (date: TransactionSummaryQuery) => {
 
     if (!summary[truckName]) {
       summary[truckName] = {
+        truckId: transaction.truckId,
         cost: transaction.cost,
         sellingPrice: transaction.sellingPrice,
+        margin: transaction.sellingPrice - transaction.cost,
       };
     } else {
       summary[truckName] = {
+        truckId: transaction.truckId,
         cost: summary[truckName].cost + transaction.cost,
         sellingPrice:
-          summary[truckName].sellingPrice + transaction.sellingPrice,
+          summary[truckName].sellingPrice +
+          (transaction.sellingPrice ? transaction.sellingPrice : 0),
+        margin:
+          summary[truckName].margin +
+          (transaction.sellingPrice
+            ? transaction.sellingPrice
+            : 0 - transaction.cost),
       };
     }
+  }
+
+  return summary;
+};
+
+const getTotalSummary = async (date: TransactionSummaryQuery) => {
+  const transactions = await transactionRepository.getAllTransactions(date);
+
+  const summary: TotalSummary = { cost: 0, sellingPrice: 0, margin: 0 };
+
+  for (const transaction of transactions) {
+    summary.cost += transaction.cost;
+
+    summary.sellingPrice += transaction.sellingPrice
+      ? transaction.sellingPrice
+      : 0;
+
+    summary.margin += transaction.sellingPrice
+      ? transaction.sellingPrice - transaction.cost
+      : 0 - transaction.cost;
   }
 
   return summary;
@@ -139,6 +167,7 @@ const transactionService = {
   createAdditionalTruckTransaction,
   getTruckTransactions,
   getGroupedTruckTransactions,
+  getTotalSummary,
   getTruckTransactionsByCustomerId,
   getTruckTransactionsByTruckId,
   getMiscTruckTransactionsByTruckId,
