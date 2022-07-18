@@ -7,14 +7,13 @@ import { AdditionalTruckTransaction } from '../../../../../types/common';
 import connectDb from '../../../../../src/mongodb/connection';
 import _ from 'lodash';
 
-interface TransactionsAPIRequest extends NextApiRequest {
+interface AdditionalTruckTransactionsAPIRequest extends NextApiRequest {
   body: AdditionalTruckTransaction;
   query: {
-    truckId: string;
+    transactionId: string;
   };
 }
-
-const createTransactionValidator = initMiddleware(
+const createAdditionalTruckTransactionValidator = initMiddleware(
   validateMiddleware(
     [
       check('truckId').isString().isLength({ min: 2 }).exists(),
@@ -27,34 +26,25 @@ const createTransactionValidator = initMiddleware(
 );
 
 export default async function handler(
-  req: TransactionsAPIRequest,
+  req: AdditionalTruckTransactionsAPIRequest,
   res: NextApiResponse
 ) {
   let conn;
   try {
     switch (req.method) {
-      case 'GET':
+      case 'PUT':
+        await createAdditionalTruckTransactionValidator(req, res);
         conn = await connectDb();
-
-        const truckId = req.query.truckId;
-        const miscTransactions =
-          await transactionService.getMiscTruckTransactionsByTruckId(truckId);
-        await conn.close();
-        res.status(200).json({ data: miscTransactions });
-        break;
-
-      case 'POST':
-        await createTransactionValidator(req, res);
-
-        conn = await connectDb();
-        const transactionPayload = req.body;
-        const transaction =
-          await transactionService.createAdditionalTruckTransaction(
-            transactionPayload
+        const editAdditionalTruckTransactionPayload = req.body;
+        const editAdditionalTruckTransaction =
+          await transactionService.editAdditionalTruckTransaction(
+            editAdditionalTruckTransactionPayload
           );
         await conn.close();
 
-        res.status(200).json({ data: transaction });
+        res
+          .status(200)
+          .json({ data: editAdditionalTruckTransaction, message: 'helllow' });
         break;
     }
   } catch (error) {

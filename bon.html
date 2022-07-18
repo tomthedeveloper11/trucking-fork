@@ -68,7 +68,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   </head>
   <body>
-    <div class="container">
       <h1 class="">{{main.customerName}}</h1>
       <h1>Perincian Bon</h1>
       <h1>Tanggal {{formatDate main.currentDate}}</h1>
@@ -100,11 +99,12 @@
           {{/each}}
         </tbody>
       </table>
+ 
       <div>
-          <p>Medan, {{formatDate main.currentDate}}</p>
-          <p>Yang Menerima</p>
-          <br><br><br><br>
+        <p>Medan, {{formatDate main.currentDate}}</p>
+        <p>Yang Menerima</p>
+        <br><br><br><br>
       </div>
-    </div>
+     
   </body>
 </html>

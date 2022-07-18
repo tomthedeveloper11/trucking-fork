@@ -59,7 +59,10 @@ const getTruckTransactionsByTruckId = async (truckId: string) => {
 const getMiscTruckTransactionsByTruckId = async (truckId: string) => {
   const response = await axios({
     method: 'GET',
-    url: `http://localhost:3000/api/transaction/truck/misc/${truckId}`,
+    url: `http://localhost:3000/api/transaction/truck/misc`,
+    params: {
+      truckId,
+    },
   });
   if (response && response.data) {
     return response.data.data as AdditionalTruckTransaction[];

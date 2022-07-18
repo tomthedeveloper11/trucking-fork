@@ -25,7 +25,6 @@ export default function AddAdditionalTransactionButton({
     cost: 0,
     transactionType: TransactionType.TRUCK_ADDITIONAL_TRANSACTION,
     truckId,
-    isPrinted: false,
   };
   const refreshData = useRouterRefresh();
   const [transaction, setTransaction] = useState(baseTransaction);

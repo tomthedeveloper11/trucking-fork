@@ -38,13 +38,12 @@ export default function EditTransactionButton({
   }
 
   async function editTransaction() {
-    console.log(transaction, '<<<<new trax');
-    // await axios({
-    //   method: 'PUT',
-    //   url: `http://localhost:3000/api/transaction/truck/misc/${transaction.id}`,
-    //   data: { ...transaction, date },
-    // });
-    // refreshData();
+    await axios({
+      method: 'PUT',
+      url: `http://localhost:3000/api/transaction/truck/misc/${transaction.id}`,
+      data: { ...transaction, date },
+    });
+    refreshData();
   }
   return (
     <>

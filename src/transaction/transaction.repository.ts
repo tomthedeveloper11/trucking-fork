@@ -114,6 +114,17 @@ const editTruckTransaction = async (
   return truckTransaction;
 };
 
+const editAdditionalTruckTransaction = async (
+  editAdditionalTruckTransactionPayload: AdditionalTruckTransaction
+) => {
+  const document = await TransactionModel.findOneAndUpdate(
+    { _id: editAdditionalTruckTransactionPayload.id },
+    editAdditionalTruckTransactionPayload
+  );
+  const truckTransaction = convertDocumentToObject<TruckTransaction>(document);
+  return truckTransaction;
+};
+
 const getTruckTransactionAutoComplete = async (): Promise<
   Record<string, string[]>
 > => {
@@ -195,6 +206,7 @@ const transactionRepository = {
   getMiscTruckTransactionsByTruckId,
   createTruckTransaction,
   editTruckTransaction,
+  editAdditionalTruckTransaction,
   getTruckTransactionAutoComplete,
   printTransaction,
   filterTruckTransactions,

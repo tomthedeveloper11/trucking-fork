@@ -23,13 +23,15 @@ export default function AddTruckTransactionButton({
     containerNo: 'TEGU3009038',
     invoiceNo: '1671',
     destination: 'AMPLAS/CATUR',
-    cost: 385000,
+    cost: 350000,
     sellingPrice: 700000,
     customer: 'SKM',
     details: '',
+    bon: '',
     transactionType: TransactionType.TRUCK_TRANSACTION,
     truckId,
-    isPrinted: false,
+    isPrintedBon: false,
+    isPrintedInvoice: false,
   };
   const baseTruckTransaction: Omit<TruckTransaction, 'id' | 'date'> = {
     containerNo: '',
@@ -39,9 +41,11 @@ export default function AddTruckTransactionButton({
     sellingPrice: 0,
     customer: '',
     details: '',
+    bon: '',
     transactionType: TransactionType.TRUCK_TRANSACTION,
     truckId,
-    isPrinted: false,
+    isPrintedBon: false,
+    isPrintedInvoice: false,
   };
   const refreshData = useRouterRefresh();
   const [truckTransaction, setTruckTransaction] = useState(
@@ -251,6 +255,7 @@ export default function AddTruckTransactionButton({
                 <label>Tanggal</label>
                 <DatePicker
                   dateFormat="dd/MM/yyyy"
+                  inline
                   selected={date}
                   onChange={(date: Date) => setDate(date)}
                 />

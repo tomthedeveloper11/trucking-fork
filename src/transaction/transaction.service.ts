@@ -6,6 +6,7 @@ import {
   TransactionSummaryQuery,
   TransactionSummary,
   TotalSummary,
+  AdditionalTruckTransaction,
 } from '../../types/common';
 import customerRepository from '../customer/customer.repository';
 import transactionRepository from './transaction.repository';
@@ -146,6 +147,17 @@ const editTruckTransaction = async (
   return editTruckTransaction;
 };
 
+const editAdditionalTruckTransaction = async (
+  editAdditionalTruckTransactionPayload: AdditionalTruckTransaction
+) => {
+  const editAdditionalTruckTransaction =
+    await transactionRepository.editAdditionalTruckTransaction({
+      ...editAdditionalTruckTransactionPayload,
+      id: editAdditionalTruckTransactionPayload.id,
+    });
+  return editAdditionalTruckTransaction;
+};
+
 const getTruckTransactionAutoComplete = async () => {
   const truckTransactionAutoComplete =
     await transactionRepository.getTruckTransactionAutoComplete();
@@ -172,6 +184,7 @@ const transactionService = {
   getTruckTransactionsByTruckId,
   getMiscTruckTransactionsByTruckId,
   editTruckTransaction,
+  editAdditionalTruckTransaction,
   getTruckTransactionAutoComplete,
   printTransaction,
   filterTruckTransactions,

@@ -21,7 +21,7 @@ export default function Print({
               }}
               key={customer.id}
             >
-              <div className="w-64 h-64 rounded-lg border border-gray-200 shadow-md hover:bg-gray-100">
+              <div className="w-64 h-64 rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 cursor-pointer">
                 <h1 className="text-7xl text-center mt-20">
                   {customer.initial}
                 </h1>

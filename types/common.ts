@@ -1,9 +1,3 @@
-export interface DummyData {
-  song: string;
-  artist: string;
-  year: number;
-}
-
 export enum TransactionType {
   TRUCK_TRANSACTION = 'TRUCK_TRANSACTION',
   TRUCK_ADDITIONAL_TRANSACTION = 'TRUCK_ADDITIONAL_TRANSACTION',
@@ -26,10 +20,9 @@ export interface Truck {
 export interface Transaction {
   id: string;
   date: Date | string;
-  details: string;
+  details?: string;
   cost: number;
   transactionType: TransactionType;
-  isPrinted: boolean;
 }
 
 export interface TruckTransaction extends Transaction {
@@ -40,6 +33,9 @@ export interface TruckTransaction extends Transaction {
   destination: string;
   sellingPrice: number;
   customer: string;
+  bon: string;
+  isPrintedBon: boolean;
+  isPrintedInvoice: boolean;
 }
 
 export interface AdditionalTruckTransaction extends Transaction {
