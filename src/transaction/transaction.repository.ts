@@ -72,7 +72,7 @@ const getTransactions = async ({
       $lte: endDate,
     },
     transactionType: TransactionType.ADDITIONAL_TRANSACTION,
-  });
+  }).sort({ date: -1 });
   const transactions = documents.map((doc) =>
     convertDocumentToObject<TruckTransaction>(doc)
   );
@@ -139,6 +139,15 @@ const editTruckTransaction = async (
   );
   const truckTransaction = convertDocumentToObject<TruckTransaction>(document);
   return truckTransaction;
+};
+
+const editTransaction = async (editTransactionPayload: Transaction) => {
+  const document = await TransactionModel.findOneAndUpdate(
+    { _id: editTransactionPayload.id },
+    editTransactionPayload
+  );
+  const transaction = convertDocumentToObject<Transaction>(document);
+  return transaction;
 };
 
 const editAdditionalTruckTransaction = async (
@@ -239,6 +248,7 @@ const transactionRepository = {
   printTransaction,
   filterTruckTransactions,
   createTransaction,
+  editTransaction,
 };
 
 export default transactionRepository;

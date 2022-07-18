@@ -37,7 +37,6 @@ const createTruckTransaction = async (
   const modifiedPayload = await validateAndModifyPayload(
     truckTransactionPayload
   );
-  console.log(modifiedPayload, 'modifiedPayload');
   const newTruckTransaction =
     await transactionRepository.createTruckTransaction(modifiedPayload);
   return newTruckTransaction;
@@ -60,6 +59,13 @@ const getTransactions = async (date: TransactionSummaryQuery) => {
 
 const createTransaction = async (transactionPayload: Transaction) => {
   const newTransaction = await transactionRepository.createTransaction(
+    transactionPayload
+  );
+  return newTransaction;
+};
+
+const editTransaction = async (transactionPayload: Transaction) => {
+  const newTransaction = await transactionRepository.editTransaction(
     transactionPayload
   );
   return newTransaction;
@@ -204,6 +210,7 @@ const transactionService = {
   filterTruckTransactions,
   getTransactions,
   createTransaction,
+  editTransaction,
 };
 
 export default transactionService;

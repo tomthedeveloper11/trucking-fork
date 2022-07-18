@@ -1,5 +1,5 @@
 import { Table } from 'flowbite-react';
-import EditAdditionalTruckTransactionButton from './truck/edit-additional-truck-transaction-button';
+import EditTransactionButton from './edit-transaction-button';
 import { DataTableTransaction, TransactionType } from '../types/common';
 
 interface DataTableProperties {
@@ -53,7 +53,7 @@ export default function TransactionDataTable({
                 {buildTransactionRow(transaction)}
                 {
                   <Table.Cell>
-                    <EditAdditionalTruckTransactionButton
+                    <EditTransactionButton
                       key={`edit-modal-key${index}`}
                       existingTransaction={{
                         ...transaction,

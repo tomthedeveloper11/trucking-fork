@@ -33,25 +33,16 @@ export default async function handler(
   let conn;
   try {
     switch (req.method) {
-      case 'GET':
+      case 'PUT':
+        await createTransactionValidator(req, res);
         conn = await connectDb();
-        const transactions = await transactionService.getTransactions(
-          req.query
-        );
-        await conn.close();
-        res.status(200).json({ data: transactions });
-        break;
-
-      case 'POST':
-        // await createTransactionValidator(req, res);
-        conn = await connectDb();
-        const transactionPayload = req.body;
-        const transaction = await transactionService.createTransaction(
-          transactionPayload
+        const editTransactionPayload = req.body;
+        const editTransaction = await transactionService.editTransaction(
+          editTransactionPayload
         );
         await conn.close();
 
-        res.status(200).json({ data: transaction });
+        res.status(200).json({ data: editTransaction, message: 'helllow' });
         break;
     }
   } catch (error) {

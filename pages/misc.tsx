@@ -9,7 +9,6 @@ import { useState } from 'react';
 export default function TransactionPage({
   transactions,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  console.log(transactions);
   const transactionDataTableHeaders = {
     Tanggal: 'w-3/12',
     Deskripsi: 'w-4/12',
