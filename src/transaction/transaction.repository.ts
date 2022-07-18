@@ -7,6 +7,7 @@ import {
   AdditionalTruckTransaction,
   TransactionSummaryQuery,
   FilterTransactionsQuery,
+  Transaction,
 } from '../../types/common';
 import { TransactionModel } from './transaction.model';
 import { Document } from 'mongoose';
@@ -59,6 +60,26 @@ const getAllTransactions = async ({
   return allTransactions;
 };
 
+const getTransactions = async ({
+  year = new Date().getFullYear().toString(),
+  month = (new Date().getMonth() + 1).toString(),
+}: TransactionSummaryQuery) => {
+  const startDate = moment(`${year}-${month}-01`).startOf('month').toDate();
+  const endDate = moment(`${year}-${month}-01`).endOf('month').toDate();
+  const documents = await TransactionModel.find({
+    date: {
+      $gte: startDate,
+      $lte: endDate,
+    },
+    transactionType: TransactionType.ADDITIONAL_TRANSACTION,
+  });
+  const transactions = documents.map((doc) =>
+    convertDocumentToObject<TruckTransaction>(doc)
+  );
+
+  return transactions;
+};
+
 const getTruckTransactionsByCustomerId = async (customerId: string) => {
   const documents = await TransactionModel.find({
     'customer.customerId': customerId,
@@ -77,7 +98,7 @@ const getTruckTransactionsByTruckId = async (truckId: string) => {
   return truckTransactions;
 };
 
-const getMiscTruckTransactionsByTruckId = async (truckId: string) => {
+const getAdditionalTruckTransactionsByTruckId = async (truckId: string) => {
   const documents = await TransactionModel.find({
     truckId,
     transactionType: TransactionType.TRUCK_ADDITIONAL_TRANSACTION,
@@ -92,6 +113,12 @@ const createTruckTransaction = async (
   const document = await TransactionModel.create(truckTransactionPayload);
   const truckTransaction = convertDocumentToObject<TruckTransaction>(document);
   return truckTransaction;
+};
+
+const createTransaction = async (transactionPayload: Transaction) => {
+  const document = await TransactionModel.create(transactionPayload);
+  const transaction = convertDocumentToObject<Transaction>(document);
+  return transaction;
 };
 
 const createAdditionalTruckTransaction = async (
@@ -201,15 +228,17 @@ const transactionRepository = {
   createAdditionalTruckTransaction,
   getTruckTransactions,
   getAllTransactions,
+  getTransactions,
   getTruckTransactionsByCustomerId,
   getTruckTransactionsByTruckId,
-  getMiscTruckTransactionsByTruckId,
+  getAdditionalTruckTransactionsByTruckId,
   createTruckTransaction,
   editTruckTransaction,
   editAdditionalTruckTransaction,
   getTruckTransactionAutoComplete,
   printTransaction,
   filterTruckTransactions,
+  createTransaction,
 };
 
 export default transactionRepository;

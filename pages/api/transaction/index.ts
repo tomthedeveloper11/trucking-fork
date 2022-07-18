@@ -1,23 +1,23 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { check, validationResult } from 'express-validator';
-import transactionService from '../../../../../src/transaction/transaction.service';
-import initMiddleware from '../../../../../src/middlewares/init-middleware';
-import validateMiddleware from '../../../../../src/middlewares/validate-middleware';
-import { AdditionalTruckTransaction } from '../../../../../types/common';
-import connectDb from '../../../../../src/mongodb/connection';
+import transactionService from '../../../src/transaction/transaction.service';
+import initMiddleware from '../../../src/middlewares/init-middleware';
+import validateMiddleware from '../../../src/middlewares/validate-middleware';
+import { Transaction } from '../../../types/common';
+import connectDb from '../../../src/mongodb/connection';
 import _ from 'lodash';
 
 interface TransactionsAPIRequest extends NextApiRequest {
-  body: AdditionalTruckTransaction;
+  body: Transaction;
   query: {
-    truckId: string;
+    month: string;
+    year: string;
   };
 }
 
 const createTransactionValidator = initMiddleware(
   validateMiddleware(
     [
-      check('truckId').isString().isLength({ min: 2 }).exists(),
       check('transactionType').isString().isLength({ min: 2 }).exists(),
       check('cost').isNumeric().exists(),
       check('details').isString().optional(),
@@ -35,25 +35,24 @@ export default async function handler(
     switch (req.method) {
       case 'GET':
         conn = await connectDb();
-
-        const truckId = req.query.truckId;
-        const miscTransactions =
-          await transactionService.getAdditionalTruckTransactionsByTruckId(
-            truckId
-          );
+        const transactions = await transactionService.getTransactions(
+          req.query
+        );
         await conn.close();
-        res.status(200).json({ data: miscTransactions });
+        res.status(200).json({ data: transactions });
         break;
 
       case 'POST':
-        await createTransactionValidator(req, res);
-
+        // await createTransactionValidator(req, res);
         conn = await connectDb();
         const transactionPayload = req.body;
-        const transaction =
-          await transactionService.createAdditionalTruckTransaction(
-            transactionPayload
-          );
+        console.log(
+          '🚀 ~ file: index.ts ~ line 49 ~ transactionPayload',
+          transactionPayload
+        );
+        const transaction = await transactionService.createTransaction(
+          transactionPayload
+        );
         await conn.close();
 
         res.status(200).json({ data: transaction });

@@ -1,19 +1,22 @@
 import { Table } from 'flowbite-react';
 import EditAdditionalTruckTransactionButton from './truck/edit-additional-truck-transaction-button';
-import { DataTableTransaction, TransactionType } from '../types/common';
+import {
+  DataTableAdditionalTransaction,
+  TransactionType,
+} from '../types/common';
 
 interface DataTableProperties {
   headers: Record<string, string>;
-  data: DataTableTransaction[];
+  data: DataTableAdditionalTransaction[];
   hiddenFields?: string[];
 }
 
-export default function TransactionDataTable({
+export default function AdditionalTruckTransactionDataTable({
   headers,
   data,
   hiddenFields,
 }: DataTableProperties) {
-  function buildTransactionRow(obj: DataTableTransaction) {
+  function buildTransactionRow(obj: DataTableAdditionalTransaction) {
     const tableTransaction: Record<string, string | number | Date | boolean> = {
       ...obj,
     };
@@ -57,7 +60,8 @@ export default function TransactionDataTable({
                       key={`edit-modal-key${index}`}
                       existingTransaction={{
                         ...transaction,
-                        transactionType: TransactionType.ADDITIONAL_TRANSACTION,
+                        transactionType:
+                          TransactionType.TRUCK_ADDITIONAL_TRANSACTION,
                       }}
                     />
                   </Table.Cell>

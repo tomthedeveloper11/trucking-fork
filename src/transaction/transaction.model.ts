@@ -50,11 +50,6 @@ const transactionSchema = new Schema<any>(
     },
     truckId: {
       type: String,
-      required: true,
-    },
-    isPrinted: {
-      type: Boolean,
-      default: false,
     },
   },
   { versionKey: false }

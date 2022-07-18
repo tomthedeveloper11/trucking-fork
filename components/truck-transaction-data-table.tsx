@@ -8,7 +8,7 @@ import {
 } from '../types/common';
 import React, { useState } from 'react';
 import { PrinterIcon } from '@heroicons/react/solid';
-import truckTransactionBloc from '../lib/truckTransactions';
+import truckTransactionBloc from '../lib/truckTransaction';
 import { formatRupiah } from '../helpers/hbsHelpers';
 
 interface DataTableProperties {

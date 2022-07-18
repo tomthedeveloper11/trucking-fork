@@ -42,6 +42,8 @@ export interface AdditionalTruckTransaction extends Transaction {
   truckId: string;
 }
 
+export type DataTableTransaction = Omit<Transaction, 'transactionType'>;
+
 export type DataTableAdditionalTransaction = Omit<
   AdditionalTruckTransaction,
   'transactionType'

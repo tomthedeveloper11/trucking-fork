@@ -12,13 +12,13 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { PlusIcon } from '@heroicons/react/solid';
 import { useToastContext } from '../../lib/toast-context';
 
-interface AddAdditionalTransactionButtonProps {
+interface AddAdditionalTruckTransactionButtonProps {
   truckId: string;
 }
 
-export default function AddAdditionalTransactionButton({
+export default function AddAdditionalTruckTransactionButton({
   truckId,
-}: AddAdditionalTransactionButtonProps) {
+}: AddAdditionalTruckTransactionButtonProps) {
   const addToast = useToastContext();
   const baseTransaction: Omit<AdditionalTruckTransaction, 'id' | 'date'> = {
     details: '',

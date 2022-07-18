@@ -1,8 +1,8 @@
 import Head from 'next/head';
 import { InferGetServerSidePropsType } from 'next';
 import AddTruckTransactionButton from '../../components/truck/add-truck-transaction-button';
-import AddAdditionalTransactionButton from '../../components/truck/add-additional-transaction-button';
-import truckTransactionBloc from '../../lib/truckTransactions';
+import AddAdditionalTruckTransactionButton from '../../components/truck/add-additional-truck-transaction-button';
+import truckTransactionBloc from '../../lib/truckTransaction';
 import {
   DataTableTruckTransaction,
   DataTableAdditionalTransaction,
@@ -10,7 +10,7 @@ import {
   AdditionalTruckTransaction,
 } from '../../types/common';
 import TruckTransactionDataTable from '../../components/truck-transaction-data-table';
-import TransactionDataTable from '../../components/transaction-data-table';
+import AdditionalTruckTransactionDataTable from '../../components/additional-truck-transaction-data-table';
 import { useState } from 'react';
 
 export default function TruckDetails({
@@ -97,7 +97,7 @@ export default function TruckDetails({
           />
         </div>
         <div className="flex justify-end mr-5 mb-3">
-          <AddAdditionalTransactionButton truckId={truckId} />
+          <AddAdditionalTruckTransactionButton truckId={truckId} />
         </div>
         {table === 'trip' ? (
           <TruckTransactionDataTable
@@ -107,7 +107,7 @@ export default function TruckDetails({
             autoCompleteData={autoCompleteData}
           />
         ) : (
-          <TransactionDataTable
+          <AdditionalTruckTransactionDataTable
             headers={miscDataTableHeaders}
             data={miscTruckTransactions.map((t) => formatMiscTransaction(t))}
             hiddenFields={['id', 'isPrinted', 'truckId']}
@@ -124,7 +124,7 @@ export const getServerSideProps = async (context: any) => {
   const truckTransactions =
     await truckTransactionBloc.getTruckTransactionsByTruckId(truckId);
   const miscTruckTransactions =
-    await truckTransactionBloc.getMiscTruckTransactionsByTruckId(truckId);
+    await truckTransactionBloc.getAdditionalTruckTransactionsByTruckId(truckId);
   const autoCompleteData =
     await truckTransactionBloc.getTruckTransactionAutoComplete();
   return {

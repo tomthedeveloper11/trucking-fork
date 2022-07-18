@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import { InferGetServerSidePropsType } from 'next';
-import truckTransactionBloc from '../lib/truckTransactions';
+import truckTransactionBloc from '../lib/truckTransaction';
 import { formatRupiah } from '../helpers/hbsHelpers';
 
 export default function Home({

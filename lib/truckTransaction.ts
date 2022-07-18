@@ -56,7 +56,7 @@ const getTruckTransactionsByTruckId = async (truckId: string) => {
   return [];
 };
 
-const getMiscTruckTransactionsByTruckId = async (truckId: string) => {
+const getAdditionalTruckTransactionsByTruckId = async (truckId: string) => {
   const response = await axios({
     method: 'GET',
     url: `http://localhost:3000/api/transaction/truck/misc`,
@@ -109,7 +109,7 @@ const truckTransactionBloc = {
   getTotalSummary,
   getTruckTransactionsByCustomerId,
   getTruckTransactionsByTruckId,
-  getMiscTruckTransactionsByTruckId,
+  getAdditionalTruckTransactionsByTruckId,
   getTruckTransactionAutoComplete,
   printTransactions,
 };

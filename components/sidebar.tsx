@@ -66,24 +66,22 @@ export default function SidebarComponent() {
               </span>
             </li>
           </Link>
-          <Link href="">
+          <Link href="/misc">
             <li
               className={
-                router.pathname == '/others'
-                  ? 'sidebarActiveLink'
-                  : 'sidebarLink'
+                router.pathname == '/misc' ? 'sidebarActiveLink' : 'sidebarLink'
               }
             >
               <ClipboardIcon
                 className={
-                  router.pathname == '/others'
+                  router.pathname == '/misc'
                     ? 'sidebarActiveIcon'
                     : 'sidebarIcon'
                 }
               />
               <span
                 className={
-                  router.pathname == '/others'
+                  router.pathname == '/misc'
                     ? 'sidebarActiveText'
                     : 'sidebarText'
                 }

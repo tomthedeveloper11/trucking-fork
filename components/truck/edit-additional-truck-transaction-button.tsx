@@ -9,15 +9,15 @@ import axios from 'axios';
 import { useToastContext } from '../../lib/toast-context';
 import { PencilAltIcon } from '@heroicons/react/solid';
 
-interface EditTransactionButtonProps {
+interface EditAdditionalTruckTransactionButtonProps {
   existingTransaction: Transaction;
   disabled?: boolean;
 }
 
-export default function EditTransactionButton({
+export default function EditAdditionalTruckTransactionButton({
   existingTransaction,
   disabled = false,
-}: EditTransactionButtonProps) {
+}: EditAdditionalTruckTransactionButtonProps) {
   const [transaction, setTransaction] = useState(existingTransaction);
   const [modal, setModal] = useState(false);
   const [day, month, year] = transaction.date.toString().split('/');
@@ -37,7 +37,7 @@ export default function EditTransactionButton({
     }));
   }
 
-  async function editTransaction() {
+  async function editAdditionalTruckTransaction() {
     await axios({
       method: 'PUT',
       url: `http://localhost:3000/api/transaction/truck/misc/${transaction.id}`,
@@ -100,7 +100,7 @@ export default function EditTransactionButton({
           <button
             className="bg-[#F5D558] hover:bg-[#E3C652] text-white font-bold py-2 px-10 rounded w-full"
             onClick={() => {
-              editTransaction()
+              editAdditionalTruckTransaction()
                 .then(() => setModal(false))
                 .catch((err) => addToast(err.response.data.message));
             }}
