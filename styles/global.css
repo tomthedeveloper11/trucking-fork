@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply ml-48;
+    @apply ml-48 scrollbar;
   }
 }
 
@@ -27,4 +27,24 @@
   .sidebarActiveText {
     @apply ml-3 text-green-400;
   }
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 9px;
+  height: 20px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  border-radius: 50vh;
+  background: #f9fafb;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background: #31c48d;
+  border-radius: 50vh;
+  border: 1px solid #31c48d;
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #31c48d;
 }
