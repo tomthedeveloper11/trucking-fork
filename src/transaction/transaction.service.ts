@@ -71,6 +71,13 @@ const editTransaction = async (transactionPayload: Transaction) => {
   return newTransaction;
 };
 
+const deleteTransaction = async (transactionId: string) => {
+  const transaction = await transactionRepository.deleteTransaction(
+    transactionId
+  );
+  return transaction;
+};
+
 const getTruckTransactions = async () => {
   const transactions = await transactionRepository.getTruckTransactions();
   return transactions;
@@ -198,6 +205,7 @@ const transactionService = {
   createTruckTransaction,
   createAdditionalTruckTransaction,
   getTruckTransactions,
+  deleteTransaction,
   getGroupedTruckTransactions,
   getTotalSummary,
   getTruckTransactionsByCustomerId,

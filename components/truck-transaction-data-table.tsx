@@ -7,9 +7,10 @@ import {
   UITruckTransaction,
 } from '../types/common';
 import React, { useState } from 'react';
-import { PrinterIcon } from '@heroicons/react/solid';
+import { PrinterIcon, TrashIcon } from '@heroicons/react/solid';
 import truckTransactionBloc from '../lib/truckTransaction';
 import { formatRupiah } from '../helpers/hbsHelpers';
+import DeleteVariousTransactionButton from './truck/delete-various-transaction-button';
 
 interface DataTableProperties {
   headers: Record<string, string>;
@@ -36,7 +37,10 @@ function buildTransactionRow(
   return (
     <>
       {Object.values(tableTransaction).map((val, i) => (
-        <Table.Cell className="whitespace-nowrap" key={`td-${obj.id}-${i}`}>
+        <Table.Cell
+          className="whitespace-nowrap px-4"
+          key={`td-${obj.id}-${i}`}
+        >
           {val ? val.toString() : ''}
         </Table.Cell>
       ))}
@@ -95,13 +99,35 @@ export default function TruckTransactionDataTable({
               <Table.Row key={`tr-${index}`}>
                 <Table.Cell>
                   {emkl && (
-                    <Checkbox
-                      onClick={() => {
-                        truckTransactions[index].selected =
-                          !truckTransactions[index].selected;
-                        setTruckTransactions([...truckTransactions]);
-                      }}
-                    ></Checkbox>
+                    <div className="grid grid-cols-3 gap-6">
+                      <input
+                        className="mt-2 rounded checked:bg-green-400 checked:border-green-400 focus:ring-green-500"
+                        type="checkbox"
+                        onClick={() => {
+                          truckTransactions[index].selected =
+                            !truckTransactions[index].selected;
+                          setTruckTransactions([...truckTransactions]);
+                        }}
+                      ></input>
+                      <p
+                        className={`text-xl font-bold ${
+                          truckTransaction.isPrintedBon
+                            ? 'text-orange-600'
+                            : 'text-gray-200'
+                        }`}
+                      >
+                        B
+                      </p>
+                      <p
+                        className={`text-xl font-bold ${
+                          truckTransaction.isPrintedInvoice
+                            ? 'text-green-600'
+                            : 'text-gray-200'
+                        }`}
+                      >
+                        T
+                      </p>
+                    </div>
                   )}
                 </Table.Cell>
                 {buildTransactionRow(truckTransaction, hiddenFields)}
@@ -113,6 +139,9 @@ export default function TruckTransactionDataTable({
                         existingTruckTransaction={truckTransactions[index]}
                         autoCompleteData={autoCompleteData}
                         disabled={truckTransactions[index]?.selected}
+                      />
+                      <DeleteVariousTransactionButton
+                        transactionId={truckTransaction.id}
                       />
                       {emkl && (
                         <PrinterIcon

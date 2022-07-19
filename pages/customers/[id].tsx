@@ -21,7 +21,8 @@ export default function CustomerDetails({
     Borongan: 'w-1/12',
     Pembayaran: 'w-1/12',
     EMKL: 'w-1/12',
-    'Info Tambahan': 'w-3/12',
+    Bon: 'w-2/12',
+    'Info Tambahan': 'w-1/12',
   };
   const formatTruckTransaction = (
     truckTransaction: TruckTransaction
@@ -36,8 +37,10 @@ export default function CustomerDetails({
       sellingPrice: truckTransaction.sellingPrice,
       customer: truckTransaction.customer,
       details: truckTransaction.details,
-      isPrinted: truckTransaction.isPrinted,
       truckId: truckTransaction.truckId,
+      bon: truckTransaction.bon,
+      isPrintedBon: truckTransaction.isPrintedBon,
+      isPrintedInvoice: truckTransaction.isPrintedInvoice,
     };
   };
 
@@ -53,7 +56,7 @@ export default function CustomerDetails({
         <TruckTransactionDataTable
           headers={dataTableHeaders}
           data={truckTransactions.map((t) => formatTruckTransaction(t))}
-          hiddenFields={['id', 'isPrinted', 'truckId']}
+          hiddenFields={['id', 'truckId', 'isPrintedBon', 'isPrintedInvoice']}
           autoCompleteData={autoCompleteData}
           emkl={true}
         />

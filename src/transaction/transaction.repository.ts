@@ -150,6 +150,14 @@ const editTransaction = async (editTransactionPayload: Transaction) => {
   return transaction;
 };
 
+const deleteTransaction = async (transactionId: string) => {
+  const document = await TransactionModel.findOneAndDelete({
+    _id: transactionId,
+  });
+  const transaction = convertDocumentToObject<Transaction>(document);
+  return transaction;
+};
+
 const editAdditionalTruckTransaction = async (
   editAdditionalTruckTransactionPayload: AdditionalTruckTransaction
 ) => {
@@ -191,11 +199,6 @@ const printTransaction = async (transactionIds: string[]) => {
   });
 
   const truckTransactions = documents.map((doc) => mapTruckTransaction(doc));
-  console.log(
-    '🚀 ~ file: transaction.repository.ts ~ line 147 ~ printTransaction ~ truckTransactions',
-    truckTransactions
-  );
-
   const content = {
     main: {
       currentDate: new Date(),
@@ -238,6 +241,7 @@ const transactionRepository = {
   getTruckTransactions,
   getAllTransactions,
   getTransactions,
+  deleteTransaction,
   getTruckTransactionsByCustomerId,
   getTruckTransactionsByTruckId,
   getAdditionalTruckTransactionsByTruckId,

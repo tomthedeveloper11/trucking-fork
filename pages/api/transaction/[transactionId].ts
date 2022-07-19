@@ -12,6 +12,7 @@ interface TransactionsAPIRequest extends NextApiRequest {
   query: {
     month: string;
     year: string;
+    transactionId: string;
   };
 }
 
@@ -43,6 +44,17 @@ export default async function handler(
         await conn.close();
 
         res.status(200).json({ data: editTransaction, message: 'helllow' });
+        break;
+
+      case 'DELETE':
+        conn = await connectDb();
+        const { transactionId } = req.query;
+        const transaction = await transactionService.deleteTransaction(
+          transactionId
+        );
+        await conn.close();
+
+        res.status(200).json({ data: transaction });
         break;
     }
   } catch (error) {

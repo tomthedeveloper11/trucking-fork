@@ -1,6 +1,7 @@
 import { Table } from 'flowbite-react';
 import EditTransactionButton from './edit-transaction-button';
 import { DataTableTransaction, TransactionType } from '../types/common';
+import DeleteVariousTransactionButton from './truck/delete-various-transaction-button';
 
 interface DataTableProperties {
   headers: Record<string, string>;
@@ -59,6 +60,9 @@ export default function TransactionDataTable({
                         ...transaction,
                         transactionType: TransactionType.ADDITIONAL_TRANSACTION,
                       }}
+                    />
+                    <DeleteVariousTransactionButton
+                      transactionId={transaction.id}
                     />
                   </Table.Cell>
                 }
