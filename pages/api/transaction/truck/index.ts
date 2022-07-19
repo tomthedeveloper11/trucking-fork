@@ -25,6 +25,7 @@ const createTruckTransactionValidator = initMiddleware(
       check('customer').isString().isLength({ min: 2 }).exists(),
       check('destination').isString().isLength({ min: 2 }).exists(),
       check('sellingPrice').isNumeric().optional(),
+      check('bon').isString().optional(),
       check('details').isString().optional(),
     ],
     validationResult

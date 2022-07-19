@@ -61,23 +61,23 @@ export default function Home({
               <a
                 href={`/trucks/${entry[1].truckId}?truckName=${entry[0]}`}
                 key={i}
-                className="flex gap-40 px-6 py-3 m-5 rounded-lg border border-gray-200 shadow-md hover:bg-gray-100"
+                className="gap-40 px-6 py-3 m-5 rounded-lg border border-gray-200 shadow-md hover:bg-gray-100"
               >
                 <div className="relative">
-                  <h3 className="absolute translate-y-[-50%] top-[50%] text-5xl whitespace-nowrap text-center justify-center align-middle">
+                  <h3 className="text-5xl whitespace-nowrap text-center justify-center align-middle">
                     {entry[0]}
                   </h3>
                 </div>
 
                 <div>
-                  <h3 className="my-2 text-green-400 text-end">
+                  <h3 className="my-2 text-green-400 text-center">
                     Pembayaran: {formatRupiah(entry[1].sellingPrice)}
                   </h3>
-                  <h3 className="my-2 text-red-400 text-end">
+                  <h3 className="my-2 text-red-400 text-center">
                     Biaya: {formatRupiah(entry[1].cost)}
                   </h3>
                   <hr />
-                  <h3 className="my-2 text-end">
+                  <h3 className="my-2 text-center">
                     Margin: {formatRupiah(entry[1].margin)}
                   </h3>
                 </div>

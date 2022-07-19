@@ -37,6 +37,7 @@ const createTruckTransaction = async (
   const modifiedPayload = await validateAndModifyPayload(
     truckTransactionPayload
   );
+  console.log(modifiedPayload, '<<<<<');
   const newTruckTransaction =
     await transactionRepository.createTruckTransaction(modifiedPayload);
   return newTruckTransaction;

@@ -48,7 +48,7 @@ export default function AdditionalTruckTransactionDataTable({
               {header}
             </Table.HeadCell>
           ))}
-          <Table.HeadCell>Edit</Table.HeadCell>
+          <Table.HeadCell>Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
           {data.map((transaction, index) => {
@@ -56,7 +56,7 @@ export default function AdditionalTruckTransactionDataTable({
               <Table.Row key={`tr-${index}`}>
                 {buildTransactionRow(transaction)}
                 {
-                  <Table.Cell>
+                  <Table.Cell className="flex flex-row">
                     <EditAdditionalTruckTransactionButton
                       key={`edit-modal-key${index}`}
                       existingTransaction={{

@@ -28,7 +28,8 @@ export default function TruckDetails({
     Borongan: 'w-1/12',
     Pembayaran: 'w-1/12',
     EMKL: 'w-1/12',
-    'Info Tambahan': 'w-3/12',
+    bon: 'w-1/12',
+    'Info Tambahan': 'w-2/12',
   };
 
   const miscDataTableHeaders = {
@@ -49,9 +50,11 @@ export default function TruckDetails({
       cost: truckTransaction.cost,
       sellingPrice: truckTransaction.sellingPrice,
       customer: truckTransaction.customer,
+      bon: truckTransaction.bon,
       details: truckTransaction.details,
-      isPrinted: truckTransaction.isPrinted,
       truckId: truckTransaction.truckId,
+      isPrintedBon: truckTransaction.isPrintedBon,
+      isPrintedInvoice: truckTransaction.isPrintedInvoice,
     };
   };
 
@@ -63,7 +66,6 @@ export default function TruckDetails({
       date: new Date(transaction.date).toLocaleDateString('id-ID'),
       details: transaction.details,
       cost: transaction.cost,
-      isPrinted: transaction.isPrinted,
       truckId: transaction.truckId,
     };
   };
@@ -75,35 +77,52 @@ export default function TruckDetails({
         <title>Truck Details</title>
       </Head>
 
-      <div className="container p-10 mb-60 flex-col">
+      <div className="container p-8 mb-60 flex-col">
         <h1 className="text-center text-7xl mb-5">{truckName}</h1>
         <button
-          className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+          className={`mr-3 hover:bg-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ${
+            table === 'trip'
+              ? 'bg-blue-500 text-white'
+              : 'bg-transparent text-blue-700'
+          }`}
           onClick={() => setTable('trip')}
         >
-          Pengeluaran Trip
+          Transaksi Trip
         </button>
         <button
-          className="bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded"
+          className={`mr-3 hover:bg-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ${
+            table === 'misc'
+              ? 'bg-blue-500 text-white'
+              : 'bg-transparent text-blue-700'
+          }`}
           onClick={() => setTable('misc')}
         >
-          Pengeluaran Lainnya
+          Transaksi Lainnya
         </button>
-        <button></button>
-        <div className="flex justify-end mr-5 mb-3">
-          <AddTruckTransactionButton
-            truckId={truckId}
-            autoCompleteData={autoCompleteData}
-          />
-        </div>
-        <div className="flex justify-end mr-5 mb-3">
-          <AddAdditionalTruckTransactionButton truckId={truckId} />
-        </div>
+        {table === 'trip' ? (
+          <div className="flex justify-end mr-5 mb-3">
+            <AddTruckTransactionButton
+              truckId={truckId}
+              autoCompleteData={autoCompleteData}
+            />
+          </div>
+        ) : (
+          <div className="flex justify-end mr-5 mb-3">
+            <AddAdditionalTruckTransactionButton truckId={truckId} />
+          </div>
+        )}
+
         {table === 'trip' ? (
           <TruckTransactionDataTable
             headers={truckDataTableHeaders}
             data={truckTransactions.map((t) => formatTruckTransaction(t))}
-            hiddenFields={['id', 'isPrinted', 'truckId']}
+            hiddenFields={[
+              'id',
+              'isPrinted',
+              'truckId',
+              'isPrintedBon',
+              'isPrintedInvoice',
+            ]}
             autoCompleteData={autoCompleteData}
           />
         ) : (

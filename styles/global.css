@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply ml-48 scrollbar;
+    @apply ml-[20vw] lg:ml-[200px] scrollbar;
   }
 }
 
@@ -31,7 +31,7 @@
 
 .scrollbar::-webkit-scrollbar {
   width: 9px;
-  height: 20px;
+  height: 9px;
 }
 
 .scrollbar::-webkit-scrollbar-track {
@@ -47,4 +47,10 @@
 
 .scrollbar::-webkit-scrollbar-thumb:hover {
   background: #31c48d;
+}
+
+.react-datepicker__navigation {
+  top: 1em;
+  line-height: 1.7em;
+  border: 0.45em solid transparent;
 }

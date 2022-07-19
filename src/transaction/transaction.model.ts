@@ -23,6 +23,9 @@ const transactionSchema = new Schema<any>(
     details: {
       type: String,
     },
+    bon: {
+      type: String,
+    },
     cost: {
       type: Number,
       required: true,
@@ -50,6 +53,12 @@ const transactionSchema = new Schema<any>(
     },
     truckId: {
       type: String,
+    },
+    isPrintedBon: {
+      type: Boolean,
+    },
+    isPrintedInvoice: {
+      type: Boolean,
     },
   },
   { versionKey: false }

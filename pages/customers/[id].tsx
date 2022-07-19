@@ -50,7 +50,7 @@ export default function CustomerDetails({
         <title>Truck Details</title>
       </Head>
 
-      <div className="container p-10 mb-60 flex-col">
+      <div className="container p-8 mb-60 flex-col">
         <h1 className="text-center text-7xl mb-5">{customer.initial}</h1>
 
         <TruckTransactionDataTable

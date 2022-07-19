@@ -23,7 +23,7 @@ export default function DeleteVariousTransactionButton({ transactionId }) {
 
   return (
     <TrashIcon
-      className="h-10 cursor-pointer"
+      className="h-7 cursor-pointer text-red-500"
       onClick={deleteTruckTransaction}
     />
   );

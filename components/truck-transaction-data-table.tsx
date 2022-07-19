@@ -37,10 +37,7 @@ function buildTransactionRow(
   return (
     <>
       {Object.values(tableTransaction).map((val, i) => (
-        <Table.Cell
-          className="whitespace-nowrap px-4"
-          key={`td-${obj.id}-${i}`}
-        >
+        <Table.Cell className="pr-4" key={`td-${obj.id}-${i}`}>
           {val ? val.toString() : ''}
         </Table.Cell>
       ))}
@@ -83,9 +80,9 @@ export default function TruckTransactionDataTable({
 
   return (
     <>
-      <Table hoverable={true}>
+      <Table>
         <Table.Head className="whitespace-nowrap">
-          <Table.HeadCell></Table.HeadCell>
+          {emkl && <Table.HeadCell></Table.HeadCell>}
           {Object.entries(headers).map(([header, columnWidth], index) => (
             <Table.HeadCell key={index} className={`${columnWidth}`}>
               {header}
@@ -96,9 +93,15 @@ export default function TruckTransactionDataTable({
         <Table.Body className="divide-y">
           {data.map((truckTransaction, index) => {
             return (
-              <Table.Row key={`tr-${index}`}>
-                <Table.Cell>
-                  {emkl && (
+              <Table.Row
+                key={`tr-${index}`}
+                className={`${
+                  truckTransactions[index].selected &&
+                  'bg-green-100 hover:bg-green-200'
+                } hover:bg-gray-100`}
+              >
+                {emkl && (
+                  <Table.Cell>
                     <div className="grid grid-cols-3 gap-6">
                       <input
                         className="mt-2 rounded checked:bg-green-400 checked:border-green-400 focus:ring-green-500"
@@ -128,8 +131,8 @@ export default function TruckTransactionDataTable({
                         T
                       </p>
                     </div>
-                  )}
-                </Table.Cell>
+                  </Table.Cell>
+                )}
                 {buildTransactionRow(truckTransaction, hiddenFields)}
                 {
                   <Table.Cell>
@@ -145,7 +148,7 @@ export default function TruckTransactionDataTable({
                       />
                       {emkl && (
                         <PrinterIcon
-                          className="cursor-pointer"
+                          className="cursor-pointer h-7"
                           onClick={() => print(truckTransactions[index].id)}
                         />
                       )}

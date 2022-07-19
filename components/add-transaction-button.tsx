@@ -54,17 +54,25 @@ export default function AddTransactionButton() {
       >
         <PlusIcon className="h-10" />
       </button>
-      <Modal show={modal} onClose={() => setModal(false)}>
+      <Modal show={modal} onClose={() => setModal(false)} size="3xl">
         <Modal.Header>Tambah Transaksi Lainnya</Modal.Header>
         <Modal.Body>
           <form action="post">
-            <div className="grid grid-rows-2 grid-cols-5 grid-flow-row gap-4">
+            <div className="grid grid-rows-4 grid-cols-5 grid-flow-row gap-4">
               <div className="form-group row-span-1 col-span-3">
                 <TextInput
                   label="Deskripsi"
                   name="details"
                   value={transaction.details}
                   onChange={handleChange}
+                />
+              </div>
+              <div className="form-group row-span-5 col-span-2">
+                <label>Tanggal</label>
+                <DatePicker
+                  dateFormat="dd/MM/yyyy"
+                  selected={date}
+                  onChange={(date: Date) => setDate(date)}
                 />
               </div>
               <div className="form-group row-span-1 col-span-2">
@@ -75,14 +83,6 @@ export default function AddTransactionButton() {
                   value={transaction.cost}
                   prefix="Rp"
                   onChange={handleChange}
-                />
-              </div>
-              <div className="form-group row-span-1 col-span-2">
-                <label>Tanggal</label>
-                <DatePicker
-                  dateFormat="dd/MM/yyyy"
-                  selected={date}
-                  onChange={(date: Date) => setDate(date)}
                 />
               </div>
             </div>

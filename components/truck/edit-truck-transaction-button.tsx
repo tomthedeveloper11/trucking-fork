@@ -92,7 +92,7 @@ export default function EditTruckTransactionButton({
       <PencilAltIcon
         className={`${
           disabled ? 'text-gray-200' : 'text-yellow-200'
-        } cursor-pointer h-8`}
+        } cursor-pointer h-7`}
         href={'#'}
         onClick={() => {
           if (!disabled) {
@@ -101,11 +101,11 @@ export default function EditTruckTransactionButton({
         }}
       />
 
-      <Modal show={modal} onClose={() => setModal(false)}>
+      <Modal show={modal} onClose={() => setModal(false)} size="5xl">
         <Modal.Header>Edit Transaksi</Modal.Header>
         <Modal.Body>
           <form action="post">
-            <div className="grid grid-rows-2 grid-cols-5 grid-flow-row gap-4">
+            <div className="grid grid-rows-2 grid-cols-7 grid-flow-row gap-4">
               <div className="form-group row-span-1 col-span-2">
                 <TextInput
                   label="No. Container"
@@ -155,6 +155,16 @@ export default function EditTruckTransactionButton({
                   </div>
                   {/* autoComplete customer */}
                 </div>
+              </div>
+              <div className="form-group row-span-5 col-span-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Tanggal
+                </label>
+                <DatePicker
+                  dateFormat="dd/MM/yyyy"
+                  selected={date}
+                  onChange={(date: Date) => setDate(date)}
+                />
               </div>
 
               <div className="form-group row-span-1 col-span-3">
@@ -227,17 +237,6 @@ export default function EditTruckTransactionButton({
                   name="details"
                   value={truckTransaction.details}
                   onChange={handleChange}
-                />
-              </div>
-
-              <div className="form-group row-span-1 col-span-2">
-                <label>Tanggal</label>
-                <DatePicker
-                  selected={date}
-                  dateFormat={'dd/M/yyyy'}
-                  onChange={(date: Date) => {
-                    setDate(date);
-                  }}
                 />
               </div>
             </div>

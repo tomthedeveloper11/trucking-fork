@@ -50,8 +50,7 @@ export default function EditTransactionButton({
       <PencilAltIcon
         className={`${
           disabled ? 'text-gray-200' : 'text-yellow-200'
-        } cursor-pointer h-8`}
-        href={'#'}
+        } cursor-pointer h-7`}
         onClick={() => {
           if (!disabled) {
             setModal(true);

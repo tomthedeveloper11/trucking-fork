@@ -45,7 +45,7 @@ export default function TransactionDataTable({
               {header}
             </Table.HeadCell>
           ))}
-          <Table.HeadCell>Edit</Table.HeadCell>
+          <Table.HeadCell>Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
           {data.map((transaction, index) => {
@@ -53,7 +53,7 @@ export default function TransactionDataTable({
               <Table.Row key={`tr-${index}`}>
                 {buildTransactionRow(transaction)}
                 {
-                  <Table.Cell>
+                  <Table.Cell className="flex flex-row">
                     <EditTransactionButton
                       key={`edit-modal-key${index}`}
                       existingTransaction={{

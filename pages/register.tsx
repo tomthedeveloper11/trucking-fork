@@ -35,7 +35,11 @@ export default function Register() {
 
   return (
     <div className="flex text-center m-auto">
-      <form className="mt-[22vh]" action="post" onSubmit={registerFunction}>
+      <form
+        className="xl:mt-[22vh] mt-[11vh]"
+        action="post"
+        onSubmit={registerFunction}
+      >
         <div>
           <h1 className="text-2xl font-bold">Tambah Pengguna Baru</h1>
         </div>

@@ -13,7 +13,7 @@ export default function Home({
       <Head>
         <title>{'Home'}</title>
       </Head>
-      <div className="container p-10">
+      <div className="container p-8">
         <div className="flex justify-end mr-5 mb-3">
           <AddTruckButton />
         </div>
@@ -28,8 +28,10 @@ export default function Home({
               }}
               key={truck.id}
             >
-              <a className="w-64 h-64 rounded-lg border border-gray-200 shadow-md hover:bg-gray-100">
-                <h1 className="text-7xl text-center mt-20">{truck.name}</h1>
+              <a className="xl:w-64 xl:h-64 w-40 h-40 rounded-lg border border-gray-200 shadow-md hover:bg-gray-100">
+                <h1 className="xl:text-7xl text-5xl text-center xl:mt-20 mt-[52px]">
+                  {truck.name}
+                </h1>
               </a>
             </Link>
           ))}
