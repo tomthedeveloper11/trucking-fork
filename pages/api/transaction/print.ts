@@ -6,6 +6,7 @@ import _ from 'lodash';
 interface PrintTransactionsAPIRequest extends NextApiRequest {
   body: {
     transactionIds: string[];
+    type: string;
   };
 }
 
@@ -18,8 +19,11 @@ export default async function handler(
     case 'POST':
       try {
         conn = await connectDb();
-        const { transactionIds } = req.body;
-        const pdf = await transactionService.printTransaction(transactionIds);
+        const { transactionIds, type } = req.body;
+        const pdf = await transactionService.printTransaction(
+          transactionIds,
+          type
+        );
         await conn.close();
         res.statusCode = 200;
         res.send(pdf);

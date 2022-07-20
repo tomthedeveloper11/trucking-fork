@@ -69,20 +69,20 @@ export default function TruckTransactionDataTable({
     prepareTruckTransactions(data)
   );
 
-  function print(truckTransactionId: string) {
+  function print(truckTransactionId: string, type: string) {
     const markedTransactions = truckTransactions
       .filter((t) => t.selected)
       .map((t) => t.id);
     const transactionIds =
       markedTransactions.length > 0 ? markedTransactions : [truckTransactionId];
-    truckTransactionBloc.printTransactions(transactionIds);
+    truckTransactionBloc.printTransactions(transactionIds, type);
   }
 
   return (
     <>
       <Table>
         <Table.Head className="whitespace-nowrap">
-          {emkl && <Table.HeadCell></Table.HeadCell>}
+          {emkl && <Table.HeadCell>Print</Table.HeadCell>}
           {Object.entries(headers).map(([header, columnWidth], index) => (
             <Table.HeadCell key={index} className={`${columnWidth}`}>
               {header}
@@ -112,24 +112,30 @@ export default function TruckTransactionDataTable({
                           setTruckTransactions([...truckTransactions]);
                         }}
                       ></input>
-                      <p
+                      <button
                         className={`text-xl font-bold ${
                           truckTransaction.isPrintedBon
                             ? 'text-orange-600'
                             : 'text-gray-200'
                         }`}
+                        onClick={() =>
+                          print(truckTransactions[index].id, 'bon')
+                        }
                       >
                         B
-                      </p>
-                      <p
+                      </button>
+                      <button
                         className={`text-xl font-bold ${
                           truckTransaction.isPrintedInvoice
                             ? 'text-green-600'
                             : 'text-gray-200'
                         }`}
+                        onClick={() =>
+                          print(truckTransactions[index].id, 'tagihan')
+                        }
                       >
                         T
-                      </p>
+                      </button>
                     </div>
                   </Table.Cell>
                 )}
@@ -146,12 +152,6 @@ export default function TruckTransactionDataTable({
                       <DeleteVariousTransactionButton
                         transactionId={truckTransaction.id}
                       />
-                      {emkl && (
-                        <PrinterIcon
-                          className="cursor-pointer h-7"
-                          onClick={() => print(truckTransactions[index].id)}
-                        />
-                      )}
                     </div>
                   </Table.Cell>
                 }

@@ -83,12 +83,13 @@ const getTruckTransactionAutoComplete = async (): Promise<
   return {};
 };
 
-const printTransactions = async (transactionIds: string[]) => {
+const printTransactions = async (transactionIds: string[], type: string) => {
   const response = await axios({
     method: 'POST',
     url: 'http://localhost:3000/api/transaction/print',
     data: {
       transactionIds,
+      type,
     },
     responseType: 'blob',
   });

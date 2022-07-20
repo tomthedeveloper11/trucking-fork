@@ -1,4 +1,3 @@
-import { indexPlusOne } from './../../helpers/hbsHelpers';
 import {
   EditTruckTransactionPayload,
   TransactionType,
@@ -13,12 +12,8 @@ import { TransactionModel } from './transaction.model';
 import { Document } from 'mongoose';
 import _ from 'lodash';
 import { CustomerModel } from '../customer/customer.model';
-import fs from 'fs';
-import puppeteer from 'puppeteer';
-import handlers from 'handlebars';
-import moment from 'moment';
 
-import { formatRupiah, formatDate } from '../../helpers/hbsHelpers';
+import moment from 'moment';
 
 const convertDocumentToObject = <T>(document: Document) =>
   document.toObject({ getters: true }) as T;
@@ -190,46 +185,20 @@ const getTruckTransactionAutoComplete = async (): Promise<
 };
 
 const printTransaction = async (transactionIds: string[]) => {
-  handlers.registerHelper('formatRupiah', formatRupiah);
-  handlers.registerHelper('formatDate', formatDate);
-  handlers.registerHelper('indexPlusOne', indexPlusOne);
+  const promiseAll = await Promise.all([
+    TransactionModel.find({
+      _id: { $in: transactionIds },
+    }),
+    TransactionModel.updateMany(
+      { _id: { $in: transactionIds } },
+      { isPrinted: true }
+    ),
+  ]);
 
-  const documents = await TransactionModel.find({
-    _id: { $in: transactionIds },
-  });
+  const documents = promiseAll[0];
 
   const truckTransactions = documents.map((doc) => mapTruckTransaction(doc));
-  const content = {
-    main: {
-      currentDate: new Date(),
-      customerName: truckTransactions[0].customer,
-    },
-    transactions: truckTransactions,
-  };
-
-  // read our invoice-template.html file using node fs module
-  const file = fs.readFileSync('./bon.html', 'utf8');
-
-  // compile the file with handlebars and inject the customerName variable
-  const template = handlers.compile(`${file}`);
-  const html = template(content);
-
-  // simulate a chrome browser with puppeteer and navigate to a new page
-  const browser = await puppeteer.launch();
-  const page = await browser.newPage();
-  // set our compiled html template as the pages content
-  // then waitUntil the network is idle to make sure the content has been loaded
-  await page.setContent(html, { waitUntil: 'networkidle0' });
-
-  // convert the page to pdf with the .pdf() method
-  const pdf = await page.pdf({ format: 'A4' });
-
-  await TransactionModel.updateMany(
-    { _id: { $in: transactionIds } },
-    { isPrinted: true }
-  );
-
-  return pdf;
+  return truckTransactions;
 };
 
 const filterTruckTransactions = async (query: FilterTransactionsQuery) => {

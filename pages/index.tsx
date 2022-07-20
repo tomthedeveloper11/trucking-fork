@@ -34,24 +34,41 @@ export default function Home({
           Rekap Bulan {currentMonth}
         </h2>
 
-        <div className="flex grid grid-cols-3 text-center mt-16">
+        <div className="grid grid-cols-4 text-center mt-6 border border-gray-200 rounded p-5 m-3">
           <div>
-            <h3 className="text-4xl text-green-400 mb-4">Total Pembayaran</h3>
-            <h4 className="text-2xl text-green-400">
-              {formatRupiah(summaries.sellingPrice)}
+            <h3 className="text-4xl text-green-400 mb-4">
+              Total <br></br> Pembayaran
+            </h3>
+            <h4 className="text-2xl font-bold text-green-400">
+              {formatRupiah(summaries.totalTripSellingPrice)}
             </h4>
           </div>
 
           <div>
-            <h3 className="text-4xl text-red-400 mb-4">Total Biaya</h3>
-            <h4 className="text-2xl text-red-400">
-              {formatRupiah(summaries.cost)}
+            <h3 className="text-4xl text-red-400 mb-4">
+              Total <br></br> Biaya Trip
+            </h3>
+            <h4 className="text-2xl font-bold text-red-400">
+              {formatRupiah(summaries.totalTripCost)}
             </h4>
           </div>
 
           <div>
-            <h3 className="text-4xl mb-4">Margin</h3>
-            <h4 className="text-2xl">{formatRupiah(summaries.margin)}</h4>
+            <h3 className="text-4xl text-orange-400 mb-4">
+              Total <br></br> Biaya Lain
+            </h3>
+            <h4 className="text-2xl font-bold text-orange-400">
+              {formatRupiah(summaries.totalAdditionalCost)}
+            </h4>
+          </div>
+
+          <div>
+            <h3 className="text-4xl mb-4">
+              Total <br></br> Margin
+            </h3>
+            <h4 className="text-2xl font-bold">
+              {formatRupiah(summaries.totalMargin)}
+            </h4>
           </div>
         </div>
         <hr className="m-5" />

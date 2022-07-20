@@ -7,15 +7,25 @@ import {
   TransactionSummary,
   TotalSummary,
   Transaction,
+  TransactionType,
 } from '../../types/common';
-import customerRepository from '../customer/customer.repository';
 import transactionRepository from './transaction.repository';
 import truckRepository from '../truck/truck.repository';
+
+import {
+  formatRupiah,
+  formatDate,
+  indexPlusOne,
+} from '../../helpers/hbsHelpers';
+import fs from 'fs';
+import puppeteer from 'puppeteer';
+import handlers from 'handlebars';
+import customerService from '../customer/customer.service';
 
 const validateAndModifyPayload = async (
   truckTransactionPayload: Omit<TruckTransaction, 'id'>
 ) => {
-  const customer = await customerRepository.getCustomerByInitial(
+  const customer = await customerService.getCustomerByInitial(
     truckTransactionPayload.customer
   );
   if (!customer) {
@@ -37,7 +47,6 @@ const createTruckTransaction = async (
   const modifiedPayload = await validateAndModifyPayload(
     truckTransactionPayload
   );
-  console.log(modifiedPayload, '<<<<<');
   const newTruckTransaction =
     await transactionRepository.createTruckTransaction(modifiedPayload);
   return newTruckTransaction;
@@ -113,7 +122,7 @@ const getGroupedTruckTransactions = async (date: TransactionSummaryQuery) => {
         margin:
           summary[truckName].margin +
           (transaction.sellingPrice
-            ? transaction.sellingPrice
+            ? transaction.sellingPrice - transaction.cost
             : 0 - transaction.cost),
       };
     }
@@ -125,16 +134,33 @@ const getGroupedTruckTransactions = async (date: TransactionSummaryQuery) => {
 const getTotalSummary = async (date: TransactionSummaryQuery) => {
   const transactions = await transactionRepository.getAllTransactions(date);
 
-  const summary: TotalSummary = { cost: 0, sellingPrice: 0, margin: 0 };
+  const summary: TotalSummary = {
+    totalAdditionalCost: 0,
+    totalTripCost: 0,
+    totalTripSellingPrice: 0,
+    totalMargin: 0,
+  };
 
   for (const transaction of transactions) {
-    summary.cost += transaction.cost;
+    if (
+      transaction.transactionType === TransactionType.TRUCK_TRANSACTION ||
+      transaction.transactionType ===
+        TransactionType.TRUCK_ADDITIONAL_TRANSACTION
+    ) {
+      summary.totalTripCost += transaction.cost;
+    }
 
-    summary.sellingPrice += transaction.sellingPrice
+    if (
+      transaction.transactionType === TransactionType.ADDITIONAL_TRANSACTION
+    ) {
+      summary.totalAdditionalCost += transaction.cost;
+    }
+
+    summary.totalTripSellingPrice += transaction.sellingPrice
       ? transaction.sellingPrice
       : 0;
 
-    summary.margin += transaction.sellingPrice
+    summary.totalMargin += transaction.sellingPrice
       ? transaction.sellingPrice - transaction.cost
       : 0 - transaction.cost;
   }
@@ -193,8 +219,63 @@ const getTruckTransactionAutoComplete = async () => {
   return truckTransactionAutoComplete;
 };
 
-const printTransaction = async (transactionIds: string[]) => {
-  return await transactionRepository.printTransaction(transactionIds);
+const printTransaction = async (transactionIds: string[], type: string) => {
+  handlers.registerHelper('formatRupiah', formatRupiah);
+  handlers.registerHelper('formatDate', formatDate);
+  handlers.registerHelper('indexPlusOne', indexPlusOne);
+
+  const truckTransactions = await transactionRepository.printTransaction(
+    transactionIds
+  );
+
+  const totalSellingPrice = truckTransactions.reduce(
+    (accumulator, obj) => accumulator + obj.sellingPrice,
+    0
+  );
+
+  const trucks = await truckRepository.getTrucks();
+  const customer = await customerService.getCustomerByInitial(
+    truckTransactions[0].customer
+  );
+
+  for (const truckTransaction of truckTransactions) {
+    const licenseNumber = trucks.find(
+      (t) => t.id === truckTransaction.truckId
+    )?.licenseNumber;
+
+    truckTransaction.licenseNumber = licenseNumber;
+  }
+
+  const content = {
+    main: {
+      currentDate: new Date(),
+      customerInitial: truckTransactions[0].customer,
+      customerName: customer?.name,
+      totalSellingPrice,
+    },
+    transactions: truckTransactions,
+  };
+
+  let file;
+  if (type === 'bon') {
+    file = fs.readFileSync('./bon.html', 'utf8');
+    console.log('bon');
+  } else {
+    file = fs.readFileSync('./tagihan.html', 'utf8');
+    console.log('tagihan');
+  }
+
+  const template = handlers.compile(`${file}`);
+  const html = template(content);
+
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+
+  await page.setContent(html, { waitUntil: 'networkidle0' });
+
+  const pdf = await page.pdf({ format: 'A4' });
+
+  return pdf;
 };
 
 const filterTruckTransactions = async (query: FilterTransactionsQuery) => {

@@ -225,8 +225,8 @@ export default function EditTruckTransactionButton({
               <div className="form-group row-span-1 col-span-5">
                 <TextInput
                   label="Bon"
-                  name="invoices"
-                  // value={truckTransaction.details}
+                  name="bon"
+                  value={truckTransaction.bon}
                   onChange={handleChange}
                 />
               </div>

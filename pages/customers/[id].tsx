@@ -36,9 +36,9 @@ export default function CustomerDetails({
       cost: truckTransaction.cost,
       sellingPrice: truckTransaction.sellingPrice,
       customer: truckTransaction.customer,
+      bon: truckTransaction.bon,
       details: truckTransaction.details,
       truckId: truckTransaction.truckId,
-      bon: truckTransaction.bon,
       isPrintedBon: truckTransaction.isPrintedBon,
       isPrintedInvoice: truckTransaction.isPrintedInvoice,
     };

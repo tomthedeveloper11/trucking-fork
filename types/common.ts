@@ -96,9 +96,10 @@ export interface TransactionSummary {
 }
 
 export interface TotalSummary {
-  cost: number;
-  sellingPrice: number;
-  margin: number;
+  totalAdditionalCost: number;
+  totalTripCost: number;
+  totalTripSellingPrice: number;
+  totalMargin: number;
 }
 
 export interface User {

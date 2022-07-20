@@ -16,10 +16,18 @@ const getCustomerByCustomerId = async (customerId: string) => {
   return customer;
 };
 
+const getCustomerByInitial = async (customerInitial: string) => {
+  const customer = await customerRepository.getCustomerByInitial(
+    customerInitial
+  );
+  return customer;
+};
+
 const customerService = {
   createCustomer,
   getCustomers,
   getCustomerByCustomerId,
+  getCustomerByInitial,
 };
 
 export default customerService;

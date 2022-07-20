@@ -62,13 +62,21 @@ export default function EditTransactionButton({
         <Modal.Header>Edit Transaksi</Modal.Header>
         <Modal.Body>
           <form action="post">
-            <div className="grid grid-rows-2 grid-cols-5 grid-flow-row gap-4">
-              <div className="form-group row-span-1 col-span-2">
+            <div className="grid grid-rows-4 grid-cols-5 grid-flow-row gap-4">
+              <div className="form-group row-span-1 col-span-3">
                 <TextInput
                   label="Deskripsi"
                   name="details"
                   value={transaction.details}
                   onChange={handleChange}
+                />
+              </div>
+              <div className="form-group row-span-5 col-span-2">
+                <label>Tanggal</label>
+                <DatePicker
+                  dateFormat="dd/MM/yyyy"
+                  selected={date}
+                  onChange={(date: Date) => setDate(date)}
                 />
               </div>
               <div className="form-group row-span-1 col-span-2">
@@ -79,17 +87,6 @@ export default function EditTransactionButton({
                   value={transaction.cost}
                   prefix="Rp"
                   onChange={handleChange}
-                />
-              </div>
-
-              <div className="form-group row-span-1 col-span-2">
-                <label>Tanggal</label>
-                <DatePicker
-                  selected={date}
-                  dateFormat={'dd/M/yyyy'}
-                  onChange={(date: Date) => {
-                    setDate(date);
-                  }}
                 />
               </div>
             </div>
