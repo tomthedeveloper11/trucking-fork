@@ -34,39 +34,43 @@ export default function Home({
           Rekap Bulan {currentMonth}
         </h2>
 
-        <div className="grid grid-cols-4 text-center mt-6 border border-gray-200 rounded p-5 m-3">
-          <div>
-            <h3 className="text-4xl text-green-400 mb-4">
-              Total <br></br> Pembayaran
-            </h3>
-            <h4 className="text-2xl font-bold text-green-400">
+        <div className="grid grid-cols-4 gap-7 text-center mt-6 border border-gray-200 rounded p-5 m-3 bg-zinc-100 shadow-md">
+          <div className="bg-white shadow-md rounded">
+            <div className="bg-green-100">
+              <div className="bg-green-400 h-1 w-full"></div>
+              <h3 className="text-2xl py-3">Total Pembayaran</h3>
+            </div>
+            <h4 className="text-2xl font-bold  py-6">
               {formatRupiah(summaries.totalTripSellingPrice)}
             </h4>
           </div>
 
-          <div>
-            <h3 className="text-4xl text-red-400 mb-4">
-              Total <br></br> Biaya Trip
-            </h3>
-            <h4 className="text-2xl font-bold text-red-400">
+          <div className="bg-white shadow-md rounded">
+            <div className="bg-red-100">
+              <div className="bg-red-400 h-1 w-full"></div>
+              <h3 className="text-2xl py-3">Total Biaya Trip</h3>
+            </div>
+            <h4 className="text-2xl font-bold  py-6">
               {formatRupiah(summaries.totalTripCost)}
             </h4>
           </div>
 
-          <div>
-            <h3 className="text-4xl text-orange-400 mb-4">
-              Total <br></br> Biaya Lain
-            </h3>
-            <h4 className="text-2xl font-bold text-orange-400">
+          <div className="bg-white shadow-md rounded">
+            <div className="bg-orange-100">
+              <div className="bg-orange-400 h-1 w-full"></div>
+              <h3 className="text-2xl py-3">Total Biaya Lain</h3>
+            </div>
+            <h4 className="text-2xl font-bold py-6">
               {formatRupiah(summaries.totalAdditionalCost)}
             </h4>
           </div>
 
-          <div>
-            <h3 className="text-4xl mb-4">
-              Total <br></br> Margin
-            </h3>
-            <h4 className="text-2xl font-bold">
+          <div className="bg-white shadow-md rounded">
+            <div className="bg-blue-100">
+              <div className="bg-blue-400 h-1 w-full"></div>
+              <h3 className="text-2xl py-3">Total Margin</h3>
+            </div>
+            <h4 className="text-2xl font-bold py-6">
               {formatRupiah(summaries.totalMargin)}
             </h4>
           </div>
@@ -87,14 +91,14 @@ export default function Home({
                 </div>
 
                 <div>
-                  <h3 className="my-2 text-green-400 text-center">
+                  <h3 className="my-2 text-green-400 text-center font-medium">
                     Pembayaran: {formatRupiah(entry[1].sellingPrice)}
                   </h3>
-                  <h3 className="my-2 text-red-400 text-center">
+                  <h3 className="my-2 text-red-400 text-center font-medium">
                     Biaya: {formatRupiah(entry[1].cost)}
                   </h3>
                   <hr />
-                  <h3 className="my-2 text-center">
+                  <h3 className="my-2 text-center font-medium">
                     Margin: {formatRupiah(entry[1].margin)}
                   </h3>
                 </div>
