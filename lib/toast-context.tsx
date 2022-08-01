@@ -11,7 +11,7 @@ export function ToastContextProvider({ children }: { children: JSX.Element }) {
   const addToast = useCallback(
     function (toast: string) {
       setToasts((toasts) => [...toasts, toast]);
-      setTimeout(() => setToasts((toasts) => toasts.slice(1)), 3000);
+      setTimeout(() => setToasts((toasts) => toasts.slice(1)), 2000);
     },
     [setToasts]
   );

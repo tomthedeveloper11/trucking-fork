@@ -9,6 +9,9 @@
 }
 
 @layer components {
+  .login {
+    @apply flex justify-center;
+  }
   .sidebarLink {
     @apply hover:bg-gray-100 cursor-pointer items-center p-2 text-base font-normal text-gray-900 rounded-lg flex;
   }

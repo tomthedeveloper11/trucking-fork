@@ -9,8 +9,8 @@ import userAuthenticationMiddleware from '../../../../src/middlewares/user-authe
 
 interface TransactionSummaryRequest extends NextApiRequest {
   query: {
-    month: string;
-    year: string;
+    startDate: Date;
+    endDate: Date;
   };
 }
 

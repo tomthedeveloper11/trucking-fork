@@ -12,6 +12,16 @@ import {
 import TruckTransactionDataTable from '../../components/truck-transaction-data-table';
 import AdditionalTruckTransactionDataTable from '../../components/additional-truck-transaction-data-table';
 import { useState } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import moment from 'moment';
+
+const defaultStartDate = moment(
+  `${new Date().getFullYear()}-${new Date().getMonth() + 1}-01`
+)
+  .startOf('month')
+  .toDate();
+const defaultEndDate = new Date();
 
 export default function TruckDetails({
   truckName,
@@ -20,6 +30,12 @@ export default function TruckDetails({
   miscTruckTransactions,
   autoCompleteData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const [truckTransactionsState, setTruckTransactionsState] =
+    useState(truckTransactions);
+  const [miscTruckTransactionsState, setMiscTruckTransactionsState] = useState(
+    miscTruckTransactions
+  );
+
   const truckDataTableHeaders = {
     Tanggal: 'w-1/12',
     'No. Container': 'w-2/12',
@@ -71,6 +87,27 @@ export default function TruckDetails({
   };
 
   const [table, setTable] = useState('trip');
+  const [startDate, setStartDate] = useState(defaultStartDate);
+  const [endDate, setEndDate] = useState(new Date());
+
+  async function filterByMonth() {
+    const truckTransactions =
+      await truckTransactionBloc.getTruckTransactionsByTruckId(
+        truckId,
+        startDate,
+        endDate
+      );
+
+    const miscTruckTransactions =
+      await truckTransactionBloc.getAdditionalTruckTransactionsByTruckId(
+        truckId,
+        defaultStartDate,
+        defaultEndDate
+      );
+
+    setTruckTransactionsState(truckTransactions);
+    setMiscTruckTransactionsState(miscTruckTransactions);
+  }
   return (
     <>
       <Head>
@@ -79,6 +116,28 @@ export default function TruckDetails({
 
       <div className="container p-8 mb-60 flex-col">
         <h1 className="text-center text-7xl mb-5">{truckName}</h1>
+
+        <div className="flex w-56 gap-5 mx-3 my-5">
+          <DatePicker
+            dateFormat="dd/MM/yyyy"
+            selected={startDate}
+            onChange={(date: Date) => setStartDate(date)}
+          />
+          <span className="text-3xl">-</span>
+          <DatePicker
+            dateFormat="dd/MM/yyyy"
+            selected={endDate}
+            onChange={(date: Date) => setEndDate(date)}
+            minDate={startDate}
+          />
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={filterByMonth}
+          >
+            Filter
+          </button>
+        </div>
+
         <button
           className={`mr-3 hover:bg-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ${
             table === 'trip'
@@ -115,7 +174,7 @@ export default function TruckDetails({
         {table === 'trip' ? (
           <TruckTransactionDataTable
             headers={truckDataTableHeaders}
-            data={truckTransactions.map((t) => formatTruckTransaction(t))}
+            data={truckTransactionsState.map((t) => formatTruckTransaction(t))}
             hiddenFields={[
               'id',
               'isPrinted',
@@ -128,7 +187,9 @@ export default function TruckDetails({
         ) : (
           <AdditionalTruckTransactionDataTable
             headers={miscDataTableHeaders}
-            data={miscTruckTransactions.map((t) => formatMiscTransaction(t))}
+            data={miscTruckTransactionsState.map((t) =>
+              formatMiscTransaction(t)
+            )}
             hiddenFields={['id', 'isPrinted', 'truckId']}
           />
         )}
@@ -141,9 +202,17 @@ export const getServerSideProps = async (context: any) => {
   const truckId: string = context.params.id;
   const truckName: string = context.query.truckName;
   const truckTransactions =
-    await truckTransactionBloc.getTruckTransactionsByTruckId(truckId);
+    await truckTransactionBloc.getTruckTransactionsByTruckId(
+      truckId,
+      defaultStartDate,
+      defaultEndDate
+    );
   const miscTruckTransactions =
-    await truckTransactionBloc.getAdditionalTruckTransactionsByTruckId(truckId);
+    await truckTransactionBloc.getAdditionalTruckTransactionsByTruckId(
+      truckId,
+      defaultStartDate,
+      defaultEndDate
+    );
   const autoCompleteData =
     await truckTransactionBloc.getTruckTransactionAutoComplete();
   return {

@@ -8,8 +8,8 @@ import validateMiddleware from '../../../../src/middlewares/validate-middleware'
 
 interface TransactionSummaryRequest extends NextApiRequest {
   query: {
-    month: string;
-    year: string;
+    startDate: Date;
+    endDate: Date;
   };
 }
 

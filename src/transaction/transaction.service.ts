@@ -174,16 +174,30 @@ const getTruckTransactionsByCustomerId = async (customerId: string) => {
   return transactions;
 };
 
-const getTruckTransactionsByTruckId = async (truckId: string) => {
+const getTruckTransactionsByTruckId = async ({
+  truckId,
+  startDate,
+  endDate,
+}) => {
   const transactions =
-    await transactionRepository.getTruckTransactionsByTruckId(truckId);
+    await transactionRepository.getTruckTransactionsByTruckId(
+      truckId,
+      startDate,
+      endDate
+    );
   return transactions;
 };
 
-const getAdditionalTruckTransactionsByTruckId = async (truckId: string) => {
+const getAdditionalTruckTransactionsByTruckId = async ({
+  truckId,
+  startDate,
+  endDate,
+}) => {
   const transactions =
     await transactionRepository.getAdditionalTruckTransactionsByTruckId(
-      truckId
+      truckId,
+      startDate,
+      endDate
     );
   return transactions;
 };

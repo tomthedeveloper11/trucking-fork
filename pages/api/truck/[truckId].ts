@@ -5,6 +5,8 @@ import connectDb from '../../../src/mongodb/connection';
 interface TruckDetailProps extends NextApiRequest {
   query: {
     truckId: string;
+    startDate: Date;
+    endDate: Date;
   };
 }
 
@@ -17,9 +19,8 @@ export default async function handler(
     case 'GET':
       conn = await connectDb();
 
-      const truckId = req.query.truckId;
       const transactions =
-        await transactionService.getTruckTransactionsByTruckId(truckId);
+        await transactionService.getTruckTransactionsByTruckId(req.query);
       await conn.close();
       res.status(200).json({ data: transactions });
       break;

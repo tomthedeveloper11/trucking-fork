@@ -37,11 +37,13 @@ const getTruckTransactions = async () => {
 };
 
 const getAllTransactions = async ({
-  year = new Date().getFullYear().toString(),
-  month = (new Date().getMonth() + 1).toString(),
+  startDate = moment(
+    `${new Date().getFullYear()}-${new Date().getMonth() + 1}-01`
+  )
+    .startOf('month')
+    .toDate(),
+  endDate = new Date(),
 }: TransactionSummaryQuery) => {
-  const startDate = moment(`${year}-${month}-01`).startOf('month').toDate();
-  const endDate = moment(`${year}-${month}-01`).endOf('month').toDate();
   const documents = await TransactionModel.find({
     date: {
       $gte: startDate,
@@ -84,8 +86,16 @@ const getTruckTransactionsByCustomerId = async (customerId: string) => {
   return truckTransactions;
 };
 
-const getTruckTransactionsByTruckId = async (truckId: string) => {
+const getTruckTransactionsByTruckId = async (
+  truckId: string,
+  startDate: Date,
+  endDate: Date
+) => {
   const documents = await TransactionModel.find({
+    date: {
+      $gte: startDate,
+      $lte: endDate,
+    },
     truckId,
     transactionType: TransactionType.TRUCK_TRANSACTION,
   }).sort({ date: -1 });
@@ -93,12 +103,23 @@ const getTruckTransactionsByTruckId = async (truckId: string) => {
   return truckTransactions;
 };
 
-const getAdditionalTruckTransactionsByTruckId = async (truckId: string) => {
+const getAdditionalTruckTransactionsByTruckId = async (
+  truckId: string,
+  startDate: Date,
+  endDate: Date
+) => {
+  console.log(startDate)
+  console.log(endDate)
   const documents = await TransactionModel.find({
+    date: {
+      $gte: startDate,
+      $lte: endDate,
+    },
     truckId,
     transactionType: TransactionType.TRUCK_ADDITIONAL_TRANSACTION,
   }).sort({ date: -1 });
   const truckTransactions = documents.map((doc) => mapTruckTransaction(doc));
+  console.log("🚀 ~ file: transaction.repository.ts ~ line 120 ~ truckTransactions", truckTransactions)
   return truckTransactions;
 };
 

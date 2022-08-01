@@ -32,7 +32,7 @@ export default function Login() {
   }
 
   return (
-    <div className="flex text-center ">
+    <div className="flex justify-center text-center">
       <form className="flex-col" action="post" onSubmit={loginFunction}>
         <div>
           <h1 className="text-2xl font-bold">Login to your account</h1>

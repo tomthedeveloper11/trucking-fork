@@ -11,6 +11,8 @@ interface TransactionsAPIRequest extends NextApiRequest {
   body: AdditionalTruckTransaction;
   query: {
     truckId: string;
+    startDate: Date;
+    endDate: Date;
   };
 }
 
@@ -36,10 +38,9 @@ export default async function handler(
       case 'GET':
         conn = await connectDb();
 
-        const truckId = req.query.truckId;
         const miscTransactions =
           await transactionService.getAdditionalTruckTransactionsByTruckId(
-            truckId
+            req.query
           );
         await conn.close();
         res.status(200).json({ data: miscTransactions });

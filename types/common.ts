@@ -82,8 +82,8 @@ export interface FilterTransactionsQuery {
 }
 
 export interface TransactionSummaryQuery {
-  month: string;
-  year: string;
+  startDate: Date;
+  endDate: Date;
 }
 
 export interface TransactionSummary {

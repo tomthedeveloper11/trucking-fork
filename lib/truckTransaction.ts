@@ -1,3 +1,4 @@
+import { TransactionSummaryQuery } from './../types/common';
 import axios from 'axios';
 import { TruckTransaction, AdditionalTruckTransaction } from '../types/common';
 
@@ -12,10 +13,17 @@ const getTruckTransactions = async () => {
   return [];
 };
 
-const getGroupedTruckTransactions = async () => {
+const getGroupedTruckTransactions = async ({
+  startDate,
+  endDate,
+}: TransactionSummaryQuery) => {
   const response = await axios({
     method: 'GET',
     url: `http://localhost:3000/api/transaction/summary/trucks`,
+    params: {
+      startDate,
+      endDate,
+    },
   });
   if (response && response.data) {
     return response.data.data;
@@ -23,10 +31,17 @@ const getGroupedTruckTransactions = async () => {
   return {};
 };
 
-const getTotalSummary = async () => {
+const getTotalSummary = async ({
+  startDate,
+  endDate,
+}: TransactionSummaryQuery) => {
   const response = await axios({
     method: 'GET',
-    url: `http://localhost:3000/api/transaction/summary`,
+    url: `http://localhost:3000/api/transaction/summary/`,
+    params: {
+      startDate,
+      endDate,
+    },
   });
   if (response && response.data) {
     return response.data.data;
@@ -45,10 +60,18 @@ const getTruckTransactionsByCustomerId = async (customerId: string) => {
   return [];
 };
 
-const getTruckTransactionsByTruckId = async (truckId: string) => {
+const getTruckTransactionsByTruckId = async (
+  truckId: string,
+  startDate: Date,
+  endDate: Date
+) => {
   const response = await axios({
     method: 'GET',
     url: `http://localhost:3000/api/truck/${truckId}`,
+    params: {
+      startDate,
+      endDate,
+    },
   });
   if (response && response.data) {
     return response.data.data as TruckTransaction[];
@@ -56,12 +79,18 @@ const getTruckTransactionsByTruckId = async (truckId: string) => {
   return [];
 };
 
-const getAdditionalTruckTransactionsByTruckId = async (truckId: string) => {
+const getAdditionalTruckTransactionsByTruckId = async (
+  truckId: string,
+  startDate: Date,
+  endDate: Date
+) => {
   const response = await axios({
     method: 'GET',
     url: `http://localhost:3000/api/transaction/truck/misc`,
     params: {
       truckId,
+      startDate,
+      endDate,
     },
   });
   if (response && response.data) {
@@ -103,6 +132,9 @@ const printTransactions = async (transactionIds: string[], type: string) => {
   };
 
   saveAsPDF(response.data);
+
+  if (response) return 'Print Success';
+  return 'Print Failed';
 };
 const truckTransactionBloc = {
   getTruckTransactions,

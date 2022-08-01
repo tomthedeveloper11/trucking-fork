@@ -31,9 +31,7 @@ export default function TransactionPage({
       </Head>
 
       <div className="container p-8 mb-60 flex-col">
-        <h1 className="text-center text-7xl mb-5">
-          Pengeluaran Lainnya Bulan ...
-        </h1>
+        <h1 className="text-center text-7xl mb-5">Pengeluaran Lain Juli</h1>
         <div className="flex justify-end mr-5 mb-3">
           <AddTransactionButton />
         </div>
