@@ -19,20 +19,20 @@ export default function AddTruckTransactionButton({
   autoCompleteData,
 }: AddTruckTransactionButtonProps) {
   const addToast = useToastContext();
-  const placeHolderTransaction: Omit<TruckTransaction, 'id' | 'date'> = {
-    containerNo: 'TEGU3009038',
-    invoiceNo: '1671',
-    destination: 'AMPLAS/CATUR',
-    cost: 350000,
-    sellingPrice: 700000,
-    customer: 'SKM',
-    details: '',
-    bon: '',
-    transactionType: TransactionType.TRUCK_TRANSACTION,
-    truckId,
-    isPrintedBon: false,
-    isPrintedInvoice: false,
-  };
+  // const placeHolderTransaction: Omit<TruckTransaction, 'id' | 'date'> = {
+  //   containerNo: 'TEGU3009038',
+  //   invoiceNo: '1671',
+  //   destination: 'AMPLAS/CATUR',
+  //   cost: 350000,
+  //   sellingPrice: 700000,
+  //   customer: 'SKM',
+  //   details: '',
+  //   bon: '',
+  //   transactionType: TransactionType.TRUCK_TRANSACTION,
+  //   truckId,
+  //   isPrintedBon: false,
+  //   isPrintedInvoice: false,
+  // };
   const baseTruckTransaction: Omit<TruckTransaction, 'id' | 'date'> = {
     containerNo: '',
     invoiceNo: '',
@@ -49,7 +49,7 @@ export default function AddTruckTransactionButton({
   };
   const refreshData = useRouterRefresh();
   const [truckTransaction, setTruckTransaction] = useState(
-    placeHolderTransaction
+    baseTruckTransaction
   );
   const [date, setDate] = useState(new Date());
   const [modal, setModal] = useState(false);
