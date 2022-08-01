@@ -6,7 +6,7 @@ import {
   TruckTransaction,
   UITruckTransaction,
 } from '../types/common';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PrinterIcon } from '@heroicons/react/solid';
 import truckTransactionBloc from '../lib/truckTransaction';
 import DeleteVariousTransactionButton from './truck/delete-various-transaction-button';
@@ -69,6 +69,10 @@ export default function TruckTransactionDataTable({
   const [truckTransactions, setTruckTransactions] = useState(
     prepareTruckTransactions(data)
   );
+
+  useEffect(() => {
+    setTruckTransactions(prepareTruckTransactions(data));
+  }, [data]);
 
   async function print(truckTransactionId: string, type: string) {
     addToast('Loading...');
@@ -171,20 +175,22 @@ export default function TruckTransactionDataTable({
                     </Table.Cell>
                   )}
                   {buildTransactionRow(truckTransaction, hiddenFields)}
-                  <Table.Cell>
-                    <div className="flex flex-row">
-                      <EditTruckTransactionButton
-                        key={`edit-modal-key${index}`}
-                        existingTruckTransaction={truckTransactions[index]}
-                        autoCompleteData={autoCompleteData}
-                        disabled={truckTransactions[index]?.selected}
-                      />
-                      <DeleteVariousTransactionButton
-                        transactionId={truckTransaction.id}
-                        disabled={truckTransactions[index]?.selected}
-                      />
-                    </div>
-                  </Table.Cell>
+                  {truckTransactions[index] && (
+                    <Table.Cell>
+                      <div className="flex flex-row">
+                        <EditTruckTransactionButton
+                          key={`edit-modal-key${index}`}
+                          existingTruckTransaction={truckTransactions[index]}
+                          autoCompleteData={autoCompleteData}
+                          disabled={truckTransactions[index]?.selected}
+                        />
+                        <DeleteVariousTransactionButton
+                          transactionId={truckTransaction.id}
+                          disabled={truckTransactions[index]?.selected}
+                        />
+                      </div>
+                    </Table.Cell>
+                  )}
                 </Table.Row>
               );
             })}
