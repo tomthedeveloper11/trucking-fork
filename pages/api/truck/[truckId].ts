@@ -18,7 +18,6 @@ export default async function handler(
   switch (req.method) {
     case 'GET':
       conn = await connectDb();
-
       const transactions =
         await transactionService.getTruckTransactionsByTruckId(req.query);
       await conn.close();

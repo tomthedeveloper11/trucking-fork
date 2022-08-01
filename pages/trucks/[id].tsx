@@ -11,7 +11,7 @@ import {
 } from '../../types/common';
 import TruckTransactionDataTable from '../../components/truck-transaction-data-table';
 import AdditionalTruckTransactionDataTable from '../../components/additional-truck-transaction-data-table';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
@@ -35,6 +35,10 @@ export default function TruckDetails({
   const [miscTruckTransactionsState, setMiscTruckTransactionsState] = useState(
     miscTruckTransactions
   );
+
+  useEffect(() => {
+    setTruckTransactionsState(truckTransactions);
+  }, [truckTransactions]);
 
   const truckDataTableHeaders = {
     Tanggal: 'w-1/12',

@@ -48,9 +48,8 @@ export default function AddTruckTransactionButton({
     isPrintedInvoice: false,
   };
   const refreshData = useRouterRefresh();
-  const [truckTransaction, setTruckTransaction] = useState(
-    baseTruckTransaction
-  );
+  const [truckTransaction, setTruckTransaction] =
+    useState(baseTruckTransaction);
   const [date, setDate] = useState(new Date());
   const [modal, setModal] = useState(false);
   const [recommendation, setRecommendation] = useState({

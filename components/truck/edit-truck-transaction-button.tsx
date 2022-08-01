@@ -20,7 +20,6 @@ export default function EditTruckTransactionButton({
   autoCompleteData,
   disabled = false,
 }: EditTruckTransactionButtonProps) {
-  console.log(existingTruckTransaction, 'Existing');
   const [truckTransaction, setTruckTransaction] = useState(
     existingTruckTransaction
   );
