@@ -78,6 +78,7 @@ export default function TruckDetails({
   const formatMiscTransaction = (
     transaction: AdditionalTruckTransaction
   ): DataTableAdditionalTransaction => {
+    //
     return {
       id: transaction.id,
       date: new Date(transaction.date).toLocaleDateString('id-ID'),
