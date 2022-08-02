@@ -29,7 +29,6 @@ export default async function handler(
       const userPayload = req.body as User;
       const access_token = await userService.login(userPayload);
       req.headers.authorization = access_token;
-      console.log('🚀 ~ file: login.ts ~ line 32 ~ req.headers', req.headers);
       await conn.close();
 
       res.status(200).json({

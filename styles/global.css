@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply ml-[20vw] lg:ml-[200px] scrollbar;
+    @apply ml-[17vw] lg:ml-[155px] scrollbar;
   }
 }
 

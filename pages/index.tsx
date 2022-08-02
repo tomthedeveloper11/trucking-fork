@@ -10,12 +10,8 @@ import moment from 'moment';
 // const currentMonthString = (new Date().getMonth() + 1).toString();
 // const currentYearString = new Date().getFullYear().toString();
 
-const defaultStartDate = moment(
-  `${new Date().getFullYear()}-${new Date().getMonth() + 1}-01`
-)
-  .startOf('month')
-  .toDate();
-const defaultEndDate = new Date();
+const defaultStartDate = new Date(2020, 1, 1);
+const defaultEndDate = new Date(new Date().setHours(23, 59, 59));
 
 export default function Home({
   truckSummaries,
@@ -28,7 +24,7 @@ export default function Home({
   const entries = Object.entries(truckSummariesState);
   entries.sort();
 
-  const [startDate, setStartDate] = useState(defaultStartDate);
+  const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
 
   // const months = [
@@ -100,7 +96,7 @@ export default function Home({
             })}
           </select>
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className="bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             onClick={filterByMonth}
           >
             Filter
@@ -111,13 +107,17 @@ export default function Home({
           <DatePicker
             dateFormat="dd/MM/yyyy"
             selected={startDate}
-            onChange={(date: Date) => setStartDate(date)}
+            onChange={(date: Date) =>
+              setStartDate(new Date(new Date(date).setHours(0, 0, 0)))
+            }
           />
           <span className="text-3xl">-</span>
           <DatePicker
             dateFormat="dd/MM/yyyy"
             selected={endDate}
-            onChange={(date: Date) => setEndDate(date)}
+            onChange={(date: Date) =>
+              setEndDate(new Date(new Date(date).setHours(23, 59, 59)))
+            }
             minDate={startDate}
           />
           <button

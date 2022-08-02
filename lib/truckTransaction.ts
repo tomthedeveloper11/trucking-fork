@@ -49,10 +49,14 @@ const getTotalSummary = async ({
   return {};
 };
 
-const getTruckTransactionsByCustomerId = async (customerId: string) => {
+const getTruckTransactionsByCustomerId = async (customerId, startDate, endDate) => {
   const response = await axios({
     method: 'GET',
     url: `http://localhost:3000/api/transaction/customer/${customerId}`,
+    params: {
+      startDate,
+      endDate,
+    },
   });
   if (response && response.data) {
     return response.data.data as TruckTransaction[];

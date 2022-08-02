@@ -168,9 +168,17 @@ const getTotalSummary = async (date: TransactionSummaryQuery) => {
   return summary;
 };
 
-const getTruckTransactionsByCustomerId = async (customerId: string) => {
+const getTruckTransactionsByCustomerId = async ({
+  customerId,
+  startDate,
+  endDate,
+}) => {
   const transactions =
-    await transactionRepository.getTruckTransactionsByCustomerId(customerId);
+    await transactionRepository.getTruckTransactionsByCustomerId(
+      customerId,
+      startDate,
+      endDate
+    );
   return transactions;
 };
 
@@ -239,20 +247,25 @@ const printTransaction = async (transactionIds: string[], type: string) => {
   handlers.registerHelper('indexPlusOne', indexPlusOne);
 
   const truckTransactions = await transactionRepository.printTransaction(
-    transactionIds
+    transactionIds,
+    type
   );
 
-  const totalSellingPrice = truckTransactions.reduce(
+  const sortedTruckTransactions = truckTransactions.sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  );
+
+  const totalSellingPrice = sortedTruckTransactions.reduce(
     (accumulator, obj) => accumulator + obj.sellingPrice,
     0
   );
 
   const trucks = await truckRepository.getTrucks();
   const customer = await customerService.getCustomerByInitial(
-    truckTransactions[0].customer
+    sortedTruckTransactions[0].customer
   );
 
-  for (const truckTransaction of truckTransactions) {
+  for (const truckTransaction of sortedTruckTransactions) {
     const licenseNumber = trucks.find(
       (t) => t.id === truckTransaction.truckId
     )?.licenseNumber;
@@ -263,20 +276,18 @@ const printTransaction = async (transactionIds: string[], type: string) => {
   const content = {
     main: {
       currentDate: new Date(),
-      customerInitial: truckTransactions[0].customer,
+      customerInitial: sortedTruckTransactions[0].customer,
       customerName: customer?.name,
       totalSellingPrice,
     },
-    transactions: truckTransactions,
+    transactions: sortedTruckTransactions,
   };
 
   let file;
   if (type === 'bon') {
     file = fs.readFileSync('./bon.html', 'utf8');
-    console.log('bon');
   } else {
     file = fs.readFileSync('./tagihan.html', 'utf8');
-    console.log('tagihan');
   }
 
   const template = handlers.compile(`${file}`);

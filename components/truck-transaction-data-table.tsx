@@ -1,16 +1,16 @@
-import { Table, Checkbox } from 'flowbite-react';
+import { Table } from 'flowbite-react';
 import EditTruckTransactionButton from './truck/edit-truck-transaction-button';
 import {
   DataTableTruckTransaction,
   TransactionType,
-  TruckTransaction,
   UITruckTransaction,
 } from '../types/common';
 import React, { useEffect, useState } from 'react';
 import { PrinterIcon } from '@heroicons/react/solid';
 import truckTransactionBloc from '../lib/truckTransaction';
-import DeleteVariousTransactionButton from './truck/delete-various-transaction-button';
+import DeleteVariousTransactionButton from './delete-various-transaction-button';
 import { useToastContext } from '../lib/toast-context';
+import { useRouterRefresh } from '../hooks/hooks';
 
 interface DataTableProperties {
   headers: Record<string, string>;
@@ -37,7 +37,7 @@ function buildTransactionRow(
   return (
     <>
       {Object.values(tableTransaction).map((val, i) => (
-        <Table.Cell className="px-4 text-center" key={`td-${obj.id}-${i}`}>
+        <Table.Cell className="px-0 text-center" key={`td-${obj.id}-${i}`}>
           {val ? val.toString() : ''}
         </Table.Cell>
       ))}
@@ -64,8 +64,8 @@ export default function TruckTransactionDataTable({
   autoCompleteData,
   emkl = false,
 }: DataTableProperties) {
+  const refreshData = useRouterRefresh();
   const addToast = useToastContext();
-  const baseTruckTransactions: TruckTransaction[] = [];
   const [truckTransactions, setTruckTransactions] = useState(
     prepareTruckTransactions(data)
   );
@@ -90,8 +90,10 @@ export default function TruckTransactionDataTable({
     if (response === 'Print Success') {
       addToast('Print Success');
     } else {
-      addToast('Please Try Again');
+      addToast('Mohon coba kembali');
     }
+
+    refreshData();
   }
 
   return (
@@ -104,7 +106,7 @@ export default function TruckTransactionDataTable({
           {Object.entries(headers).map(([header, columnWidth], index) => (
             <Table.HeadCell
               key={index}
-              className={`${columnWidth} px-4 text-center`}
+              className={`${columnWidth} px-3 text-center`}
             >
               {header}
             </Table.HeadCell>
@@ -136,39 +138,31 @@ export default function TruckTransactionDataTable({
                         ></input>
                         <div>
                           <button
-                            className="flex my-1 border border-gray-300 rounded shadow-sm px-2 hover:bg-white"
+                            className={`flex my-1 border border-gray-300 rounded shadow-sm px-2 ${
+                              truckTransaction.isPrintedBon
+                                ? 'text-gray-600 hover:bg-white'
+                                : 'bg-green-400 hover:bg-green-500 text-gray-100'
+                            }`}
                             onClick={() =>
                               print(truckTransactions[index].id, 'bon')
                             }
                           >
                             <PrinterIcon className="h-5 mt-1" />
-                            <p
-                              className={`text-lg font-bold ${
-                                truckTransaction.isPrintedBon
-                                  ? 'text-orange-600'
-                                  : 'text-gray-600'
-                              }`}
-                            >
-                              Bon
-                            </p>
+                            <p className={`text-lg font-bold`}>Bon</p>
                           </button>
 
                           <button
-                            className="flex my-1 border border-gray-300 rounded shadow-sm px-2 hover:bg-white"
+                            className={`flex my-1 border border-gray-300 rounded shadow-sm px-2 ${
+                              truckTransaction.isPrintedInvoice
+                                ? 'text-gray-600 hover:bg-white'
+                                : 'bg-green-400 hover:bg-green-500 text-gray-100'
+                            }`}
                             onClick={() =>
                               print(truckTransactions[index].id, 'tagihan')
                             }
                           >
                             <PrinterIcon className="h-5 mt-1" />
-                            <p
-                              className={`text-lg font-bold ${
-                                truckTransaction.isPrintedInvoice
-                                  ? 'text-green-600'
-                                  : 'text-gray-600'
-                              }`}
-                            >
-                              Tagihan
-                            </p>
+                            <p className={`text-lg font-bold`}>Tagihan</p>
                           </button>
                         </div>
                       </div>

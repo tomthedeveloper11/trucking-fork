@@ -37,12 +37,8 @@ const getTruckTransactions = async () => {
 };
 
 const getAllTransactions = async ({
-  startDate = moment(
-    `${new Date().getFullYear()}-${new Date().getMonth() + 1}-01`
-  )
-    .startOf('month')
-    .toDate(),
-  endDate = new Date(),
+  startDate,
+  endDate,
 }: TransactionSummaryQuery) => {
   const documents = await TransactionModel.find({
     date: {
@@ -58,11 +54,9 @@ const getAllTransactions = async ({
 };
 
 const getTransactions = async ({
-  year = new Date().getFullYear().toString(),
-  month = (new Date().getMonth() + 1).toString(),
+  startDate,
+  endDate,
 }: TransactionSummaryQuery) => {
-  const startDate = moment(`${year}-${month}-01`).startOf('month').toDate();
-  const endDate = moment(`${year}-${month}-01`).endOf('month').toDate();
   const documents = await TransactionModel.find({
     date: {
       $gte: startDate,
@@ -77,8 +71,16 @@ const getTransactions = async ({
   return transactions;
 };
 
-const getTruckTransactionsByCustomerId = async (customerId: string) => {
+const getTruckTransactionsByCustomerId = async (
+  customerId: string,
+  startDate: Date,
+  endDate: Date
+) => {
   const documents = await TransactionModel.find({
+    date: {
+      $gte: startDate,
+      $lte: endDate,
+    },
     'customer.customerId': customerId,
     transactionType: TransactionType.TRUCK_TRANSACTION,
   }).sort({ date: -1 });
@@ -108,8 +110,6 @@ const getAdditionalTruckTransactionsByTruckId = async (
   startDate: Date,
   endDate: Date
 ) => {
-  console.log(startDate)
-  console.log(endDate)
   const documents = await TransactionModel.find({
     date: {
       $gte: startDate,
@@ -119,7 +119,6 @@ const getAdditionalTruckTransactionsByTruckId = async (
     transactionType: TransactionType.TRUCK_ADDITIONAL_TRANSACTION,
   }).sort({ date: -1 });
   const truckTransactions = documents.map((doc) => mapTruckTransaction(doc));
-  console.log("🚀 ~ file: transaction.repository.ts ~ line 120 ~ truckTransactions", truckTransactions)
   return truckTransactions;
 };
 
@@ -205,15 +204,19 @@ const getTruckTransactionAutoComplete = async (): Promise<
   return result;
 };
 
-const printTransaction = async (transactionIds: string[]) => {
+const printTransaction = async (transactionIds: string[], type: string) => {
+  let option = {};
+  if (type === 'bon') {
+    option = { isPrintedBon: true };
+  } else {
+    option = { isPrintedInvoice: true };
+  }
+
   const promiseAll = await Promise.all([
     TransactionModel.find({
       _id: { $in: transactionIds },
     }),
-    TransactionModel.updateMany(
-      { _id: { $in: transactionIds } },
-      { isPrinted: true }
-    ),
+    TransactionModel.updateMany({ _id: { $in: transactionIds } }, option),
   ]);
 
   const documents = promiseAll[0];

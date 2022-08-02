@@ -10,8 +10,8 @@ import _ from 'lodash';
 interface TransactionsAPIRequest extends NextApiRequest {
   body: Transaction;
   query: {
-    month: string;
-    year: string;
+    startDate: Date;
+    endDate: Date;
   };
 }
 

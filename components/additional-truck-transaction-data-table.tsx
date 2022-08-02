@@ -4,7 +4,7 @@ import {
   DataTableAdditionalTransaction,
   TransactionType,
 } from '../types/common';
-import DeleteVariousTransactionButton from './truck/delete-various-transaction-button';
+import DeleteVariousTransactionButton from './delete-various-transaction-button';
 
 interface DataTableProperties {
   headers: Record<string, string>;

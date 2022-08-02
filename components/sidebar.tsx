@@ -13,10 +13,10 @@ export default function SidebarComponent() {
   const router = useRouter();
 
   return (
-    <div className="scrollbar fixed w-[20vw] max-w-[200px] overflow-y-scroll top-0 bottom-0 left-0 py-10 bg-gray-50 rounded dark:bg-gray-800 scroll">
-      <ul className="mb-5 border-b border-gray-200 dark:border-gray-700">
+    <div className="scrollbar fixed w-[17vw] max-w-[155px] overflow-y-scroll top-0 bottom-0 left-0 py-10 bg-gray-50 rounded scroll">
+      <ul className="mb-5 border-b border-gray-200">
         <li>
-          <a className="flex items-center p-2 mt-5 text-base font-normal text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white group">
+          <a className="flex items-center p-2 mt-5 text-base font-normal text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 group">
             <Image
               className="rounded-full object-scale-down bg-blue-400"
               src="https://cdn.pixabay.com/photo/2018/08/28/13/29/avatar-3637561_960_720.png"

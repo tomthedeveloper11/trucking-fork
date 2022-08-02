@@ -16,12 +16,8 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import moment from 'moment';
 
-const defaultStartDate = moment(
-  `${new Date().getFullYear()}-${new Date().getMonth() + 1}-01`
-)
-  .startOf('month')
-  .toDate();
-const defaultEndDate = new Date();
+const defaultStartDate = new Date(2020, 1, 1);
+const defaultEndDate = new Date(new Date().setHours(23, 59, 59));
 
 export default function TruckDetails({
   truckName,
@@ -38,7 +34,8 @@ export default function TruckDetails({
 
   useEffect(() => {
     setTruckTransactionsState(truckTransactions);
-  }, [truckTransactions]);
+    setMiscTruckTransactionsState(miscTruckTransactions);
+  }, [truckTransactions, miscTruckTransactions]);
 
   const truckDataTableHeaders = {
     Tanggal: 'w-1/12',
@@ -91,8 +88,8 @@ export default function TruckDetails({
   };
 
   const [table, setTable] = useState('trip');
-  const [startDate, setStartDate] = useState(defaultStartDate);
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date(new Date().setHours(0, 0, 0)));
+  const [endDate, setEndDate] = useState(new Date(new Date().setHours(23, 59, 59)));
 
   async function filterByMonth() {
     const truckTransactions =
@@ -105,8 +102,8 @@ export default function TruckDetails({
     const miscTruckTransactions =
       await truckTransactionBloc.getAdditionalTruckTransactionsByTruckId(
         truckId,
-        defaultStartDate,
-        defaultEndDate
+        startDate,
+        endDate
       );
 
     setTruckTransactionsState(truckTransactions);
@@ -125,13 +122,17 @@ export default function TruckDetails({
           <DatePicker
             dateFormat="dd/MM/yyyy"
             selected={startDate}
-            onChange={(date: Date) => setStartDate(date)}
+            onChange={(date: Date) =>
+              setStartDate(new Date(new Date(date).setHours(0, 0, 0)))
+            }
           />
           <span className="text-3xl">-</span>
           <DatePicker
             dateFormat="dd/MM/yyyy"
             selected={endDate}
-            onChange={(date: Date) => setEndDate(date)}
+            onChange={(date: Date) =>
+              setEndDate(new Date(new Date(date).setHours(23, 59, 59)))
+            }
             minDate={startDate}
           />
           <button

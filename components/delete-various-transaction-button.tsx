@@ -1,8 +1,7 @@
 import axios from 'axios';
-import { TransactionType, TruckTransaction } from '../../types/common';
-import { useRouterRefresh } from '../../hooks/hooks';
+import { useRouterRefresh } from '../hooks/hooks';
 import { TrashIcon } from '@heroicons/react/solid';
-import { useToastContext } from '../../lib/toast-context';
+import { useToastContext } from '../lib/toast-context';
 
 interface DeleteTruckTransactionButtonProps {
   transactionId: string;
@@ -17,7 +16,6 @@ export default function DeleteVariousTransactionButton({
   const addToast = useToastContext();
 
   async function deleteTruckTransaction() {
-    console.log('Kehapus');
     await axios({
       method: 'DELETE',
       url: `http://localhost:3000/api/transaction/${transactionId}`,

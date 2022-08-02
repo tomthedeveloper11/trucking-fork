@@ -7,11 +7,19 @@ import {
 } from '../../types/common';
 import TruckTransactionDataTable from '../../components/truck-transaction-data-table';
 import customerBloc from '../../lib/customer';
+import { useEffect, useState } from 'react';
+
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
+const defaultStartDate = new Date(2020, 1, 1);
+const defaultEndDate = new Date(new Date().setHours(23, 59, 59));
 
 export default function CustomerDetails({
   truckTransactions,
   autoCompleteData,
   customer,
+  customerId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const dataTableHeaders = {
     Tanggal: 'w-1/12',
@@ -44,6 +52,34 @@ export default function CustomerDetails({
     };
   };
 
+  const [truckTransactionsState, setTruckTransactionsState] =
+    useState(truckTransactions);
+
+  useEffect(() => {
+    setTruckTransactionsState(truckTransactions);
+  }, [truckTransactions]);
+
+  const [startDate, setStartDate] = useState(
+    new Date(new Date().setHours(0, 0, 0))
+  );
+  const [endDate, setEndDate] = useState(
+    new Date(new Date().setHours(23, 59, 59))
+  );
+
+  async function filterByMonth() {
+    const truckTransactions =
+      await truckTransactionBloc.getTruckTransactionsByCustomerId(
+        customerId,
+        startDate,
+        endDate
+      );
+
+    truckTransactions.forEach((trax) => {
+      trax.selected = false;
+    });
+
+    setTruckTransactionsState(truckTransactions);
+  }
   return (
     <>
       <Head>
@@ -53,9 +89,34 @@ export default function CustomerDetails({
       <div className="container p-8 mb-60 flex-col">
         <h1 className="text-center text-7xl mb-5">{customer.initial}</h1>
 
+        <div className="flex w-56 gap-5 mx-3 my-5">
+          <DatePicker
+            dateFormat="dd/MM/yyyy"
+            selected={startDate}
+            onChange={(date: Date) =>
+              setStartDate(new Date(new Date(date).setHours(0, 0, 0)))
+            }
+          />
+          <span className="text-3xl">-</span>
+          <DatePicker
+            dateFormat="dd/MM/yyyy"
+            selected={endDate}
+            onChange={(date: Date) =>
+              setEndDate(new Date(new Date(date).setHours(23, 59, 59)))
+            }
+            minDate={startDate}
+          />
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={filterByMonth}
+          >
+            Filter
+          </button>
+        </div>
+
         <TruckTransactionDataTable
           headers={dataTableHeaders}
-          data={truckTransactions.map((t) => formatTruckTransaction(t))}
+          data={truckTransactionsState.map((t) => formatTruckTransaction(t))}
           hiddenFields={['id', 'truckId', 'isPrintedBon', 'isPrintedInvoice']}
           autoCompleteData={autoCompleteData}
           emkl={true}
@@ -69,11 +130,15 @@ export const getServerSideProps = async (context: any) => {
   const customerId: string = context.params.id;
   const customer = await customerBloc.getCustomerByCustomerId(customerId);
   const truckTransactions =
-    await truckTransactionBloc.getTruckTransactionsByCustomerId(customerId);
+    await truckTransactionBloc.getTruckTransactionsByCustomerId(
+      customerId,
+      defaultStartDate,
+      defaultEndDate
+    );
   const autoCompleteData =
     await truckTransactionBloc.getTruckTransactionAutoComplete();
 
   return {
-    props: { truckTransactions, autoCompleteData, customer },
+    props: { truckTransactions, autoCompleteData, customer, customerId },
   };
 };

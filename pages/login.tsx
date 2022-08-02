@@ -26,7 +26,6 @@ export default function Login() {
       url: 'http://localhost:3000/api/login',
       data: user,
     });
-    console.log('🚀 ~ file: login.tsx ~ line 28 ~ login ~ response', response);
     router.push('/');
     // setUser({ username: '', password: '' });
   }
