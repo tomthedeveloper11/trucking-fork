@@ -78,6 +78,7 @@ export default function TruckDetails({
   const formatMiscTransaction = (
     transaction: AdditionalTruckTransaction
   ): DataTableAdditionalTransaction => {
+    //
     return {
       id: transaction.id,
       date: new Date(transaction.date).toLocaleDateString('id-ID'),
@@ -88,8 +89,12 @@ export default function TruckDetails({
   };
 
   const [table, setTable] = useState('trip');
-  const [startDate, setStartDate] = useState(new Date(new Date().setHours(0, 0, 0)));
-  const [endDate, setEndDate] = useState(new Date(new Date().setHours(23, 59, 59)));
+  const [startDate, setStartDate] = useState(
+    new Date(new Date().setHours(0, 0, 0))
+  );
+  const [endDate, setEndDate] = useState(
+    new Date(new Date().setHours(23, 59, 59))
+  );
 
   async function filterByMonth() {
     const truckTransactions =
