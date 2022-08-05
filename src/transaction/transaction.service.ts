@@ -92,7 +92,6 @@ const getTruckTransactions = async () => {
   const transactions = await transactionRepository.getTruckTransactions();
   return transactions;
 };
-
 const getGroupedTruckTransactions = async (date: TransactionSummaryQuery) => {
   const transactions = await transactionRepository.getAllTransactions(date);
   const trucks = await truckRepository.getTrucks();
@@ -108,14 +107,27 @@ const getGroupedTruckTransactions = async (date: TransactionSummaryQuery) => {
     if (!summary[truckName]) {
       summary[truckName] = {
         truckId: transaction.truckId,
-        cost: transaction.cost,
+        cost: 0,
+        additionalCost: 0,
         sellingPrice: transaction.sellingPrice,
         margin: transaction.sellingPrice - transaction.cost,
       };
+      if (transaction.transactionType == 'TRUCK_TRANSACTION') {
+        summary[truckName].cost = transaction.cost;
+      } else {
+        summary[truckName].additionalCost = transaction.cost;
+      }
     } else {
       summary[truckName] = {
         truckId: transaction.truckId,
-        cost: summary[truckName].cost + transaction.cost,
+        cost:
+          transaction.transactionType == 'TRUCK_TRANSACTION'
+            ? summary[truckName].cost + transaction.cost
+            : summary[truckName].cost,
+        additionalCost:
+          transaction.transactionType == 'TRUCK_ADDITIONAL_TRANSACTION'
+            ? summary[truckName].additionalCost + transaction.cost
+            : summary[truckName].additionalCost,
         sellingPrice:
           summary[truckName].sellingPrice +
           (transaction.sellingPrice ? transaction.sellingPrice : 0),
@@ -285,11 +297,76 @@ const printTransaction = async (transactionIds: string[], type: string) => {
 
   let file;
   if (type === 'bon') {
-    file = fs.readFileSync('./bon.html', 'utf8');
+    file = fs.readFileSync('./templates/bon.html', 'utf8');
   } else {
-    file = fs.readFileSync('./tagihan.html', 'utf8');
+    file = fs.readFileSync('./templates/tagihan.html', 'utf8');
   }
 
+  const template = handlers.compile(`${file}`);
+  const html = template(content);
+
+  const browser = await puppeteer.launch();
+  const page = await browser.newPage();
+
+  await page.setContent(html, { waitUntil: 'networkidle0' });
+
+  const pdf = await page.pdf({ format: 'A4' });
+
+  return pdf;
+};
+
+const printSummary = async ({ startDate, endDate }) => {
+  handlers.registerHelper('formatRupiah', formatRupiah);
+  handlers.registerHelper('formatDate', formatDate);
+
+  const summary = await getGroupedTruckTransactions({ startDate, endDate });
+  const transactions = await transactionRepository.getTransactions({
+    startDate,
+    endDate,
+  });
+
+  console.log(summary)
+  console.log('transactionss',transactions)
+
+  const totalSellingPrice = Object.values(summary).reduce(
+    (acc, obj) => acc + obj.sellingPrice,
+    0
+  );
+  const totalTruckCost = Object.values(summary).reduce(
+    (acc, obj) => acc + obj.cost,
+    0
+  );
+  const totalAdditionalCost = Object.values(summary).reduce(
+    (acc, obj) => acc + obj.additionalCost,
+    0
+  );
+  const transactionsTotal = transactions.reduce(
+    (acc, obj) => acc + obj.cost,
+    0
+  );
+  const totalCost = totalAdditionalCost + transactionsTotal
+  const totalMargin = totalSellingPrice - totalCost - totalAdditionalCost - transactionsTotal
+
+  const content = {
+    startDate: new Date(startDate).toLocaleDateString('id-ID', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }),
+    endDate: new Date(endDate).toLocaleDateString('id-ID', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    }),
+    summary,
+    transactions,
+    totalSellingPrice,
+    totalTruckCost,
+    totalCost,
+    totalMargin
+  };
+
+  const file = fs.readFileSync('./templates/laporan.html', 'utf8');
   const template = handlers.compile(`${file}`);
   const html = template(content);
 
@@ -326,6 +403,7 @@ const transactionService = {
   getTransactions,
   createTransaction,
   editTransaction,
+  printSummary,
 };
 
 export default transactionService;

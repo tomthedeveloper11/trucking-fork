@@ -5,11 +5,9 @@ import { formatRupiah } from '../helpers/hbsHelpers';
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import moment from 'moment';
-
-// const currentMonthString = (new Date().getMonth() + 1).toString();
-// const currentYearString = new Date().getFullYear().toString();
-
+import axios from 'axios';
+import { getCookie } from 'cookies-next';
+import { GetServerSideProps } from 'next';
 const defaultStartDate = new Date(2020, 1, 1);
 const defaultEndDate = new Date(new Date().setHours(23, 59, 59));
 
@@ -19,6 +17,7 @@ export default function Home({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const [truckSummariesState, setTruckSummariesState] =
     useState(truckSummaries);
+
   const [summariesState, setSummariesState] = useState(summaries);
 
   const entries = Object.entries(truckSummariesState);
@@ -27,34 +26,7 @@ export default function Home({
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
 
-  // const months = [
-  //   { no: '1', name: 'Januari' },
-  //   { no: '2', name: 'Februari' },
-  //   { no: '3', name: 'Maret' },
-  //   { no: '4', name: 'April' },
-  //   { no: '5', name: 'Mei' },
-  //   { no: '6', name: 'Juni' },
-  //   { no: '7', name: 'Juli' },
-  //   { no: '8', name: 'Agustus' },
-  //   { no: '9', name: 'September' },
-  //   { no: '10', name: 'Oktober' },
-  //   { no: '11', name: 'November' },
-  //   { no: '12', name: 'Desember' },
-  // ];
-  // const currentMonthName = months[new Date().getMonth()].name;
-
-  // const [selectedMonthString, setSelectedMonthString] =
-  //   useState(currentMonthString);
-  // const [selectedMonthName, setSelectedMonthName] = useState(currentMonthName);
-
-  // function handleChange(event: React.ChangeEvent<HTMLSelectElement>) {
-  //   const { value } = event.target;
-  // setSelectedMonthString(value);
-  // }
-
   async function filterByMonth() {
-    // setSelectedMonthName(months[+selectedMonthString - 1].name);
-
     const truckSummaries =
       await truckTransactionBloc.getGroupedTruckTransactions({
         startDate,
@@ -69,39 +41,28 @@ export default function Home({
     setSummariesState(summaries);
   }
 
+  async function printSummary() {
+    const response = await truckTransactionBloc.printSummary({
+      startDate,
+      endDate,
+    });
+  }
+
+  async function getUser() {
+    await axios({
+      method: 'GET',
+      url: `http://localhost:3000/api/user`,
+    });
+  }
+
   return (
     <>
       <Head>
         <title>{'Home'}</title>
       </Head>
       <div className="container m-auto">
-        <h2 className="text-7xl text-center m-auto">
-          {/* Rekap Bulan {selectedMonthName || currentMonthName} */}
-          Rekap
-        </h2>
-
-        {/* <div className="flex w-56 gap-5">
-          <select
-            className="w-full border box-border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-6"
-            name="month"
-            value={selectedMonthString}
-            onChange={handleChange}
-          >
-            {months.map((month) => {
-              return (
-                <option key={month.no} value={month.no}>
-                  {month.name}
-                </option>
-              );
-            })}
-          </select>
-          <button
-            className="bg-blue-400 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={filterByMonth}
-          >
-            Filter
-          </button>
-        </div> */}
+        <h2 className="text-7xl text-center m-auto">Rekap</h2>
+        <button onClick={() => getUser()}>User</button>
 
         <div className="flex w-56 gap-5 mx-3 my-5">
           <DatePicker
@@ -127,6 +88,12 @@ export default function Home({
             Filter
           </button>
         </div>
+        <button
+          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-5"
+          onClick={printSummary}
+        >
+          Print Laporan
+        </button>
 
         <div className="grid grid-cols-4 gap-7 text-center mt-6 border border-gray-200 rounded p-5 m-3 bg-zinc-100 shadow-md">
           <div className="bg-white shadow-md rounded">
@@ -152,7 +119,7 @@ export default function Home({
           <div className="bg-white shadow-md rounded">
             <div className="bg-orange-100">
               <div className="bg-orange-400 h-1 w-full"></div>
-              <h3 className="text-2xl py-3">Total Biaya Lain</h3>
+              <h3 className="text-2xl py-3">Total Pengeluaran Lain</h3>
             </div>
             <h4 className="text-2xl font-bold py-6">
               {formatRupiah(summariesState.totalAdditionalCost)}
@@ -189,7 +156,10 @@ export default function Home({
                     Pembayaran: {formatRupiah(entry[1].sellingPrice)}
                   </h3>
                   <h3 className="my-2 text-red-400 text-center font-medium">
-                    Biaya: {formatRupiah(entry[1].cost)}
+                    Borongan: {formatRupiah(entry[1].cost)}
+                  </h3>
+                  <h3 className="my-2 text-red-400 text-center font-medium">
+                    Biaya: {formatRupiah(entry[1].additionalCost)}
                   </h3>
                   <hr />
                   <h3 className="my-2 text-center font-medium">
@@ -205,14 +175,21 @@ export default function Home({
   );
 }
 
-export const getServerSideProps = async ({ _: any }) => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const access_token = getCookie('access_token', {
+    req: context.req,
+    res: context.res,
+  });
+  
   const truckSummaries = await truckTransactionBloc.getGroupedTruckTransactions(
     {
+      access_token,
       startDate: defaultStartDate,
       endDate: defaultEndDate,
     }
   );
   const summaries = await truckTransactionBloc.getTotalSummary({
+    access_token,
     startDate: defaultStartDate,
     endDate: defaultEndDate,
   });

@@ -5,7 +5,6 @@ import initMiddleware from '../../src/middlewares/init-middleware';
 import validateMiddleware from '../../src/middlewares/validate-middleware';
 import { User } from '../../types/common';
 import connectDb from '../../src/mongodb/connection';
-
 const loginValidator = initMiddleware(
   validateMiddleware(
     [
@@ -28,13 +27,10 @@ export default async function handler(
       conn = await connectDb();
       const userPayload = req.body as User;
       const access_token = await userService.login(userPayload);
-      req.headers.authorization = access_token;
       await conn.close();
-
+    
       res.status(200).json({
-        data: {
-          access_token,
-        },
+        access_token,
         message: 'Login Success!',
       });
       break;

@@ -14,12 +14,16 @@ const getTruckTransactions = async () => {
 };
 
 const getGroupedTruckTransactions = async ({
+  access_token,
   startDate,
   endDate,
 }: TransactionSummaryQuery) => {
   const response = await axios({
     method: 'GET',
     url: `http://localhost:3000/api/transaction/summary/trucks`,
+    headers: {
+      access_token
+    },
     params: {
       startDate,
       endDate,
@@ -49,7 +53,11 @@ const getTotalSummary = async ({
   return {};
 };
 
-const getTruckTransactionsByCustomerId = async (customerId, startDate, endDate) => {
+const getTruckTransactionsByCustomerId = async (
+  customerId,
+  startDate,
+  endDate
+) => {
   const response = await axios({
     method: 'GET',
     url: `http://localhost:3000/api/transaction/customer/${customerId}`,
@@ -140,6 +148,32 @@ const printTransactions = async (transactionIds: string[], type: string) => {
   if (response) return 'Print Success';
   return 'Print Failed';
 };
+
+const printSummary = async ({ startDate, endDate }) => {
+  const response = await axios({
+    method: 'GET',
+    url: 'http://localhost:3000/api/transaction/printSummary',
+    responseType: 'blob',
+    params: {
+      startDate,
+      endDate,
+    },
+  });
+
+  const saveAsPDF = async (response: any) => {
+    const blob = new Blob([response]);
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'summary.pdf';
+    link.click();
+  };
+
+  saveAsPDF(response.data);
+
+  if (response) return 'Print Success';
+  return 'Print Failed';
+};
+
 const truckTransactionBloc = {
   getTruckTransactions,
   getGroupedTruckTransactions,
@@ -149,6 +183,7 @@ const truckTransactionBloc = {
   getAdditionalTruckTransactionsByTruckId,
   getTruckTransactionAutoComplete,
   printTransactions,
+  printSummary,
 };
 
 export default truckTransactionBloc;

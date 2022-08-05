@@ -1,3 +1,4 @@
+import { CookieParseOptions } from './../../../../node_modules/@types/cookie/index.d';
 import { NextApiRequest, NextApiResponse } from 'next';
 import transactionService from '../../../../src/transaction/transaction.service';
 import connectDb from '../../../../src/mongodb/connection';
@@ -31,6 +32,7 @@ export default async function handler(
   try {
     switch (req.method) {
       case 'GET':
+        console.log(req.headers.access_token, 'lalalall')
         conn = await connectDb();
         const truckTransactions =
           await transactionService.getGroupedTruckTransactions(req.query);

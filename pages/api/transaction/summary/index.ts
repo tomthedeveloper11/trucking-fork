@@ -6,6 +6,7 @@ import initMiddleware from '../../../../src/middlewares/init-middleware';
 import { check, validationResult } from 'express-validator';
 import validateMiddleware from '../../../../src/middlewares/validate-middleware';
 import userAuthenticationMiddleware from '../../../../src/middlewares/user-authentication-middleware';
+import NextCors from 'nextjs-cors';
 
 interface TransactionSummaryRequest extends NextApiRequest {
   query: {
@@ -34,8 +35,6 @@ export default async function handler(
   try {
     switch (req.method) {
       case 'GET':
-        // await userAuthentication(req, res);
-
         conn = await connectDb();
         const transactions = await transactionService.getTotalSummary(
           req.query
