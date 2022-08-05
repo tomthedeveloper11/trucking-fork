@@ -82,6 +82,7 @@ export interface FilterTransactionsQuery {
 }
 
 export interface TransactionSummaryQuery {
+  access_token: string | CookieValueTypes;
   startDate: Date;
   endDate: Date;
 }
@@ -90,6 +91,7 @@ export interface TransactionSummary {
   [truckName: string]: {
     truckId: string;
     cost: number;
+    additionalCost: number;
     sellingPrice: number;
     margin: number;
   };

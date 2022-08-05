@@ -96,6 +96,9 @@ export default function TruckTransactionDataTable({
     refreshData();
   }
 
+  const totalCost = data.reduce((acc, obj) => acc + obj.cost, 0);
+  const totalSell = data.reduce((acc, obj) => acc + obj.sellingPrice, 0);
+
   return (
     <>
       <Table>
@@ -114,82 +117,87 @@ export default function TruckTransactionDataTable({
           <Table.HeadCell>Actions</Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
-          {data &&
-            data.map((truckTransaction, index) => {
-              return (
-                <Table.Row
-                  key={`tr-${index}`}
-                  className={`${
-                    truckTransactions[index]?.selected &&
-                    'bg-green-100 hover:bg-green-200'
-                  } hover:bg-gray-100`}
-                >
-                  {emkl && (
-                    <Table.Cell>
-                      <div className="flex gap-3">
-                        <input
-                          className="mt-7 rounded checked:bg-green-400 checked:border-green-400 focus:ring-green-500"
-                          type="checkbox"
-                          onClick={() => {
-                            truckTransactions[index].selected =
-                              !truckTransactions[index].selected;
-                            setTruckTransactions([...truckTransactions]);
-                          }}
-                        ></input>
-                        <div>
-                          <button
-                            className={`flex my-1 border border-gray-300 rounded shadow-sm px-2 ${
-                              truckTransaction.isPrintedBon
-                                ? 'text-gray-600 hover:bg-white'
-                                : 'bg-green-400 hover:bg-green-500 text-gray-100'
-                            }`}
-                            onClick={() =>
-                              print(truckTransactions[index].id, 'bon')
-                            }
-                          >
-                            <PrinterIcon className="h-5 mt-1" />
-                            <p className={`text-lg font-bold`}>Bon</p>
-                          </button>
+          {data.map((truckTransaction, index) => {
+            return (
+              <Table.Row
+                key={`tr-${index}`}
+                className={`${
+                  truckTransactions[index]?.selected &&
+                  'bg-green-100 hover:bg-green-200'
+                } hover:bg-gray-100`}
+              >
+                {emkl && (
+                  <Table.Cell>
+                    <div className="flex gap-3">
+                      <input
+                        className="mt-7 rounded checked:bg-green-400 checked:border-green-400 focus:ring-green-500"
+                        type="checkbox"
+                        onClick={() => {
+                          truckTransactions[index].selected =
+                            !truckTransactions[index].selected;
+                          setTruckTransactions([...truckTransactions]);
+                        }}
+                      ></input>
+                      <div>
+                        <button
+                          className={`flex my-1 border border-gray-300 rounded shadow-sm px-2 ${
+                            truckTransaction.isPrintedBon
+                              ? 'text-gray-600 hover:bg-white'
+                              : 'bg-green-400 hover:bg-green-500 text-gray-100'
+                          }`}
+                          onClick={() =>
+                            print(truckTransactions[index].id, 'bon')
+                          }
+                        >
+                          <PrinterIcon className="h-5 mt-1" />
+                          <p className={`text-lg font-bold`}>Bon</p>
+                        </button>
 
-                          <button
-                            className={`flex my-1 border border-gray-300 rounded shadow-sm px-2 ${
-                              truckTransaction.isPrintedInvoice
-                                ? 'text-gray-600 hover:bg-white'
-                                : 'bg-green-400 hover:bg-green-500 text-gray-100'
-                            }`}
-                            onClick={() =>
-                              print(truckTransactions[index].id, 'tagihan')
-                            }
-                          >
-                            <PrinterIcon className="h-5 mt-1" />
-                            <p className={`text-lg font-bold`}>Tagihan</p>
-                          </button>
-                        </div>
+                        <button
+                          className={`flex my-1 border border-gray-300 rounded shadow-sm px-2 ${
+                            truckTransaction.isPrintedInvoice
+                              ? 'text-gray-600 hover:bg-white'
+                              : 'bg-green-400 hover:bg-green-500 text-gray-100'
+                          }`}
+                          onClick={() =>
+                            print(truckTransactions[index].id, 'tagihan')
+                          }
+                        >
+                          <PrinterIcon className="h-5 mt-1" />
+                          <p className={`text-lg font-bold`}>Tagihan</p>
+                        </button>
                       </div>
-                    </Table.Cell>
-                  )}
-                  {buildTransactionRow(truckTransaction, hiddenFields)}
-                  {truckTransactions[index] && (
-                    <Table.Cell>
-                      <div className="flex flex-row">
-                        <EditTruckTransactionButton
-                          key={`edit-modal-key${index}`}
-                          existingTruckTransaction={truckTransactions[index]}
-                          autoCompleteData={autoCompleteData}
-                          disabled={truckTransactions[index]?.selected}
-                        />
-                        <DeleteVariousTransactionButton
-                          transactionId={truckTransaction.id}
-                          disabled={truckTransactions[index]?.selected}
-                        />
-                      </div>
-                    </Table.Cell>
-                  )}
-                </Table.Row>
-              );
-            })}
+                    </div>
+                  </Table.Cell>
+                )}
+                {buildTransactionRow(truckTransaction, hiddenFields)}
+                {truckTransactions[index] && (
+                  <Table.Cell>
+                    <div className="flex flex-row">
+                      <EditTruckTransactionButton
+                        key={`edit-modal-key${index}`}
+                        existingTruckTransaction={truckTransactions[index]}
+                        autoCompleteData={autoCompleteData}
+                        disabled={truckTransactions[index]?.selected}
+                      />
+                      <DeleteVariousTransactionButton
+                        transactionId={truckTransaction.id}
+                        disabled={truckTransactions[index]?.selected}
+                      />
+                    </div>
+                  </Table.Cell>
+                )}
+              </Table.Row>
+            );
+          })}
         </Table.Body>
       </Table>
+      {totalCost != 0 && totalSell != 0 && (
+        <div className="mt-5 pl-[39.5vw] border flex gap-8">
+          <p className="text-lg font-bold">{totalCost}</p>
+          <p className="text-lg font-bold">{totalSell}</p>
+        </div>
+      )}
     </>
   );
 }

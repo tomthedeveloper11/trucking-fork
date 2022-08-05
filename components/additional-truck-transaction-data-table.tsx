@@ -39,6 +39,8 @@ export default function AdditionalTruckTransactionDataTable({
     );
   }
 
+  const totalCost = data.reduce((acc, obj) => acc + obj.cost, 0);
+
   return (
     <>
       <Table hoverable={true}>
@@ -75,6 +77,11 @@ export default function AdditionalTruckTransactionDataTable({
           })}
         </Table.Body>
       </Table>
+      {totalCost != 0 && (
+        <div className="mt-5 pl-[50.5vw] border">
+          <p className="text-lg font-bold">{totalCost}</p>
+        </div>
+      )}
     </>
   );
 }
