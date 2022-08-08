@@ -4,19 +4,26 @@ import { Truck } from '../../types/common';
 import truckBloc from '../../lib/truck';
 import { InferGetServerSidePropsType } from 'next';
 import AddTruckButton from '../../components/truck/add-truck-button';
+import * as jwt from 'jsonwebtoken';
+import { getCookie } from 'cookies-next';
 
 export default function Home({
   trucks,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const access_token = getCookie('access_token');
+  const user = jwt.decode(access_token, process.env.SECRET_KEY);
+
   return (
     <>
       <Head>
         <title>{'Home'}</title>
       </Head>
       <div className="container p-8">
-        <div className="flex justify-end mr-5 mb-3">
-          <AddTruckButton />
-        </div>
+        {user?.role !== 'guest' && (
+          <div className="flex justify-end mr-5 mb-3">
+            <AddTruckButton />
+          </div>
+        )}
         <div className="grid grid-cols-4 gap-4 ml-17">
           {trucks.map((truck: Truck) => (
             <Link

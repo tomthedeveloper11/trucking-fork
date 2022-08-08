@@ -3,19 +3,26 @@ import Link from 'next/link';
 import { InferGetServerSidePropsType } from 'next';
 import customerBloc from '../../lib/customer';
 import AddCustomerButton from '../../components/add-customer-button';
+import * as jwt from 'jsonwebtoken';
+import { getCookie } from 'cookies-next';
 
 export default function Print({
   customers,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const access_token = getCookie('access_token');
+  const user = jwt.decode(access_token, process.env.SECRET_KEY);
+
   return (
     <>
       <Head>
         <title>{'Print'}</title>
       </Head>
       <div className="container p-8">
-        <div className="flex justify-end mr-5 mb-3">
-          <AddCustomerButton />
-        </div>
+        {user?.role !== 'guest' && (
+          <div className="flex justify-end mr-5 mb-3">
+            <AddCustomerButton />
+          </div>
+        )}
         <div className="grid grid-cols-4 gap-4 ml-17">
           {Object.values(customers).map((customer) => (
             <Link

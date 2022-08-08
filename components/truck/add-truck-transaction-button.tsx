@@ -8,6 +8,8 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { PlusIcon } from '@heroicons/react/solid';
 import { useToastContext } from '../../lib/toast-context';
+import { getCookie } from 'cookies-next';
+import * as jwt from 'jsonwebtoken';
 
 interface AddTruckTransactionButtonProps {
   truckId: string;
@@ -18,21 +20,10 @@ export default function AddTruckTransactionButton({
   truckId,
   autoCompleteData,
 }: AddTruckTransactionButtonProps) {
+  const access_token = getCookie('access_token');
+  const user = jwt.decode(access_token, process.env.SECRET_KEY);
+
   const addToast = useToastContext();
-  // const placeHolderTransaction: Omit<TruckTransaction, 'id' | 'date'> = {
-  //   containerNo: 'TEGU3009038',
-  //   invoiceNo: '1671',
-  //   destination: 'AMPLAS/CATUR',
-  //   cost: 350000,
-  //   sellingPrice: 700000,
-  //   customer: 'SKM',
-  //   details: '',
-  //   bon: '',
-  //   transactionType: TransactionType.TRUCK_TRANSACTION,
-  //   truckId,
-  //   isPrintedBon: false,
-  //   isPrintedInvoice: false,
-  // };
   const baseTruckTransaction: Omit<TruckTransaction, 'id' | 'date'> = {
     containerNo: '',
     invoiceNo: '',
@@ -231,16 +222,18 @@ export default function AddTruckTransactionButton({
                   onChange={handleChange}
                 />
               </div>
-              <div className="form-group row-span-1 col-span-1">
-                <TextInput
-                  label="Pembayaran"
-                  name="sellingPrice"
-                  type="currency"
-                  value={truckTransaction.sellingPrice}
-                  prefix="Rp"
-                  onChange={handleChange}
-                />
-              </div>
+              {user?.role === 'admin' && (
+                <div className="form-group row-span-1 col-span-1">
+                  <TextInput
+                    label="Pembayaran"
+                    name="sellingPrice"
+                    type="currency"
+                    value={truckTransaction.sellingPrice}
+                    prefix="Rp"
+                    onChange={handleChange}
+                  />
+                </div>
+              )}
 
               <div className="form-group row-span-1 col-span-5">
                 <TextInput

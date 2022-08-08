@@ -1,6 +1,7 @@
 import { TransactionSummaryQuery } from './../types/common';
 import axios from 'axios';
 import { TruckTransaction, AdditionalTruckTransaction } from '../types/common';
+import { CookieValueTypes } from 'cookies-next';
 
 const getTruckTransactions = async () => {
   const response = await axios({
@@ -18,11 +19,13 @@ const getGroupedTruckTransactions = async ({
   startDate,
   endDate,
 }: TransactionSummaryQuery) => {
+  if (!access_token) throw new Error('Invalid token');
+
   const response = await axios({
     method: 'GET',
     url: `http://localhost:3000/api/transaction/summary/trucks`,
     headers: {
-      access_token
+      access_token,
     },
     params: {
       startDate,
@@ -36,12 +39,16 @@ const getGroupedTruckTransactions = async ({
 };
 
 const getTotalSummary = async ({
+  access_token,
   startDate,
   endDate,
 }: TransactionSummaryQuery) => {
   const response = await axios({
     method: 'GET',
     url: `http://localhost:3000/api/transaction/summary/`,
+    headers: {
+      access_token,
+    },
     params: {
       startDate,
       endDate,
@@ -50,17 +57,24 @@ const getTotalSummary = async ({
   if (response && response.data) {
     return response.data.data;
   }
+
   return {};
 };
 
 const getTruckTransactionsByCustomerId = async (
+  access_token,
   customerId,
   startDate,
   endDate
 ) => {
+  if (!access_token) throw new Error('Invalid token');
+
   const response = await axios({
     method: 'GET',
     url: `http://localhost:3000/api/transaction/customer/${customerId}`,
+    headers: {
+      access_token,
+    },
     params: {
       startDate,
       endDate,
@@ -73,13 +87,19 @@ const getTruckTransactionsByCustomerId = async (
 };
 
 const getTruckTransactionsByTruckId = async (
+  access_token: CookieValueTypes,
   truckId: string,
   startDate: Date,
   endDate: Date
 ) => {
+  if (!access_token) throw new Error('Invalid token');
+
   const response = await axios({
     method: 'GET',
     url: `http://localhost:3000/api/truck/${truckId}`,
+    headers: {
+      access_token: access_token,
+    },
     params: {
       startDate,
       endDate,

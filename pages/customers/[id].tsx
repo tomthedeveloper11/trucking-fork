@@ -11,6 +11,8 @@ import { useEffect, useState } from 'react';
 
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import * as jwt from 'jsonwebtoken';
+import { getCookie } from 'cookies-next';
 
 const defaultStartDate = new Date(2020, 1, 1);
 const defaultEndDate = new Date(new Date().setHours(23, 59, 59));
@@ -21,6 +23,9 @@ export default function CustomerDetails({
   customer,
   customerId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const access_token = getCookie('access_token');
+  const user = jwt.decode(access_token, process.env.SECRET_KEY);
+  
   const dataTableHeaders = {
     Tanggal: 'w-1/12',
     'No. Container': 'w-2/12',
@@ -32,6 +37,12 @@ export default function CustomerDetails({
     Bon: 'w-2/12',
     'Info Tambahan': 'w-1/12',
   };
+
+  
+  if (user?.role === 'user') {
+    delete dataTableHeaders.Pembayaran
+  }
+
   const formatTruckTransaction = (
     truckTransaction: TruckTransaction
   ): DataTableTruckTransaction => {
@@ -69,6 +80,7 @@ export default function CustomerDetails({
   async function filterByMonth() {
     const truckTransactions =
       await truckTransactionBloc.getTruckTransactionsByCustomerId(
+        access_token,
         customerId,
         startDate,
         endDate
@@ -117,7 +129,13 @@ export default function CustomerDetails({
         <TruckTransactionDataTable
           headers={dataTableHeaders}
           data={truckTransactionsState.map((t) => formatTruckTransaction(t))}
-          hiddenFields={['id', 'truckId', 'isPrintedBon', 'isPrintedInvoice']}
+          hiddenFields={[
+            'id',
+            'truckId',
+            'isPrintedBon',
+            'isPrintedInvoice',
+            user?.role === 'user' ? 'sellingPrice' : '',
+          ]}
           autoCompleteData={autoCompleteData}
           emkl={true}
         />
@@ -127,10 +145,16 @@ export default function CustomerDetails({
 }
 
 export const getServerSideProps = async (context: any) => {
+  const access_token = getCookie('access_token', {
+    req: context.req,
+    res: context.res,
+  });
+  
   const customerId: string = context.params.id;
   const customer = await customerBloc.getCustomerByCustomerId(customerId);
   const truckTransactions =
     await truckTransactionBloc.getTruckTransactionsByCustomerId(
+      access_token,
       customerId,
       defaultStartDate,
       defaultEndDate

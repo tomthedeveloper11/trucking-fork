@@ -24,7 +24,6 @@ export default function Register() {
 
   async function registerFunction() {
     window.event?.preventDefault();
-    console.log(user);
     const response = await axios({
       method: 'POST',
       url: 'http://localhost:3000/api/register',

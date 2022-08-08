@@ -14,7 +14,8 @@ import AdditionalTruckTransactionDataTable from '../../components/additional-tru
 import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import moment from 'moment';
+import * as jwt from 'jsonwebtoken';
+import { getCookie } from 'cookies-next';
 
 const defaultStartDate = new Date(2020, 1, 1);
 const defaultEndDate = new Date(new Date().setHours(23, 59, 59));
@@ -26,6 +27,9 @@ export default function TruckDetails({
   miscTruckTransactions,
   autoCompleteData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const access_token = getCookie('access_token');
+  const user = jwt.decode(access_token, process.env.SECRET_KEY);
+
   const [truckTransactionsState, setTruckTransactionsState] =
     useState(truckTransactions);
   const [miscTruckTransactionsState, setMiscTruckTransactionsState] = useState(
@@ -48,6 +52,10 @@ export default function TruckDetails({
     bon: 'w-1/12',
     'Info Tambahan': 'w-2/12',
   };
+
+  if (user?.role === 'user') {
+    delete truckDataTableHeaders.Pembayaran;
+  }
 
   const miscDataTableHeaders = {
     Tanggal: 'w-3/12',
@@ -99,6 +107,7 @@ export default function TruckDetails({
   async function filterByMonth() {
     const truckTransactions =
       await truckTransactionBloc.getTruckTransactionsByTruckId(
+        access_token,
         truckId,
         startDate,
         endDate
@@ -122,7 +131,6 @@ export default function TruckDetails({
 
       <div className="container p-8 mb-60 flex-col">
         <h1 className="text-center text-7xl mb-5">{truckName}</h1>
-
         <div className="flex w-56 gap-5 mx-3 my-5">
           <DatePicker
             dateFormat="dd/MM/yyyy"
@@ -147,7 +155,6 @@ export default function TruckDetails({
             Filter
           </button>
         </div>
-
         <button
           className={`mr-3 hover:bg-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ${
             table === 'trip'
@@ -168,19 +175,19 @@ export default function TruckDetails({
         >
           Transaksi Lainnya
         </button>
-        {table === 'trip' ? (
+        {table === 'trip' && user?.role !== 'guest' && (
           <div className="flex justify-end mr-5 mb-3">
             <AddTruckTransactionButton
               truckId={truckId}
               autoCompleteData={autoCompleteData}
             />
           </div>
-        ) : (
+        )}{' '}
+        {table === 'misc' && user?.role !== 'guest' && (
           <div className="flex justify-end mr-5 mb-3">
             <AddAdditionalTruckTransactionButton truckId={truckId} />
           </div>
         )}
-
         {table === 'trip' ? (
           <TruckTransactionDataTable
             headers={truckDataTableHeaders}
@@ -191,6 +198,7 @@ export default function TruckDetails({
               'truckId',
               'isPrintedBon',
               'isPrintedInvoice',
+              user?.role === 'user' ? 'sellingPrice' : '',
             ]}
             autoCompleteData={autoCompleteData}
           />
@@ -208,11 +216,17 @@ export default function TruckDetails({
   );
 }
 
-export const getServerSideProps = async (context: any) => {
+export const getServerSideProps = async (context) => {
+  const access_token = getCookie('access_token', {
+    req: context.req,
+    res: context.res,
+  });
+
   const truckId: string = context.params.id;
   const truckName: string = context.query.truckName;
   const truckTransactions =
     await truckTransactionBloc.getTruckTransactionsByTruckId(
+      access_token,
       truckId,
       defaultStartDate,
       defaultEndDate

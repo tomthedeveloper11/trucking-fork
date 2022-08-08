@@ -11,6 +11,8 @@ import truckTransactionBloc from '../lib/truckTransaction';
 import DeleteVariousTransactionButton from './delete-various-transaction-button';
 import { useToastContext } from '../lib/toast-context';
 import { useRouterRefresh } from '../hooks/hooks';
+import { getCookie } from 'cookies-next';
+import * as jwt from 'jsonwebtoken';
 
 interface DataTableProperties {
   headers: Record<string, string>;
@@ -64,6 +66,9 @@ export default function TruckTransactionDataTable({
   autoCompleteData,
   emkl = false,
 }: DataTableProperties) {
+  const access_token = getCookie('access_token');
+  const user = jwt.decode(access_token, process.env.SECRET_KEY);
+
   const refreshData = useRouterRefresh();
   const addToast = useToastContext();
   const [truckTransactions, setTruckTransactions] = useState(
@@ -103,7 +108,7 @@ export default function TruckTransactionDataTable({
     <>
       <Table>
         <Table.Head className="whitespace-nowrap">
-          {emkl && (
+          {emkl && user?.role !== 'guest' && (
             <Table.HeadCell className="text-center">Print</Table.HeadCell>
           )}
           {Object.entries(headers).map(([header, columnWidth], index) => (
@@ -114,7 +119,7 @@ export default function TruckTransactionDataTable({
               {header}
             </Table.HeadCell>
           ))}
-          <Table.HeadCell>Actions</Table.HeadCell>
+          {user?.role !== 'guest' && <Table.HeadCell>Actions</Table.HeadCell>}
         </Table.Head>
         <Table.Body className="divide-y">
           {data.map((truckTransaction, index) => {
@@ -126,7 +131,7 @@ export default function TruckTransactionDataTable({
                   'bg-green-100 hover:bg-green-200'
                 } hover:bg-gray-100`}
               >
-                {emkl && (
+                {emkl && user?.role !== 'guest' && (
                   <Table.Cell>
                     <div className="flex gap-3">
                       <input
@@ -171,7 +176,7 @@ export default function TruckTransactionDataTable({
                   </Table.Cell>
                 )}
                 {buildTransactionRow(truckTransaction, hiddenFields)}
-                {truckTransactions[index] && (
+                {truckTransactions[index] && user?.role !== 'guest' && (
                   <Table.Cell>
                     <div className="flex flex-row">
                       <EditTruckTransactionButton

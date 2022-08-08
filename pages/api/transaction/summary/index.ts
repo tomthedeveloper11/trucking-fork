@@ -5,10 +5,12 @@ import _ from 'lodash';
 import initMiddleware from '../../../../src/middlewares/init-middleware';
 import { check, validationResult } from 'express-validator';
 import validateMiddleware from '../../../../src/middlewares/validate-middleware';
-import userAuthenticationMiddleware from '../../../../src/middlewares/user-authentication-middleware';
-import NextCors from 'nextjs-cors';
-
+import * as jwt from 'jsonwebtoken';
+import { JwtPayload } from 'jsonwebtoken'
 interface TransactionSummaryRequest extends NextApiRequest {
+  headers: {
+    access_token: string;
+  };
   query: {
     startDate: Date;
     endDate: Date;
@@ -25,8 +27,6 @@ const transactionSummaryValidator = initMiddleware(
   )
 );
 
-const userAuthentication = initMiddleware(userAuthenticationMiddleware());
-
 export default async function handler(
   req: TransactionSummaryRequest,
   res: NextApiResponse
@@ -35,11 +35,20 @@ export default async function handler(
   try {
     switch (req.method) {
       case 'GET':
+        const { access_token } = req.headers;
+        const user = jwt.verify(access_token, process.env.SECRET_KEY) as JwtPayload;
         conn = await connectDb();
-        const transactions = await transactionService.getTotalSummary(
-          req.query
-        );
+        const transactions = await transactionService.getTotalSummary({
+          access_token,
+          startDate: req.query.startDate,
+          endDate: req.query.endDate,
+        });
         await conn.close();
+
+        if ( user.role === 'user') {
+          transactions.totalTripSellingPrice = 0;
+          transactions.totalMargin = 0;
+        }
 
         res.status(200).json({ data: transactions });
         break;

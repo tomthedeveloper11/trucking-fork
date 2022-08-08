@@ -8,8 +8,13 @@ import {
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { getCookie } from 'cookies-next';
+import * as jwt from 'jsonwebtoken';
 
 export default function SidebarComponent() {
+  const access_token = getCookie('access_token');
+  const user = jwt.decode(access_token, process.env.SECRET_KEY);
+
   const router = useRouter();
 
   return (
@@ -24,7 +29,7 @@ export default function SidebarComponent() {
               width={45}
               height={45}
             />
-            <span className="ml-3">Tommy</span>
+            <span className="ml-3">{user?.username}</span>
           </a>
         </li>
       </ul>

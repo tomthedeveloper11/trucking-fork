@@ -5,9 +5,10 @@ import { formatRupiah } from '../helpers/hbsHelpers';
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import axios from 'axios';
-import { getCookie } from 'cookies-next';
 import { GetServerSideProps } from 'next';
+import { getCookie } from 'cookies-next';
+import * as jwt from 'jsonwebtoken';
+
 const defaultStartDate = new Date(2020, 1, 1);
 const defaultEndDate = new Date(new Date().setHours(23, 59, 59));
 
@@ -15,6 +16,9 @@ export default function Home({
   truckSummaries,
   summaries,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const access_token = getCookie('access_token');
+  const user = jwt.decode(access_token, process.env.SECRET_KEY);
+
   const [truckSummariesState, setTruckSummariesState] =
     useState(truckSummaries);
 
@@ -29,10 +33,12 @@ export default function Home({
   async function filterByMonth() {
     const truckSummaries =
       await truckTransactionBloc.getGroupedTruckTransactions({
+        access_token,
         startDate,
         endDate,
       });
     const summaries = await truckTransactionBloc.getTotalSummary({
+      access_token,
       startDate,
       endDate,
     });
@@ -48,13 +54,6 @@ export default function Home({
     });
   }
 
-  async function getUser() {
-    await axios({
-      method: 'GET',
-      url: `http://localhost:3000/api/user`,
-    });
-  }
-
   return (
     <>
       <Head>
@@ -62,7 +61,6 @@ export default function Home({
       </Head>
       <div className="container m-auto">
         <h2 className="text-7xl text-center m-auto">Rekap</h2>
-        <button onClick={() => getUser()}>User</button>
 
         <div className="flex w-56 gap-5 mx-3 my-5">
           <DatePicker
@@ -88,23 +86,31 @@ export default function Home({
             Filter
           </button>
         </div>
-        <button
-          className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-5"
-          onClick={printSummary}
-        >
-          Print Laporan
-        </button>
+        {user?.role !== 'user' && (
+          <button
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-5"
+            onClick={printSummary}
+          >
+            Print Laporan
+          </button>
+        )}
 
-        <div className="grid grid-cols-4 gap-7 text-center mt-6 border border-gray-200 rounded p-5 m-3 bg-zinc-100 shadow-md">
-          <div className="bg-white shadow-md rounded">
-            <div className="bg-green-100">
-              <div className="bg-green-400 h-1 w-full"></div>
-              <h3 className="text-2xl py-3">Total Pembayaran</h3>
+        <div
+          className={`${
+            user?.role === 'user' && 'grid-cols-2'
+          } grid grid-cols-4 gap-7 text-center mt-6 border border-gray-200 rounded p-5 m-3 bg-zinc-100 shadow-md`}
+        >
+          {user?.role !== 'user' && (
+            <div className="bg-white shadow-md rounded">
+              <div className="bg-green-100">
+                <div className="bg-green-400 h-1 w-full"></div>
+                <h3 className="text-2xl py-3">Total Pembayaran</h3>
+              </div>
+              <h4 className="text-2xl font-bold  py-6">
+                {formatRupiah(summariesState.totalTripSellingPrice)}
+              </h4>
             </div>
-            <h4 className="text-2xl font-bold  py-6">
-              {formatRupiah(summariesState.totalTripSellingPrice)}
-            </h4>
-          </div>
+          )}
 
           <div className="bg-white shadow-md rounded">
             <div className="bg-red-100">
@@ -126,15 +132,17 @@ export default function Home({
             </h4>
           </div>
 
-          <div className="bg-white shadow-md rounded">
-            <div className="bg-blue-100">
-              <div className="bg-blue-400 h-1 w-full"></div>
-              <h3 className="text-2xl py-3">Total Margin</h3>
+          {user?.role !== 'user' && (
+            <div className="bg-white shadow-md rounded">
+              <div className="bg-blue-100">
+                <div className="bg-blue-400 h-1 w-full"></div>
+                <h3 className="text-2xl py-3">Total Margin</h3>
+              </div>
+              <h4 className="text-2xl font-bold py-6">
+                {formatRupiah(summariesState.totalMargin)}
+              </h4>
             </div>
-            <h4 className="text-2xl font-bold py-6">
-              {formatRupiah(summariesState.totalMargin)}
-            </h4>
-          </div>
+          )}
         </div>
         <hr className="m-5" />
         <div className="grid grid-cols-3">
@@ -152,9 +160,11 @@ export default function Home({
                 </div>
 
                 <div>
-                  <h3 className="my-2 text-green-400 text-center font-medium">
-                    Pembayaran: {formatRupiah(entry[1].sellingPrice)}
-                  </h3>
+                  {user?.role !== 'user' && (
+                    <h3 className="my-2 text-green-400 text-center font-medium">
+                      Pembayaran: {formatRupiah(entry[1].sellingPrice)}
+                    </h3>
+                  )}
                   <h3 className="my-2 text-red-400 text-center font-medium">
                     Borongan: {formatRupiah(entry[1].cost)}
                   </h3>
@@ -162,9 +172,11 @@ export default function Home({
                     Biaya: {formatRupiah(entry[1].additionalCost)}
                   </h3>
                   <hr />
-                  <h3 className="my-2 text-center font-medium">
-                    Margin: {formatRupiah(entry[1].margin)}
-                  </h3>
+                  {user?.role !== 'user' && (
+                    <h3 className="my-2 text-center font-medium">
+                      Margin: {formatRupiah(entry[1].margin)}
+                    </h3>
+                  )}
                 </div>
               </a>
             );
@@ -180,7 +192,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     req: context.req,
     res: context.res,
   });
-  
+
   const truckSummaries = await truckTransactionBloc.getGroupedTruckTransactions(
     {
       access_token,

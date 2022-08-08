@@ -1,3 +1,5 @@
+import { CookieValueTypes } from "cookies-next";
+
 export enum TransactionType {
   TRUCK_TRANSACTION = 'TRUCK_TRANSACTION',
   TRUCK_ADDITIONAL_TRANSACTION = 'TRUCK_ADDITIONAL_TRANSACTION',
@@ -82,7 +84,7 @@ export interface FilterTransactionsQuery {
 }
 
 export interface TransactionSummaryQuery {
-  access_token: string | CookieValueTypes;
+  access_token: string;
   startDate: Date;
   endDate: Date;
 }

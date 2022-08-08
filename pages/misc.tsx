@@ -7,6 +7,8 @@ import TransactionDataTable from '../components/transaction-data-table';
 import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import * as jwt from 'jsonwebtoken';
+import { getCookie } from 'cookies-next';
 
 const defaultStartDate = new Date(2020, 1, 1);
 const defaultEndDate = new Date(new Date().setHours(23, 59, 59));
@@ -14,6 +16,9 @@ const defaultEndDate = new Date(new Date().setHours(23, 59, 59));
 export default function TransactionPage({
   transactions,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const access_token = getCookie('access_token');
+  const user = jwt.decode(access_token, process.env.SECRET_KEY);
+
   const transactionDataTableHeaders = {
     Tanggal: 'w-3/12',
     Deskripsi: 'w-4/12',
@@ -83,9 +88,11 @@ export default function TransactionPage({
             Filter
           </button>
         </div>
-        <div className="flex justify-end mr-5 mb-3">
-          <AddTransactionButton />
-        </div>
+        {user?.role !== 'guest' && (
+          <div className="flex justify-end mr-5 mb-3">
+            <AddTransactionButton />
+          </div>
+        )}
         <TransactionDataTable
           headers={transactionDataTableHeaders}
           data={transactionsState.map((t) => formatTransaction(t))}

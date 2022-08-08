@@ -325,9 +325,6 @@ const printSummary = async ({ startDate, endDate }) => {
     endDate,
   });
 
-  console.log(summary)
-  console.log('transactionss',transactions)
-
   const totalSellingPrice = Object.values(summary).reduce(
     (acc, obj) => acc + obj.sellingPrice,
     0

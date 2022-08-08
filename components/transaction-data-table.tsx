@@ -2,6 +2,8 @@ import { Table } from 'flowbite-react';
 import EditTransactionButton from './edit-transaction-button';
 import { DataTableTransaction, TransactionType } from '../types/common';
 import DeleteVariousTransactionButton from './delete-various-transaction-button';
+import * as jwt from 'jsonwebtoken';
+import { getCookie } from 'cookies-next';
 
 interface DataTableProperties {
   headers: Record<string, string>;
@@ -14,6 +16,9 @@ export default function TransactionDataTable({
   data,
   hiddenFields,
 }: DataTableProperties) {
+  const access_token = getCookie('access_token');
+  const user = jwt.decode(access_token, process.env.SECRET_KEY);
+
   function buildTransactionRow(obj: DataTableTransaction) {
     const tableTransaction: Record<string, string | number | Date | boolean> = {
       ...obj,
@@ -45,14 +50,14 @@ export default function TransactionDataTable({
               {header}
             </Table.HeadCell>
           ))}
-          <Table.HeadCell>Actions</Table.HeadCell>
+          {user?.role !== 'guest' && <Table.HeadCell>Actions</Table.HeadCell>}
         </Table.Head>
         <Table.Body className="divide-y">
           {data.map((transaction, index) => {
             return (
               <Table.Row key={`tr-${index}`}>
                 {buildTransactionRow(transaction)}
-                {
+                {user?.role !== 'guest' && (
                   <Table.Cell className="flex flex-row">
                     <EditTransactionButton
                       key={`edit-modal-key${index}`}
@@ -65,7 +70,7 @@ export default function TransactionDataTable({
                       transactionId={transaction.id}
                     />
                   </Table.Cell>
-                }
+                )}
               </Table.Row>
             );
           })}
