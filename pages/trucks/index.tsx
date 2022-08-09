@@ -48,7 +48,23 @@ export default function Home({
   );
 }
 
-export const getServerSideProps = async (_: any) => {
+export const getServerSideProps = async (context: any) => {
+  const access_token = getCookie('access_token', {
+    req: context.req,
+    res: context.res,
+  }) as string;
+
+  try {
+    jwt.verify(access_token, process.env.SECRET_KEY);
+  } catch (e) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/login`,
+      },
+    };
+  }
+
   const trucks: Truck[] = await truckBloc.getTrucks();
   return {
     props: {

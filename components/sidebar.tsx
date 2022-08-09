@@ -5,10 +5,11 @@ import {
   ViewGridIcon,
   UserAddIcon,
 } from '@heroicons/react/solid';
+import { LogoutIcon } from '@heroicons/react/outline';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { getCookie } from 'cookies-next';
+import { deleteCookie, getCookie } from 'cookies-next';
 import * as jwt from 'jsonwebtoken';
 
 export default function SidebarComponent() {
@@ -16,6 +17,11 @@ export default function SidebarComponent() {
   const user = jwt.decode(access_token, process.env.SECRET_KEY);
 
   const router = useRouter();
+
+  function logOut() {
+    deleteCookie('access_token');
+    router.push('/login');
+  }
 
   return (
     <div className="scrollbar fixed w-[17vw] max-w-[155px] overflow-y-scroll top-0 bottom-0 left-0 py-10 bg-gray-50 rounded scroll">
@@ -155,6 +161,10 @@ export default function SidebarComponent() {
             </span>
           </li>
         </Link>
+        <li className="sidebarLink flex cursor-pointer" onClick={() => logOut()}>
+          <LogoutIcon className='sidebarIcon'/>
+          <span className='sidebarText'>Log Out</span>
+        </li>
       </ul>
     </div>
   );

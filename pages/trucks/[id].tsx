@@ -222,6 +222,16 @@ export const getServerSideProps = async (context) => {
     res: context.res,
   });
 
+  try {
+    jwt.verify(access_token, process.env.SECRET_KEY);
+  } catch (e) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/login`,
+      },
+    };
+  }
   const truckId: string = context.params.id;
   const truckName: string = context.query.truckName;
   const truckTransactions =

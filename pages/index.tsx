@@ -2,12 +2,13 @@ import Head from 'next/head';
 import { InferGetServerSidePropsType } from 'next';
 import truckTransactionBloc from '../lib/truckTransaction';
 import { formatRupiah } from '../helpers/hbsHelpers';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { GetServerSideProps } from 'next';
 import { getCookie } from 'cookies-next';
 import * as jwt from 'jsonwebtoken';
+import { useRouter } from 'next/router';
 
 const defaultStartDate = new Date(2020, 1, 1);
 const defaultEndDate = new Date(new Date().setHours(23, 59, 59));
@@ -18,6 +19,12 @@ export default function Home({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const access_token = getCookie('access_token');
   const user = jwt.decode(access_token, process.env.SECRET_KEY);
+  const router = useRouter();
+  useEffect(() => {
+    if (!user) {
+      router.push('/login');
+    }
+  });
 
   const [truckSummariesState, setTruckSummariesState] =
     useState(truckSummaries);
@@ -192,6 +199,17 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     req: context.req,
     res: context.res,
   });
+
+  try {
+    jwt.verify(access_token, process.env.SECRET_KEY);
+  } catch (e) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/login`,
+      },
+    };
+  }
 
   const truckSummaries = await truckTransactionBloc.getGroupedTruckTransactions(
     {

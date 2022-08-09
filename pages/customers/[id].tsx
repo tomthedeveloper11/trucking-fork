@@ -25,7 +25,7 @@ export default function CustomerDetails({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const access_token = getCookie('access_token');
   const user = jwt.decode(access_token, process.env.SECRET_KEY);
-  
+
   const dataTableHeaders = {
     Tanggal: 'w-1/12',
     'No. Container': 'w-2/12',
@@ -38,9 +38,8 @@ export default function CustomerDetails({
     'Info Tambahan': 'w-1/12',
   };
 
-  
   if (user?.role === 'user') {
-    delete dataTableHeaders.Pembayaran
+    delete dataTableHeaders.Pembayaran;
   }
 
   const formatTruckTransaction = (
@@ -148,8 +147,19 @@ export const getServerSideProps = async (context: any) => {
   const access_token = getCookie('access_token', {
     req: context.req,
     res: context.res,
-  });
-  
+  }) as string;
+
+  try {
+    jwt.verify(access_token, process.env.SECRET_KEY);
+  } catch (e) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/login`,
+      },
+    };
+  }
+
   const customerId: string = context.params.id;
   const customer = await customerBloc.getCustomerByCustomerId(customerId);
   const truckTransactions =
