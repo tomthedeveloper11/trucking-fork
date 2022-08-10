@@ -28,13 +28,7 @@ export default function SidebarComponent() {
       <ul className="mb-5 border-b border-gray-200">
         <li>
           <a className="flex items-center p-2 mt-5 text-base font-normal text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 group">
-            <Image
-              className="rounded-full object-scale-down bg-blue-400"
-              src="https://cdn.pixabay.com/photo/2018/08/28/13/29/avatar-3637561_960_720.png"
-              alt="Rounded avatar"
-              width={45}
-              height={45}
-            />
+           <h6>User: </h6>
             <span className="ml-3">{user?.username}</span>
           </a>
         </li>

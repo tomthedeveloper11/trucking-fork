@@ -9,6 +9,7 @@ import { GetServerSideProps } from 'next';
 import { getCookie } from 'cookies-next';
 import * as jwt from 'jsonwebtoken';
 import { useRouter } from 'next/router';
+import { PrinterIcon } from '@heroicons/react/solid';
 
 const defaultStartDate = new Date(2020, 1, 1);
 const defaultEndDate = new Date(new Date().setHours(23, 59, 59));
@@ -55,7 +56,7 @@ export default function Home({
   }
 
   async function printSummary() {
-    const response = await truckTransactionBloc.printSummary({
+    await truckTransactionBloc.printSummary({
       startDate,
       endDate,
     });
@@ -69,38 +70,43 @@ export default function Home({
       <div className="container m-auto">
         <h2 className="text-7xl text-center m-auto">Rekap</h2>
 
-        <div className="flex w-56 gap-5 mx-3 my-5">
-          <DatePicker
-            dateFormat="dd/MM/yyyy"
-            selected={startDate}
-            onChange={(date: Date) =>
-              setStartDate(new Date(new Date(date).setHours(0, 0, 0)))
-            }
-          />
-          <span className="text-3xl">-</span>
-          <DatePicker
-            dateFormat="dd/MM/yyyy"
-            selected={endDate}
-            onChange={(date: Date) =>
-              setEndDate(new Date(new Date(date).setHours(23, 59, 59)))
-            }
-            minDate={startDate}
-          />
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={filterByMonth}
-          >
-            Filter
-          </button>
+        <div className="flex justify-between m-3">
+          <div className='flex gap-5'>
+            <DatePicker
+              dateFormat="dd/MM/yyyy"
+              selected={startDate}
+              onChange={(date: Date) =>
+                setStartDate(new Date(new Date(date).setHours(0, 0, 0)))
+              }
+            />
+            <span className="text-3xl">-</span>
+            <DatePicker
+              dateFormat="dd/MM/yyyy"
+              selected={endDate}
+              onChange={(date: Date) =>
+                setEndDate(new Date(new Date(date).setHours(23, 59, 59)))
+              }
+              minDate={startDate}
+            />
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={filterByMonth}
+            >
+              Filter
+            </button>
+          </div>
+          <div>
+            {user?.role !== 'user' && (
+              <button
+                className="flex gap-2 whitespace-nowrap bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded ml-5"
+                onClick={printSummary}
+              >
+                <PrinterIcon className='h-5 mt-[2px]'/>
+                Print Laporan
+              </button>
+            )}
+          </div>
         </div>
-        {user?.role !== 'user' && (
-          <button
-            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded ml-5"
-            onClick={printSummary}
-          >
-            Print Laporan
-          </button>
-        )}
 
         <div
           className={`${
