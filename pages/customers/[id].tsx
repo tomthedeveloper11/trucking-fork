@@ -1,18 +1,31 @@
 import Head from 'next/head';
 import { InferGetServerSidePropsType } from 'next';
-import AddTruckTransactionButton from '../../components/truck/add-truck-transaction-button';
-import truckTransactionBloc from '../../lib/truckTransactions';
+import truckTransactionBloc from '../../lib/truckTransaction';
 import {
   DataTableTruckTransaction,
   TruckTransaction,
 } from '../../types/common';
 import TruckTransactionDataTable from '../../components/truck-transaction-data-table';
+import customerBloc from '../../lib/customer';
+import { useEffect, useState } from 'react';
+
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import * as jwt from 'jsonwebtoken';
+import { getCookie } from 'cookies-next';
+
+const defaultStartDate = new Date(2020, 1, 1);
+const defaultEndDate = new Date(new Date().setHours(23, 59, 59));
 
 export default function CustomerDetails({
-  customerInitial,
   truckTransactions,
   autoCompleteData,
+  customer,
+  customerId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const access_token = getCookie('access_token');
+  const user = jwt.decode(access_token, process.env.SECRET_KEY);
+
   const dataTableHeaders = {
     Tanggal: 'w-1/12',
     'No. Container': 'w-2/12',
@@ -21,8 +34,14 @@ export default function CustomerDetails({
     Borongan: 'w-1/12',
     Pembayaran: 'w-1/12',
     EMKL: 'w-1/12',
-    'Info Tambahan': 'w-3/12',
+    Bon: 'w-2/12',
+    'Info Tambahan': 'w-1/12',
   };
+
+  if (user?.role === 'user') {
+    delete dataTableHeaders.Pembayaran;
+  }
+
   const formatTruckTransaction = (
     truckTransaction: TruckTransaction
   ): DataTableTruckTransaction => {
@@ -35,26 +54,89 @@ export default function CustomerDetails({
       cost: truckTransaction.cost,
       sellingPrice: truckTransaction.sellingPrice,
       customer: truckTransaction.customer,
+      bon: truckTransaction.bon,
       details: truckTransaction.details,
-      isPrinted: truckTransaction.isPrinted,
       truckId: truckTransaction.truckId,
+      isPrintedBon: truckTransaction.isPrintedBon,
+      isPrintedInvoice: truckTransaction.isPrintedInvoice,
     };
   };
 
+  const [truckTransactionsState, setTruckTransactionsState] =
+    useState(truckTransactions);
+
+  useEffect(() => {
+    setTruckTransactionsState(truckTransactions);
+  }, [truckTransactions]);
+
+  const [startDate, setStartDate] = useState(
+    new Date(new Date().setHours(0, 0, 0))
+  );
+  const [endDate, setEndDate] = useState(
+    new Date(new Date().setHours(23, 59, 59))
+  );
+
+  async function filterByMonth() {
+    const truckTransactions =
+      await truckTransactionBloc.getTruckTransactionsByCustomerId(
+        access_token,
+        customerId,
+        startDate,
+        endDate
+      );
+
+    truckTransactions.forEach((trax) => {
+      trax.selected = false;
+    });
+
+    setTruckTransactionsState(truckTransactions);
+  }
   return (
     <>
       <Head>
         <title>Truck Details</title>
       </Head>
 
-      <div className="container p-10 mb-60 flex-col">
-        <h1 className="text-center text-7xl mb-5">{customerInitial}</h1>
+      <div className="container p-8 mb-60 flex-col">
+        <h1 className="text-center text-7xl mb-5">{customer.initial}</h1>
+
+        <div className="flex w-56 gap-5 mx-3 my-5">
+          <DatePicker
+            dateFormat="dd/MM/yyyy"
+            selected={startDate}
+            onChange={(date: Date) =>
+              setStartDate(new Date(new Date(date).setHours(0, 0, 0)))
+            }
+          />
+          <span className="text-3xl">-</span>
+          <DatePicker
+            dateFormat="dd/MM/yyyy"
+            selected={endDate}
+            onChange={(date: Date) =>
+              setEndDate(new Date(new Date(date).setHours(23, 59, 59)))
+            }
+            minDate={startDate}
+          />
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={filterByMonth}
+          >
+            Filter
+          </button>
+        </div>
 
         <TruckTransactionDataTable
           headers={dataTableHeaders}
-          data={truckTransactions.map((t) => formatTruckTransaction(t))}
-          hiddenFields={['id', 'isPrinted', 'truckId']}
+          data={truckTransactionsState.map((t) => formatTruckTransaction(t))}
+          hiddenFields={[
+            'id',
+            'truckId',
+            'isPrintedBon',
+            'isPrintedInvoice',
+            user?.role === 'user' ? 'sellingPrice' : '',
+          ]}
           autoCompleteData={autoCompleteData}
+          emkl={true}
         />
       </div>
     </>
@@ -62,15 +144,35 @@ export default function CustomerDetails({
 }
 
 export const getServerSideProps = async (context: any) => {
-  const customerInitial: string = context.params.id;
+  const access_token = getCookie('access_token', {
+    req: context.req,
+    res: context.res,
+  }) as string;
+
+  try {
+    jwt.verify(access_token, process.env.SECRET_KEY);
+  } catch (e) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/login`,
+      },
+    };
+  }
+
+  const customerId: string = context.params.id;
+  const customer = await customerBloc.getCustomerByCustomerId(customerId);
   const truckTransactions =
-    await truckTransactionBloc.getTruckTransactionsByCustomerInitial(
-      customerInitial
+    await truckTransactionBloc.getTruckTransactionsByCustomerId(
+      access_token,
+      customerId,
+      defaultStartDate,
+      defaultEndDate
     );
   const autoCompleteData =
     await truckTransactionBloc.getTruckTransactionAutoComplete();
 
   return {
-    props: { customerInitial, truckTransactions, autoCompleteData },
+    props: { truckTransactions, autoCompleteData, customer, customerId },
   };
 };

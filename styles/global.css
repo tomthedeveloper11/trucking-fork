@@ -4,11 +4,14 @@
 
 @layer base {
   body {
-    @apply ml-48;
+    @apply ml-[17vw] lg:ml-[155px] scrollbar;
   }
 }
 
 @layer components {
+  .login {
+    @apply flex justify-center;
+  }
   .sidebarLink {
     @apply hover:bg-gray-100 cursor-pointer items-center p-2 text-base font-normal text-gray-900 rounded-lg flex;
   }
@@ -27,4 +30,30 @@
   .sidebarActiveText {
     @apply ml-3 text-green-400;
   }
+}
+
+.scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.scrollbar::-webkit-scrollbar-track {
+  border-radius: 50vh;
+  background: #f9fafb;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background: #31c48d;
+  border-radius: 50vh;
+  border: 1px solid #31c48d;
+}
+
+.scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #31c48d;
+}
+
+.react-datepicker__navigation {
+  top: 1em;
+  line-height: 1.7em;
+  border: 0.45em solid transparent;
 }

@@ -1,4 +1,4 @@
-import { Modal, Button, ListGroup } from 'flowbite-react';
+import { Modal, ListGroup } from 'flowbite-react';
 import React, { useState } from 'react';
 import TextInput from '../text-input';
 import { TruckTransaction } from '../../types/common';
@@ -8,6 +8,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 import { useToastContext } from '../../lib/toast-context';
 import { PencilAltIcon } from '@heroicons/react/solid';
+import { getCookie } from 'cookies-next';
+import * as jwt from 'jsonwebtoken';
 
 interface EditTruckTransactionButtonProps {
   existingTruckTransaction: TruckTransaction;
@@ -20,14 +22,15 @@ export default function EditTruckTransactionButton({
   autoCompleteData,
   disabled = false,
 }: EditTruckTransactionButtonProps) {
+  const access_token = getCookie('access_token');
+  const user = jwt.decode(access_token, process.env.SECRET_KEY);
+
   const [truckTransaction, setTruckTransaction] = useState(
     existingTruckTransaction
   );
   const [modal, setModal] = useState(false);
-  const [date, setDate] = useState(new Date());
-
   const [day, month, year] = truckTransaction.date.toString().split('/');
-  const [newDate, setNewDate] = useState(
+  const [date, setDate] = useState(
     new Date(Number(year), Number(month) - 1, Number(day))
   );
   const [recommendation, setRecommendation] = useState({
@@ -93,8 +96,8 @@ export default function EditTruckTransactionButton({
     <>
       <PencilAltIcon
         className={`${
-          disabled ? 'text-gray-200' : 'text-yellow-200'
-        } cursor-pointer`}
+          disabled ? 'text-gray-200' : 'text-yellow-200 cursor-pointer'
+        } h-7`}
         href={'#'}
         onClick={() => {
           if (!disabled) {
@@ -103,11 +106,11 @@ export default function EditTruckTransactionButton({
         }}
       />
 
-      <Modal show={modal} onClose={() => setModal(false)}>
+      <Modal show={modal} onClose={() => setModal(false)} size="5xl">
         <Modal.Header>Edit Transaksi</Modal.Header>
         <Modal.Body>
           <form action="post">
-            <div className="grid grid-rows-2 grid-cols-5 grid-flow-row gap-4">
+            <div className="grid grid-rows-2 grid-cols-7 grid-flow-row gap-4">
               <div className="form-group row-span-1 col-span-2">
                 <TextInput
                   label="No. Container"
@@ -158,6 +161,16 @@ export default function EditTruckTransactionButton({
                   {/* autoComplete customer */}
                 </div>
               </div>
+              <div className="form-group row-span-5 col-span-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Tanggal
+                </label>
+                <DatePicker
+                  dateFormat="dd/MM/yyyy"
+                  selected={date}
+                  onChange={(date: Date) => setDate(date)}
+                />
+              </div>
 
               <div className="form-group row-span-1 col-span-3">
                 <div className="relative w-full">
@@ -203,7 +216,7 @@ export default function EditTruckTransactionButton({
                 />
               </div>
 
-              <div className="form-group row-span-1 col-span-1">
+              {user?.role !== 'user' && <div className="form-group row-span-1 col-span-1">
                 <TextInput
                   label="Pembayaran"
                   name="sellingPrice"
@@ -212,13 +225,13 @@ export default function EditTruckTransactionButton({
                   prefix="Rp"
                   onChange={handleChange}
                 />
-              </div>
+              </div>}
 
               <div className="form-group row-span-1 col-span-5">
                 <TextInput
                   label="Bon"
-                  name="invoices"
-                  // value={truckTransaction.details}
+                  name="bon"
+                  value={truckTransaction.bon}
                   onChange={handleChange}
                 />
               </div>
@@ -229,18 +242,6 @@ export default function EditTruckTransactionButton({
                   name="details"
                   value={truckTransaction.details}
                   onChange={handleChange}
-                />
-              </div>
-
-              <div className="form-group row-span-1 col-span-2">
-                <label>Tanggal</label>
-                <DatePicker
-                  selected={newDate ? newDate : date}
-                  dateFormat={'dd/M/yyyy'}
-                  onChange={(date: Date) => {
-                    setNewDate(date);
-                    setDate(date);
-                  }}
                 />
               </div>
             </div>

@@ -1,4 +1,4 @@
-import { Modal, Button, ListGroup } from 'flowbite-react';
+import { Modal, ListGroup } from 'flowbite-react';
 import axios from 'axios';
 import { useState } from 'react';
 import TextInput from '../text-input';
@@ -8,6 +8,8 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { PlusIcon } from '@heroicons/react/solid';
 import { useToastContext } from '../../lib/toast-context';
+import { getCookie } from 'cookies-next';
+import * as jwt from 'jsonwebtoken';
 
 interface AddTruckTransactionButtonProps {
   truckId: string;
@@ -18,19 +20,10 @@ export default function AddTruckTransactionButton({
   truckId,
   autoCompleteData,
 }: AddTruckTransactionButtonProps) {
+  const access_token = getCookie('access_token');
+  const user = jwt.decode(access_token, process.env.SECRET_KEY);
+
   const addToast = useToastContext();
-  const placeHolderTransaction: Omit<TruckTransaction, 'id' | 'date'> = {
-    containerNo: 'TEGU3009038',
-    invoiceNo: '1671',
-    destination: 'AMPLAS/CATUR',
-    cost: 385000,
-    sellingPrice: 700000,
-    customer: 'SKM',
-    details: '',
-    transactionType: TransactionType.TRUCK_TRANSACTION,
-    truckId,
-    isPrinted: false,
-  };
   const baseTruckTransaction: Omit<TruckTransaction, 'id' | 'date'> = {
     containerNo: '',
     invoiceNo: '',
@@ -39,14 +32,15 @@ export default function AddTruckTransactionButton({
     sellingPrice: 0,
     customer: '',
     details: '',
+    bon: '',
     transactionType: TransactionType.TRUCK_TRANSACTION,
     truckId,
-    isPrinted: false,
+    isPrintedBon: false,
+    isPrintedInvoice: false,
   };
   const refreshData = useRouterRefresh();
-  const [truckTransaction, setTruckTransaction] = useState(
-    placeHolderTransaction
-  );
+  const [truckTransaction, setTruckTransaction] =
+    useState(baseTruckTransaction);
   const [date, setDate] = useState(new Date());
   const [modal, setModal] = useState(false);
   const [recommendation, setRecommendation] = useState({
@@ -116,16 +110,16 @@ export default function AddTruckTransactionButton({
   return (
     <>
       <button
-        className="z-10 fixed bottom-20 bg-green-400 hover:bg-green-500 text-white font-bold p-5 rounded-full"
+        className="z-10 fixed bottom-5 bg-green-400 hover:bg-green-500 text-white p-2 lg:p-5 transition-all rounded-full"
         onClick={() => setModal(true)}
       >
         <PlusIcon className="h-10 " />
       </button>
-      <Modal show={modal} onClose={() => setModal(false)}>
-        <Modal.Header>Tambah Transaksi Baru</Modal.Header>
+      <Modal show={modal} onClose={() => setModal(false)} size="5xl">
+        <Modal.Header>Transaksi Trip</Modal.Header>
         <Modal.Body>
           <form action="post">
-            <div className="grid grid-rows-2 grid-cols-5 grid-flow-row gap-4">
+            <div className="grid grid-rows-2 grid-cols-7 grid-flow-row gap-4">
               <div className="form-group row-span-1 col-span-2">
                 <TextInput
                   label="No. Container"
@@ -175,6 +169,16 @@ export default function AddTruckTransactionButton({
                   {/* autoComplete customer */}
                 </div>
               </div>
+              <div className="form-group row-span-5 col-span-2">
+                <label className="block text-sm font-medium text-gray-700">
+                  Tanggal
+                </label>
+                <DatePicker
+                  dateFormat="dd/MM/yyyy"
+                  selected={date}
+                  onChange={(date: Date) => setDate(date)}
+                />
+              </div>
               <div className="form-group row-span-1 col-span-3">
                 <div className="relative w-full">
                   <TextInput
@@ -218,22 +222,24 @@ export default function AddTruckTransactionButton({
                   onChange={handleChange}
                 />
               </div>
-              <div className="form-group row-span-1 col-span-1">
-                <TextInput
-                  label="Pembayaran"
-                  name="sellingPrice"
-                  type="currency"
-                  value={truckTransaction.sellingPrice}
-                  prefix="Rp"
-                  onChange={handleChange}
-                />
-              </div>
+              {user?.role === 'admin' && (
+                <div className="form-group row-span-1 col-span-1">
+                  <TextInput
+                    label="Pembayaran"
+                    name="sellingPrice"
+                    type="currency"
+                    value={truckTransaction.sellingPrice}
+                    prefix="Rp"
+                    onChange={handleChange}
+                  />
+                </div>
+              )}
 
               <div className="form-group row-span-1 col-span-5">
                 <TextInput
                   label="Bon"
-                  name="details"
-                  value={truckTransaction.details}
+                  name="bon"
+                  value={truckTransaction.bon}
                   onChange={handleChange}
                 />
               </div>
@@ -244,15 +250,6 @@ export default function AddTruckTransactionButton({
                   name="details"
                   value={truckTransaction.details}
                   onChange={handleChange}
-                />
-              </div>
-
-              <div className="form-group row-span-1 col-span-2">
-                <label>Tanggal</label>
-                <DatePicker
-                  dateFormat="dd/MM/yyyy"
-                  selected={date}
-                  onChange={(date: Date) => setDate(date)}
                 />
               </div>
             </div>

@@ -1,12 +1,9 @@
-export interface DummyData {
-  song: string;
-  artist: string;
-  year: number;
-}
+import { CookieValueTypes } from "cookies-next";
 
 export enum TransactionType {
   TRUCK_TRANSACTION = 'TRUCK_TRANSACTION',
   TRUCK_ADDITIONAL_TRANSACTION = 'TRUCK_ADDITIONAL_TRANSACTION',
+  ADDITIONAL_TRANSACTION = 'ADDITIONAL_TRANSACTION',
 }
 
 export interface Customer {
@@ -25,10 +22,9 @@ export interface Truck {
 export interface Transaction {
   id: string;
   date: Date | string;
-  details: string;
+  details?: string;
   cost: number;
   transactionType: TransactionType;
-  isPrinted: boolean;
 }
 
 export interface TruckTransaction extends Transaction {
@@ -39,7 +35,21 @@ export interface TruckTransaction extends Transaction {
   destination: string;
   sellingPrice: number;
   customer: string;
+  bon: string;
+  isPrintedBon: boolean;
+  isPrintedInvoice: boolean;
 }
+
+export interface AdditionalTruckTransaction extends Transaction {
+  truckId: string;
+}
+
+export type DataTableTransaction = Omit<Transaction, 'transactionType'>;
+
+export type DataTableAdditionalTransaction = Omit<
+  AdditionalTruckTransaction,
+  'transactionType'
+>;
 
 export type DataTableTruckTransaction = Omit<
   TruckTransaction,
@@ -63,6 +73,38 @@ export type EditTruckTransactionPayload = Omit<TruckTransaction, 'customer'> & {
 };
 
 export type UITruckTransaction = TruckTransaction & { selected: boolean };
+
+export interface FilterTransactionsQuery {
+  customer: string;
+  startDate?: string;
+  endDate?: string;
+  containerNo?: string;
+  invoiceNo?: string;
+  destination?: string;
+}
+
+export interface TransactionSummaryQuery {
+  access_token: string;
+  startDate: Date;
+  endDate: Date;
+}
+
+export interface TransactionSummary {
+  [truckName: string]: {
+    truckId: string;
+    cost: number;
+    additionalCost: number;
+    sellingPrice: number;
+    margin: number;
+  };
+}
+
+export interface TotalSummary {
+  totalAdditionalCost: number;
+  totalTripCost: number;
+  totalTripSellingPrice: number;
+  totalMargin: number;
+}
 
 export interface User {
   id: string;

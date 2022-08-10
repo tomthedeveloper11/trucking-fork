@@ -4,19 +4,26 @@ import { Truck } from '../../types/common';
 import truckBloc from '../../lib/truck';
 import { InferGetServerSidePropsType } from 'next';
 import AddTruckButton from '../../components/truck/add-truck-button';
+import * as jwt from 'jsonwebtoken';
+import { getCookie } from 'cookies-next';
 
 export default function Home({
   trucks,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const access_token = getCookie('access_token');
+  const user = jwt.decode(access_token, process.env.SECRET_KEY);
+
   return (
     <>
       <Head>
         <title>{'Home'}</title>
       </Head>
-      <div className="container p-10">
-        <div className="flex justify-end mr-5 mb-3">
-          <AddTruckButton />
-        </div>
+      <div className="container p-8">
+        {user?.role !== 'guest' && (
+          <div className="flex justify-end mr-5 mb-3">
+            <AddTruckButton />
+          </div>
+        )}
         <div className="grid grid-cols-4 gap-4 ml-17">
           {trucks.map((truck: Truck) => (
             <Link
@@ -28,9 +35,11 @@ export default function Home({
               }}
               key={truck.id}
             >
-              <div className="w-64 h-64 border border-1 rounded hover:bg-gray-100 cursor-pointer">
-                <h1 className="text-7xl text-center mt-20">{truck.name}</h1>
-              </div>
+              <a className="xl:w-64 xl:h-64 w-40 h-40 rounded-lg border border-gray-200 shadow-md hover:bg-gray-100">
+                <h1 className="xl:text-7xl text-5xl text-center xl:mt-20 mt-[52px]">
+                  {truck.name}
+                </h1>
+              </a>
             </Link>
           ))}
         </div>
@@ -39,7 +48,23 @@ export default function Home({
   );
 }
 
-export const getServerSideProps = async (_: any) => {
+export const getServerSideProps = async (context: any) => {
+  const access_token = getCookie('access_token', {
+    req: context.req,
+    res: context.res,
+  }) as string;
+
+  try {
+    jwt.verify(access_token, process.env.SECRET_KEY);
+  } catch (e) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: `/login`,
+      },
+    };
+  }
+
   const trucks: Truck[] = await truckBloc.getTrucks();
   return {
     props: {

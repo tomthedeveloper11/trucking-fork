@@ -25,6 +25,7 @@ const createTruckTransactionValidator = initMiddleware(
       check('customer').isString().isLength({ min: 2 }).exists(),
       check('destination').isString().isLength({ min: 2 }).exists(),
       check('sellingPrice').isNumeric().optional(),
+      check('bon').isString().optional(),
       check('details').isString().optional(),
     ],
     validationResult
@@ -51,9 +52,10 @@ export default async function handler(
 
         conn = await connectDb();
         const truckTransactionPayload = req.body;
-        const truckTransaction = await transactionService.createTransaction(
-          truckTransactionPayload
-        );
+        const truckTransaction =
+          await transactionService.createTruckTransaction(
+            truckTransactionPayload
+          );
         await conn.close();
 
         res.status(200).json({ data: truckTransaction });
