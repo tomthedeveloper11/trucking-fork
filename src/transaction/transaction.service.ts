@@ -254,7 +254,11 @@ const getTruckTransactionAutoComplete = async () => {
   return truckTransactionAutoComplete;
 };
 
-const printTransaction = async (transactionIds: string[], type: string) => {
+const printTransaction = async (
+  invoiceNum: string,
+  transactionIds: string[],
+  type: string
+) => {
   handlers.registerHelper('formatRupiah', formatRupiah);
   handlers.registerHelper('formatDate', formatDate);
   handlers.registerHelper('indexPlusOne', indexPlusOne);
@@ -288,6 +292,7 @@ const printTransaction = async (transactionIds: string[], type: string) => {
 
   const content = {
     main: {
+      invoiceNum,
       currentDate: new Date(),
       customerInitial: sortedTruckTransactions[0].customer,
       customerName: customer?.name,

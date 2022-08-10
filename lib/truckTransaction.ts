@@ -150,11 +150,12 @@ const getTruckTransactionAutoComplete = async (): Promise<
   return {};
 };
 
-const printTransactions = async (transactionIds: string[], type: string) => {
+const printTransactions = async (invoiceNum:string, transactionIds: string[], type: string) => {
   const response = await axios({
     method: 'POST',
     url: `${BASE_URL}/api/transaction/print`,
     data: {
+      invoiceNum,
       transactionIds,
       type,
     },

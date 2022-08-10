@@ -1,6 +1,6 @@
 interface TextInputConfig {
   prefix?: string;
-  label: string;
+  label?: string;
   name: string;
   placeholder?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;

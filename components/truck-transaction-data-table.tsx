@@ -1,4 +1,5 @@
 import { Table } from 'flowbite-react';
+import TextInput from './text-input';
 import EditTruckTransactionButton from './truck/edit-truck-transaction-button';
 import {
   DataTableTruckTransaction,
@@ -10,7 +11,6 @@ import { PrinterIcon } from '@heroicons/react/solid';
 import truckTransactionBloc from '../lib/truckTransaction';
 import DeleteVariousTransactionButton from './delete-various-transaction-button';
 import { useToastContext } from '../lib/toast-context';
-import { useRouterRefresh } from '../hooks/hooks';
 import authorizeUser from '../helpers/auth';
 
 interface DataTableProperties {
@@ -77,28 +77,50 @@ export default function TruckTransactionDataTable({
   const [truckTransactions, setTruckTransactions] = useState(
     prepareTruckTransactions(data)
   );
+  const [invoiceNum, setInvoiceNum] = useState('');
 
   useEffect(() => {
     setTruckTransactions(prepareTruckTransactions(data));
   }, [data]);
 
-  async function print(type: string) {
-    addToast('Loading...');
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const { value } = event.target;
 
+    setInvoiceNum(value);
+  }
+
+  async function print(type: string) {
     const markedTransactions = truckTransactions
       .filter((t) => t.selected)
       .map((t) => t.id);
 
+    if (markedTransactions.length < 1) {
+      addToast('Mohon pilih transaksi');
+      return;
+    }
+
+    if (type === 'tagihan' && !invoiceNum) {
+      addToast('Mohon isi no invoice');
+      return;
+    }
+
+    addToast('Loading...');
+
     const response = await truckTransactionBloc.printTransactions(
+      invoiceNum,
       markedTransactions,
       type
     );
 
     if (response === 'Print Success') {
-      addToast('Print Success');
+      addToast('Print Sukses');
     } else {
       addToast('Mohon coba kembali');
     }
+    truckTransactions.forEach((trax) => {
+      trax.selected = false;
+    });
+    setTruckTransactions([...truckTransactions]);
   }
 
   const totalCost = data.reduce((acc, obj) => acc + obj.cost, 0);
@@ -106,20 +128,31 @@ export default function TruckTransactionDataTable({
 
   return (
     <>
-      <button
-        className={`flex my-1 border border-gray-300 rounded shadow-sm px-2 text-gray-600 hover:bg-white`}
-        onClick={() => print('tagihan')}
-      >
-        <PrinterIcon className="h-5 mt-1" />
-        <p className={`text-lg font-bold`}>Tagihan</p>
-      </button>
-      <button
-        className={`flex my-1 border border-gray-300 rounded shadow-sm px-2 text-gray-600 hover:bg-white`}
-        onClick={() => print('bon')}
-      >
-        <PrinterIcon className="h-5 mt-1" />
-        <p className={`text-lg font-bold`}>Bon</p>
-      </button>
+      {emkl && (
+        <div className="flex justify-end gap-5 my-2">
+          <TextInput
+            name="invoiceNum"
+            placeholder="No Invoice"
+            value={invoiceNum}
+            onChange={handleChange}
+          />
+          <button
+            className={`flex my-1 border border-gray-300 rounded shadow-sm px-2 text-gray-600 hover:bg-white`}
+            onClick={() => print('tagihan')}
+          >
+            <PrinterIcon className="h-5 mt-1" />
+            <p className={`text-lg font-bold`}>Tagihan</p>
+          </button>
+          <button
+            className={`flex my-1 border border-gray-300 rounded shadow-sm px-2 text-gray-600 hover:bg-white`}
+            onClick={() => print('bon')}
+          >
+            <PrinterIcon className="h-5 mt-1" />
+            <p className={`text-lg font-bold`}>Bon</p>
+          </button>
+        </div>
+      )}
+
       <Table>
         <Table.Head className="whitespace-nowrap">
           {emkl && user?.role !== 'guest' && (
@@ -146,18 +179,21 @@ export default function TruckTransactionDataTable({
                   truckTransactions[index]?.selected &&
                   'bg-green-100 hover:bg-green-200'
                 } hover:bg-gray-100`}
+                onClick={() => {
+                  truckTransactions[index].selected =
+                    !truckTransactions[index].selected;
+                  setTruckTransactions([...truckTransactions]);
+                }}
               >
                 {emkl && user?.role !== 'guest' && (
                   <Table.Cell>
                     <div className="flex gap-3">
                       <input
                         className="mt-5 rounded checked:bg-green-400 checked:border-green-400 focus:ring-green-500"
+                        {...(truckTransactions[index].selected && {
+                          checked: true,
+                        })}
                         type="checkbox"
-                        onClick={() => {
-                          truckTransactions[index].selected =
-                            !truckTransactions[index].selected;
-                          setTruckTransactions([...truckTransactions]);
-                        }}
                       ></input>
                       <div>
                         <div
@@ -204,7 +240,7 @@ export default function TruckTransactionDataTable({
             );
           })}
           <Table.Row>
-            {new Array(5).fill('').map((_, i) => (
+            {new Array(emkl ? 6 : 5).fill('').map((_, i) => (
               <Table.Cell key={`c${i}`}></Table.Cell>
             ))}
 

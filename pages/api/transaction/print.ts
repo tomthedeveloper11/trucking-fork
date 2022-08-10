@@ -5,6 +5,7 @@ import _ from 'lodash';
 
 interface PrintTransactionsAPIRequest extends NextApiRequest {
   body: {
+    invoiceNum: string;
     transactionIds: string[];
     type: string;
   };
@@ -19,8 +20,9 @@ export default async function handler(
     case 'POST':
       try {
         conn = await connectDb();
-        const { transactionIds, type } = req.body;
+        const {invoiceNum, transactionIds, type } = req.body;
         const pdf = await transactionService.printTransaction(
+          invoiceNum,
           transactionIds,
           type
         );
