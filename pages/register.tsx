@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-import { User } from '../types/common';
+import { BASE_URL, User } from '../types/common';
 
 export default function Register() {
   const [user, setUser] = useState({
@@ -26,7 +26,7 @@ export default function Register() {
     window.event?.preventDefault();
     const response = await axios({
       method: 'POST',
-      url: 'http://localhost:3000/api/register',
+      url: `${BASE_URL}/api/register`,
       data: user,
     });
     setUser({ username: '', password: '', role: 'user' });

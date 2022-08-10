@@ -2,7 +2,11 @@ import { Modal, ListGroup } from 'flowbite-react';
 import axios from 'axios';
 import { useState } from 'react';
 import TextInput from '../text-input';
-import { TransactionType, TruckTransaction } from '../../types/common';
+import {
+  BASE_URL,
+  TransactionType,
+  TruckTransaction,
+} from '../../types/common';
 import { useRouterRefresh } from '../../hooks/hooks';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -94,7 +98,7 @@ export default function AddTruckTransactionButton({
   async function addTruckTransaction() {
     await axios({
       method: 'POST',
-      url: `http://localhost:3000/api/transaction/truck`,
+      url: `${BASE_URL}/api/transaction/truck`,
       data: { ...truckTransaction, date },
     })
       .then(() => {

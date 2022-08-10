@@ -2,7 +2,7 @@ import { Modal } from 'flowbite-react';
 import axios from 'axios';
 import { useState } from 'react';
 import TextInput from './text-input';
-import { Customer } from '../types/common';
+import { BASE_URL, Customer } from '../types/common';
 import { useRouterRefresh } from '../hooks/hooks';
 
 export default function AddCustomerButton() {
@@ -26,7 +26,7 @@ export default function AddCustomerButton() {
   async function addCustomer() {
     await axios({
       method: 'POST',
-      url: 'http://localhost:3000/api/customer',
+      url: `${BASE_URL}/api/customer`,
       data: newCustomer,
     });
     setNewCustomer({

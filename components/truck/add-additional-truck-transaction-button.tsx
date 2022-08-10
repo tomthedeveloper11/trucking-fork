@@ -5,6 +5,7 @@ import TextInput from '../text-input';
 import {
   TransactionType,
   AdditionalTruckTransaction,
+  BASE_URL,
 } from '../../types/common';
 import { useRouterRefresh } from '../../hooks/hooks';
 import DatePicker from 'react-datepicker';
@@ -43,7 +44,7 @@ export default function AddAdditionalTruckTransactionButton({
   async function addTransaction() {
     await axios({
       method: 'POST',
-      url: `http://localhost:3000/api/transaction/truck/misc`,
+      url: `${BASE_URL}/api/transaction/truck/misc`,
       data: { ...transaction, date },
     })
       .then(() => {

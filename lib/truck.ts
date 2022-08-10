@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { Truck } from '../types/common';
+import { BASE_URL, Truck } from '../types/common';
 
 const getTrucks = async () => {
   const response = await axios({
     method: 'GET',
-    url: 'http://localhost:3000/api/truck',
+    url: `${BASE_URL}/api/truck`,
   });
   if (response && response.data) {
     return response.data.data as Truck[];

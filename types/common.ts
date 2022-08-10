@@ -1,6 +1,9 @@
 import { CookieValueTypes } from 'cookies-next';
 import { JwtPayload } from 'jsonwebtoken';
 
+export const BASE_URL = 'https://trucking.vercel.app';
+// export const BASE_URL = 'http://localhost:3000';
+
 export enum TransactionType {
   TRUCK_TRANSACTION = 'TRUCK_TRANSACTION',
   TRUCK_ADDITIONAL_TRANSACTION = 'TRUCK_ADDITIONAL_TRANSACTION',

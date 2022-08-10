@@ -1,7 +1,7 @@
 import { Modal } from 'flowbite-react';
 import React, { useState } from 'react';
 import TextInput from './text-input';
-import { Transaction } from '../types/common';
+import { BASE_URL, Transaction } from '../types/common';
 import { useRouterRefresh } from '../hooks/hooks';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -40,7 +40,7 @@ export default function EditTransactionButton({
   async function editTransaction() {
     await axios({
       method: 'PUT',
-      url: `http://localhost:3000/api/transaction/${transaction.id}`,
+      url: `${BASE_URL}/api/transaction/${transaction.id}`,
       data: { ...transaction, date },
     });
     refreshData();

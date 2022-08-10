@@ -1,4 +1,4 @@
-import { TransactionSummaryQuery } from './../types/common';
+import { BASE_URL, TransactionSummaryQuery } from './../types/common';
 import axios from 'axios';
 import { TruckTransaction, AdditionalTruckTransaction } from '../types/common';
 import { CookieValueTypes } from 'cookies-next';
@@ -6,7 +6,7 @@ import { CookieValueTypes } from 'cookies-next';
 const getTruckTransactions = async () => {
   const response = await axios({
     method: 'GET',
-    url: `http://localhost:3000/api/transaction/truck`,
+    url: `${BASE_URL}/api/transaction/truck`,
   });
   if (response && response.data) {
     return response.data.data as TruckTransaction[];
@@ -23,7 +23,7 @@ const getGroupedTruckTransactions = async ({
 
   const response = await axios({
     method: 'GET',
-    url: `http://localhost:3000/api/transaction/summary/trucks`,
+    url: `${BASE_URL}/api/transaction/summary/trucks`,
     headers: {
       access_token,
     },
@@ -45,7 +45,7 @@ const getTotalSummary = async ({
 }: TransactionSummaryQuery) => {
   const response = await axios({
     method: 'GET',
-    url: `http://localhost:3000/api/transaction/summary/`,
+    url: `${BASE_URL}/api/transaction/summary/`,
     headers: {
       access_token,
     },
@@ -71,7 +71,7 @@ const getTruckTransactionsByCustomerId = async (
 
   const response = await axios({
     method: 'GET',
-    url: `http://localhost:3000/api/transaction/customer/${customerId}`,
+    url: `${BASE_URL}/api/transaction/customer/${customerId}`,
     headers: {
       access_token,
     },
@@ -96,7 +96,7 @@ const getTruckTransactionsByTruckId = async (
 
   const response = await axios({
     method: 'GET',
-    url: `http://localhost:3000/api/truck/${truckId}`,
+    url: `${BASE_URL}/api/truck/${truckId}`,
     headers: {
       access_token: access_token,
     },
@@ -118,7 +118,7 @@ const getAdditionalTruckTransactionsByTruckId = async (
 ) => {
   const response = await axios({
     method: 'GET',
-    url: `http://localhost:3000/api/transaction/truck/misc`,
+    url: `${BASE_URL}/api/transaction/truck/misc`,
     params: {
       truckId,
       startDate,
@@ -136,7 +136,7 @@ const getTruckTransactionAutoComplete = async (): Promise<
 > => {
   const response = await axios({
     method: 'GET',
-    url: `http://localhost:3000/api/transaction/truck/auto-complete`,
+    url: `${BASE_URL}/api/transaction/truck/auto-complete`,
   });
   if (response && response.data) {
     return response.data.data as Record<string, string[]>;
@@ -147,7 +147,7 @@ const getTruckTransactionAutoComplete = async (): Promise<
 const printTransactions = async (transactionIds: string[], type: string) => {
   const response = await axios({
     method: 'POST',
-    url: 'http://localhost:3000/api/transaction/print',
+    url: `${BASE_URL}/api/transaction/print`,
     data: {
       transactionIds,
       type,
@@ -172,7 +172,7 @@ const printTransactions = async (transactionIds: string[], type: string) => {
 const printSummary = async ({ startDate, endDate }) => {
   const response = await axios({
     method: 'GET',
-    url: 'http://localhost:3000/api/transaction/printSummary',
+    url: `${BASE_URL}/api/transaction/printSummary`,
     responseType: 'blob',
     params: {
       startDate,

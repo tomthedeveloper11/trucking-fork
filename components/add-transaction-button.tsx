@@ -2,7 +2,7 @@ import { Modal } from 'flowbite-react';
 import axios from 'axios';
 import { useState } from 'react';
 import TextInput from './text-input';
-import { TransactionType, Transaction } from '../types/common';
+import { TransactionType, Transaction, BASE_URL } from '../types/common';
 import { useRouterRefresh } from '../hooks/hooks';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -33,7 +33,7 @@ export default function AddTransactionButton() {
   async function addTransaction() {
     await axios({
       method: 'POST',
-      url: `http://localhost:3000/api/transaction`,
+      url: `${BASE_URL}/api/transaction`,
       data: { ...transaction, date },
     })
       .then(() => {

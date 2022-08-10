@@ -1,10 +1,10 @@
 import axios from 'axios';
-import { Customer } from '../types/common';
+import { BASE_URL, Customer } from '../types/common';
 
 const getCustomers = async () => {
   const response = await axios({
     method: 'GET',
-    url: 'http://localhost:3000/api/customer',
+    url: `${BASE_URL}/api/customer`,
   });
   if (response && response.data) {
     return response.data.data as Customer[];
@@ -15,7 +15,7 @@ const getCustomers = async () => {
 const getCustomerByCustomerId = async (customerId: string) => {
   const response = await axios({
     method: 'GET',
-    url: `http://localhost:3000/api/customer/${customerId}`,
+    url: `${BASE_URL}/api/customer/${customerId}`,
   });
   if (response && response.data) {
     return response.data.data as Customer;

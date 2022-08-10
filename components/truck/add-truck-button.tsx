@@ -2,7 +2,7 @@ import { Modal } from 'flowbite-react';
 import axios from 'axios';
 import { useState } from 'react';
 import TextInput from '../text-input';
-import { Truck } from '../../types/common';
+import { BASE_URL, Truck } from '../../types/common';
 import { useRouterRefresh } from '../../hooks/hooks';
 
 export default function AddTruckButton() {
@@ -25,7 +25,7 @@ export default function AddTruckButton() {
   async function addTruck() {
     await axios({
       method: 'POST',
-      url: 'http://localhost:3000/api/truck',
+      url: `${BASE_URL}/api/truck`,
       data: newTruck,
     });
     setNewTruck({ name: '', licenseNumber: '' });

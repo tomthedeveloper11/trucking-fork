@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
-import { User } from '../types/common';
+import { BASE_URL, User } from '../types/common';
 import { setCookie } from 'cookies-next';
 
 export default function Login() {
@@ -24,7 +24,7 @@ export default function Login() {
     window.event?.preventDefault();
     const response = await axios({
       method: 'POST',
-      url: 'http://localhost:3000/api/login',
+      url: `${BASE_URL}/api/login`,
       data: user,
     });
     setCookie('access_token', response.data.access_token);
