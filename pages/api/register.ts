@@ -19,8 +19,12 @@ const createUserValidator = initMiddleware(
   )
 );
 
+interface RegisterUserRequest extends NextApiRequest {
+  body: Omit<User, 'id'>;
+}
+
 export default async function handler(
-  req: NextApiRequest,
+  req: RegisterUserRequest,
   res: NextApiResponse
 ) {
   let conn;
@@ -29,7 +33,7 @@ export default async function handler(
       await createUserValidator(req, res);
 
       conn = await connectDb();
-      const userPayload = req.body as User;
+      const userPayload = req.body;
       const user = await userService.register(userPayload);
       await conn.close();
 
