@@ -88,16 +88,6 @@ export default function Register() {
           >
             Tambah
           </button>
-          {/* <div className="flex  space-x-2 justify-center items-end bg-gray-700 hover:bg-gray-600 text-white py-2 rounded-md transition duration-100">
-            <Image
-              width="20px"
-              height="20px"
-              className=" h-5 cursor-pointer"
-              src="https://i.imgur.com/arC60SB.png"
-              alt="asd"
-            />
-            <button>Or sign-in with google</button>
-          </div> */}
         </div>
       </form>
     </div>
