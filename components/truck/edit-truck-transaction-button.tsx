@@ -10,6 +10,7 @@ import { useToastContext } from '../../lib/toast-context';
 import { PencilAltIcon } from '@heroicons/react/solid';
 import { getCookie } from 'cookies-next';
 import * as jwt from 'jsonwebtoken';
+import authorizeUser from '../../helpers/auth';
 
 interface EditTruckTransactionButtonProps {
   existingTruckTransaction: TruckTransaction;
@@ -22,8 +23,7 @@ export default function EditTruckTransactionButton({
   autoCompleteData,
   disabled = false,
 }: EditTruckTransactionButtonProps) {
-  const access_token = getCookie('access_token');
-  const user = jwt.decode(access_token, process.env.SECRET_KEY);
+  const user = authorizeUser();
 
   const [truckTransaction, setTruckTransaction] = useState(
     existingTruckTransaction
@@ -216,16 +216,18 @@ export default function EditTruckTransactionButton({
                 />
               </div>
 
-              {user?.role !== 'user' && <div className="form-group row-span-1 col-span-1">
-                <TextInput
-                  label="Pembayaran"
-                  name="sellingPrice"
-                  type="currency"
-                  value={truckTransaction.sellingPrice}
-                  prefix="Rp"
-                  onChange={handleChange}
-                />
-              </div>}
+              {user?.role !== 'user' && (
+                <div className="form-group row-span-1 col-span-1">
+                  <TextInput
+                    label="Pembayaran"
+                    name="sellingPrice"
+                    type="currency"
+                    value={truckTransaction.sellingPrice}
+                    prefix="Rp"
+                    onChange={handleChange}
+                  />
+                </div>
+              )}
 
               <div className="form-group row-span-1 col-span-5">
                 <TextInput

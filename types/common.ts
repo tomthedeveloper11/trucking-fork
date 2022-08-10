@@ -1,4 +1,5 @@
-import { CookieValueTypes } from "cookies-next";
+import { CookieValueTypes } from 'cookies-next';
+import { JwtPayload } from 'jsonwebtoken';
 
 export enum TransactionType {
   TRUCK_TRANSACTION = 'TRUCK_TRANSACTION',
@@ -113,4 +114,10 @@ export interface User {
   email?: string;
   role: string;
   phoneNumber?: string;
+}
+
+export interface UserTokenPayload extends JwtPayload {
+  id: string;
+  username: string;
+  role: string;
 }

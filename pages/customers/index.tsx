@@ -5,12 +5,12 @@ import customerBloc from '../../lib/customer';
 import AddCustomerButton from '../../components/add-customer-button';
 import * as jwt from 'jsonwebtoken';
 import { getCookie } from 'cookies-next';
+import authorizeUser from '../../helpers/auth';
 
 export default function Print({
   customers,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const access_token = getCookie('access_token');
-  const user = jwt.decode(access_token, process.env.SECRET_KEY);
+  const user = authorizeUser();
 
   return (
     <>
@@ -60,7 +60,7 @@ export const getServerSideProps = async (context: any) => {
       },
     };
   }
-  
+
   const customers = await customerBloc.getCustomers();
   return {
     props: {

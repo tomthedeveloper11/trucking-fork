@@ -4,6 +4,7 @@ import { DataTableTransaction, TransactionType } from '../types/common';
 import DeleteVariousTransactionButton from './delete-various-transaction-button';
 import * as jwt from 'jsonwebtoken';
 import { getCookie } from 'cookies-next';
+import authorizeUser from '../helpers/auth';
 
 interface DataTableProperties {
   headers: Record<string, string>;
@@ -16,8 +17,7 @@ export default function TransactionDataTable({
   data,
   hiddenFields,
 }: DataTableProperties) {
-  const access_token = getCookie('access_token');
-  const user = jwt.decode(access_token, process.env.SECRET_KEY);
+  const user = authorizeUser();
 
   function buildTransactionRow(obj: DataTableTransaction) {
     const tableTransaction: Record<string, string | number | Date | boolean> = {
@@ -50,14 +50,14 @@ export default function TransactionDataTable({
               {header}
             </Table.HeadCell>
           ))}
-          {user?.role !== 'guest' && <Table.HeadCell>Actions</Table.HeadCell>}
+          {user.role !== 'guest' && <Table.HeadCell>Actions</Table.HeadCell>}
         </Table.Head>
         <Table.Body className="divide-y">
           {data.map((transaction, index) => {
             return (
               <Table.Row key={`tr-${index}`}>
                 {buildTransactionRow(transaction)}
-                {user?.role !== 'guest' && (
+                {user.role !== 'guest' && (
                   <Table.Cell className="flex flex-row">
                     <EditTransactionButton
                       key={`edit-modal-key${index}`}

@@ -10,6 +10,7 @@ import { getCookie } from 'cookies-next';
 import * as jwt from 'jsonwebtoken';
 import { useRouter } from 'next/router';
 import { PrinterIcon } from '@heroicons/react/solid';
+import authorizeUser from '../helpers/auth';
 
 const defaultStartDate = new Date(2020, 1, 1);
 const defaultEndDate = new Date(new Date().setHours(23, 59, 59));
@@ -18,8 +19,8 @@ export default function Home({
   truckSummaries,
   summaries,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const access_token = getCookie('access_token');
-  const user = jwt.decode(access_token, process.env.SECRET_KEY);
+  const user = authorizeUser();
+
   const router = useRouter();
   useEffect(() => {
     if (!user) {

@@ -6,12 +6,12 @@ import { InferGetServerSidePropsType } from 'next';
 import AddTruckButton from '../../components/truck/add-truck-button';
 import * as jwt from 'jsonwebtoken';
 import { getCookie } from 'cookies-next';
+import authorizeUser from '../../helpers/auth';
 
 export default function Home({
   trucks,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const access_token = getCookie('access_token');
-  const user = jwt.decode(access_token, process.env.SECRET_KEY);
+  const user = authorizeUser();
 
   return (
     <>

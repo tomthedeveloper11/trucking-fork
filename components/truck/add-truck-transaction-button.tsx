@@ -10,6 +10,7 @@ import { PlusIcon } from '@heroicons/react/solid';
 import { useToastContext } from '../../lib/toast-context';
 import { getCookie } from 'cookies-next';
 import * as jwt from 'jsonwebtoken';
+import authorizeUser from '../../helpers/auth';
 
 interface AddTruckTransactionButtonProps {
   truckId: string;
@@ -20,8 +21,7 @@ export default function AddTruckTransactionButton({
   truckId,
   autoCompleteData,
 }: AddTruckTransactionButtonProps) {
-  const access_token = getCookie('access_token');
-  const user = jwt.decode(access_token, process.env.SECRET_KEY);
+  const user = authorizeUser();
 
   const addToast = useToastContext();
   const baseTruckTransaction: Omit<TruckTransaction, 'id' | 'date'> = {

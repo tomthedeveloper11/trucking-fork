@@ -13,6 +13,7 @@ import { useToastContext } from '../lib/toast-context';
 import { useRouterRefresh } from '../hooks/hooks';
 import { getCookie } from 'cookies-next';
 import * as jwt from 'jsonwebtoken';
+import authorizeUser from '../helpers/auth';
 
 interface DataTableProperties {
   headers: Record<string, string>;
@@ -66,8 +67,7 @@ export default function TruckTransactionDataTable({
   autoCompleteData,
   emkl = false,
 }: DataTableProperties) {
-  const access_token = getCookie('access_token');
-  const user = jwt.decode(access_token, process.env.SECRET_KEY);
+  const user = authorizeUser();
 
   const refreshData = useRouterRefresh();
   const addToast = useToastContext();

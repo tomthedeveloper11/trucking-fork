@@ -6,15 +6,13 @@ import {
   UserAddIcon,
 } from '@heroicons/react/solid';
 import { LogoutIcon } from '@heroicons/react/outline';
-import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { deleteCookie, getCookie } from 'cookies-next';
-import * as jwt from 'jsonwebtoken';
+import { deleteCookie } from 'cookies-next';
+import authorizeUser from '../helpers/auth';
 
 export default function SidebarComponent() {
-  const access_token = getCookie('access_token');
-  const user = jwt.decode(access_token, process.env.SECRET_KEY);
+  const user = authorizeUser();
 
   const router = useRouter();
 
@@ -29,7 +27,7 @@ export default function SidebarComponent() {
         <li>
           <a className="flex items-center p-2 mt-5 text-base font-normal text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 group">
             <h6 className="font-bold">Current User: </h6>
-            <span className="ml-3">{user?.username}</span>
+            <span className="ml-3">{user.username}</span>
           </a>
         </li>
       </ul>
