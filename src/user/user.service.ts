@@ -1,5 +1,4 @@
 import { User } from '../../types/common';
-import { serialize } from 'cookie';
 import userRepository from './user.repository';
 
 import bcrypt from 'bcrypt';

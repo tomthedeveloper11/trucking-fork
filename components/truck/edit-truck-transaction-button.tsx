@@ -8,6 +8,8 @@ import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 import { useToastContext } from '../../lib/toast-context';
 import { PencilAltIcon } from '@heroicons/react/solid';
+import { getCookie } from 'cookies-next';
+import * as jwt from 'jsonwebtoken';
 
 interface EditTruckTransactionButtonProps {
   existingTruckTransaction: TruckTransaction;
@@ -20,6 +22,9 @@ export default function EditTruckTransactionButton({
   autoCompleteData,
   disabled = false,
 }: EditTruckTransactionButtonProps) {
+  const access_token = getCookie('access_token');
+  const user = jwt.decode(access_token, process.env.SECRET_KEY);
+
   const [truckTransaction, setTruckTransaction] = useState(
     existingTruckTransaction
   );
@@ -211,7 +216,7 @@ export default function EditTruckTransactionButton({
                 />
               </div>
 
-              <div className="form-group row-span-1 col-span-1">
+              {user?.role !== 'user' && <div className="form-group row-span-1 col-span-1">
                 <TextInput
                   label="Pembayaran"
                   name="sellingPrice"
@@ -220,7 +225,7 @@ export default function EditTruckTransactionButton({
                   prefix="Rp"
                   onChange={handleChange}
                 />
-              </div>
+              </div>}
 
               <div className="form-group row-span-1 col-span-5">
                 <TextInput

@@ -342,7 +342,7 @@ const printSummary = async ({ startDate, endDate }) => {
     0
   );
   const totalCost = totalAdditionalCost + transactionsTotal
-  const totalMargin = totalSellingPrice - totalCost - totalAdditionalCost - transactionsTotal
+  const totalMargin = totalSellingPrice - totalCost - totalTruckCost
 
   const content = {
     startDate: new Date(startDate).toLocaleDateString('id-ID', {

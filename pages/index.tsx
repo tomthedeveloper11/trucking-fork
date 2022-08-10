@@ -71,7 +71,7 @@ export default function Home({
         <h2 className="text-7xl text-center m-auto">Rekap</h2>
 
         <div className="flex justify-between m-3">
-          <div className='flex gap-5'>
+          <div className="flex gap-5">
             <DatePicker
               dateFormat="dd/MM/yyyy"
               selected={startDate}
@@ -101,7 +101,7 @@ export default function Home({
                 className="flex gap-2 whitespace-nowrap bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded ml-5"
                 onClick={printSummary}
               >
-                <PrinterIcon className='h-5 mt-[2px]'/>
+                <PrinterIcon className="h-5 mt-[2px]" />
                 Print Laporan
               </button>
             )}
@@ -110,8 +110,8 @@ export default function Home({
 
         <div
           className={`${
-            user?.role === 'user' && 'grid-cols-2'
-          } grid grid-cols-4 gap-7 text-center mt-6 border border-gray-200 rounded p-5 m-3 bg-zinc-100 shadow-md`}
+            user?.role === 'user' ? 'grid-cols-2' : 'grid-cols-4'
+          } grid gap-7 text-center mt-6 border border-gray-200 rounded p-5 m-3 bg-zinc-100 shadow-md`}
         >
           {user?.role !== 'user' && (
             <div className="bg-white shadow-md rounded">
@@ -128,7 +128,7 @@ export default function Home({
           <div className="bg-white shadow-md rounded">
             <div className="bg-red-100">
               <div className="bg-red-400 h-1 w-full"></div>
-              <h3 className="text-2xl py-3">Total Biaya Mobil</h3>
+              <h3 className="text-2xl py-3">Total Pengeluaran Mobil</h3>
             </div>
             <h4 className="text-2xl font-bold  py-6">
               {formatRupiah(summariesState.totalTripCost)}

@@ -155,26 +155,28 @@ export default function TruckDetails({
             Filter
           </button>
         </div>
-        <button
-          className={`mr-3 hover:bg-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ${
-            table === 'trip'
-              ? 'bg-blue-500 text-white'
-              : 'bg-transparent text-blue-700'
-          }`}
-          onClick={() => setTable('trip')}
-        >
-          Transaksi Trip
-        </button>
-        <button
-          className={`mr-3 hover:bg-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ${
-            table === 'misc'
-              ? 'bg-blue-500 text-white'
-              : 'bg-transparent text-blue-700'
-          }`}
-          onClick={() => setTable('misc')}
-        >
-          Transaksi Lainnya
-        </button>
+        <div className='grid grid-cols-2'>
+          <button
+            className={`mr-3 hover:bg-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ${
+              table === 'trip'
+                ? 'bg-blue-500 text-white'
+                : 'bg-transparent text-blue-700'
+            }`}
+            onClick={() => setTable('trip')}
+          >
+            Transaksi Trip
+          </button>
+          <button
+            className={`mr-3 hover:bg-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ${
+              table === 'misc'
+                ? 'bg-blue-500 text-white'
+                : 'bg-transparent text-blue-700'
+            }`}
+            onClick={() => setTable('misc')}
+          >
+            Transaksi Lainnya
+          </button>
+        </div>
         {table === 'trip' && user?.role !== 'guest' && (
           <div className="flex justify-end mr-5 mb-3">
             <AddTruckTransactionButton

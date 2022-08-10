@@ -28,7 +28,7 @@ export default function SidebarComponent() {
       <ul className="mb-5 border-b border-gray-200">
         <li>
           <a className="flex items-center p-2 mt-5 text-base font-normal text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 group">
-           <h6>User: </h6>
+            <h6 className="font-bold">Current User: </h6>
             <span className="ml-3">{user?.username}</span>
           </a>
         </li>
@@ -155,9 +155,12 @@ export default function SidebarComponent() {
             </span>
           </li>
         </Link>
-        <li className="sidebarLink flex cursor-pointer" onClick={() => logOut()}>
-          <LogoutIcon className='sidebarIcon'/>
-          <span className='sidebarText'>Log Out</span>
+        <li
+          className="sidebarLink flex cursor-pointer"
+          onClick={() => logOut()}
+        >
+          <LogoutIcon className="sidebarIcon" />
+          <span className="sidebarText">Log Out</span>
         </li>
       </ul>
     </div>
