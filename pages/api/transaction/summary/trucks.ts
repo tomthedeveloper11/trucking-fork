@@ -1,29 +1,19 @@
-import { CookieParseOptions } from './../../../../node_modules/@types/cookie/index.d';
 import { NextApiRequest, NextApiResponse } from 'next';
 import transactionService from '../../../../src/transaction/transaction.service';
 import connectDb from '../../../../src/mongodb/connection';
 import _ from 'lodash';
-import initMiddleware from '../../../../src/middlewares/init-middleware';
-import { check, validationResult } from 'express-validator';
-import validateMiddleware from '../../../../src/middlewares/validate-middleware';
 import * as jwt from 'jsonwebtoken';
+import { JwtPayload } from 'jsonwebtoken';
 
 interface TransactionSummaryRequest extends NextApiRequest {
+  headers: {
+    access_token: string;
+  };
   query: {
     startDate: Date;
     endDate: Date;
   };
 }
-
-const transactionSummaryValidator = initMiddleware(
-  validateMiddleware(
-    [
-      check('month').isString().isLength({ min: 1 }).exists(),
-      check('year').isString().isLength({ min: 4 }).exists(),
-    ],
-    validationResult
-  )
-);
 
 export default async function handler(
   req: TransactionSummaryRequest,
@@ -34,11 +24,18 @@ export default async function handler(
     switch (req.method) {
       case 'GET':
         const { access_token } = req.headers;
-        const user = jwt.decode(access_token, process.env.SECRET_KEY);
+        const user = jwt.verify(
+          access_token,
+          process.env.SECRET_KEY
+        ) as JwtPayload;
 
         conn = await connectDb();
         const truckTransactions =
-          await transactionService.getGroupedTruckTransactions(req.query);
+          await transactionService.getGroupedTruckTransactions({
+            access_token,
+            startDate: req.query.startDate,
+            endDate: req.query.endDate,
+          });
         await conn.close();
 
         // if (user?.role === 'user'){

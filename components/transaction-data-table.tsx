@@ -2,8 +2,6 @@ import { Table } from 'flowbite-react';
 import EditTransactionButton from './edit-transaction-button';
 import { DataTableTransaction, TransactionType } from '../types/common';
 import DeleteVariousTransactionButton from './delete-various-transaction-button';
-import * as jwt from 'jsonwebtoken';
-import { getCookie } from 'cookies-next';
 import authorizeUser from '../helpers/auth';
 
 interface DataTableProperties {

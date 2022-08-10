@@ -1,4 +1,4 @@
-import { Modal, ListGroup } from 'flowbite-react';
+import { Modal} from 'flowbite-react';
 import React, { useState } from 'react';
 import TextInput from '../text-input';
 import { BASE_URL, Transaction } from '../../types/common';
@@ -51,7 +51,6 @@ export default function EditAdditionalTruckTransactionButton({
         className={`${
           disabled ? 'text-gray-200' : 'text-yellow-200'
         } cursor-pointer h-7`}
-        href={'#'}
         onClick={() => {
           if (!disabled) {
             setModal(true);

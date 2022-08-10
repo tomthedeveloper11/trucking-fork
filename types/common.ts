@@ -1,8 +1,15 @@
 import { CookieValueTypes } from 'cookies-next';
 import { JwtPayload } from 'jsonwebtoken';
 
-export const BASE_URL = 'https://trucking.vercel.app';
-// export const BASE_URL = 'http://localhost:3000';
+// export const BASE_URL = 'https://trucking.vercel.app';
+export const BASE_URL = 'http://localhost:3000';
+
+export const redirectToLogin = {
+  redirect: {
+    permanent: false,
+    destination: `/login`,
+  },
+};
 
 export enum TransactionType {
   TRUCK_TRANSACTION = 'TRUCK_TRANSACTION',
@@ -92,7 +99,7 @@ export interface FilterTransactionsQuery {
 }
 
 export interface TransactionSummaryQuery {
-  access_token: string;
+  access_token: CookieValueTypes;
   startDate: Date;
   endDate: Date;
 }
@@ -124,7 +131,21 @@ export interface User {
 }
 
 export interface UserTokenPayload extends JwtPayload {
+  access_token: CookieValueTypes;
   id: string;
   username: string;
   role: string;
+}
+
+export interface DateQuery {
+  startDate: Date;
+  endDate: Date;
+}
+
+export interface CustomerIdQuery extends DateQuery {
+  customerId: string
+}
+
+export interface TruckIdQuery extends DateQuery {
+  truckId: string
 }

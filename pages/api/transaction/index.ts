@@ -8,6 +8,9 @@ import connectDb from '../../../src/mongodb/connection';
 import _ from 'lodash';
 
 interface TransactionsAPIRequest extends NextApiRequest {
+  headers: {
+    access_token: string;
+  };
   body: Transaction;
   query: {
     startDate: Date;
@@ -34,10 +37,13 @@ export default async function handler(
   try {
     switch (req.method) {
       case 'GET':
+        const { access_token } = req.headers;
         conn = await connectDb();
-        const transactions = await transactionService.getTransactions(
-          req.query
-        );
+        const transactions = await transactionService.getTransactions({
+          access_token,
+          startDate: req.query.startDate,
+          endDate: req.query.endDate,
+        });
         await conn.close();
         res.status(200).json({ data: transactions });
         break;

@@ -2,9 +2,12 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import transactionService from '../../../../src/transaction/transaction.service';
 import connectDb from '../../../../src/mongodb/connection';
 import * as jwt from 'jsonwebtoken';
-import { CookieValueTypes } from 'cookies-next';
+import { JwtPayload } from 'jsonwebtoken';
 
 interface customerDetailProps extends NextApiRequest {
+  headers: {
+    access_token: string;
+  };
   query: {
     customerId: string;
     startDate: Date;
@@ -17,24 +20,36 @@ export default async function handler(
   res: NextApiResponse
 ) {
   let conn;
-  switch (req.method) {
-    case 'GET':
-      const { access_token } = req.headers;
-      const user = jwt.decode(access_token, process.env.SECRET_KEY);
+  try {
+    switch (req.method) {
+      case 'GET':
+        const { access_token } = req.headers;
+        const user = jwt.verify(
+          access_token,
+          process.env.SECRET_KEY
+        ) as JwtPayload;
 
-      conn = await connectDb();
+        conn = await connectDb();
 
-      const transactions =
-        await transactionService.getTruckTransactionsByCustomerId(req.query);
-      await conn.close();
-      
-      if (user?.role === 'user') {
-        transactions.forEach((transaction) => {
-          transaction.sellingPrice = 0;
-        });
-      }
-    
-      res.status(200).json({ data: transactions });
-      break;
+        const transactions =
+          await transactionService.getTruckTransactionsByCustomerId({
+            access_token,
+            customerId: req.query.customerId,
+            startDate: req.query.startDate,
+            endDate: req.query.endDate,
+          });
+        await conn.close();
+
+        if (user.role === 'user') {
+          transactions.forEach((transaction) => {
+            transaction.sellingPrice = 0;
+          });
+        }
+
+        res.status(200).json({ data: transactions });
+        break;
+    }
+  } catch (error) {
+    res.status(500).json({ message: _.get(error, 'message') });
   }
 }

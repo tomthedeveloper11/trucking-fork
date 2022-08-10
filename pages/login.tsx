@@ -28,7 +28,7 @@ export default function Login() {
       data: user,
     });
     setCookie('access_token', response.data.access_token);
-    router.push('/');
+    router.push('/home');
   }
 
   return (

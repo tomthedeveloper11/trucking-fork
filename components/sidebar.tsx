@@ -32,21 +32,25 @@ export default function SidebarComponent() {
         </li>
       </ul>
       <ul className="space-y-7">
-        <Link href="/">
+        <Link href="/home">
           <li
             className={
-              router.pathname == '/' ? 'sidebarActiveLink' : 'sidebarLink'
+              router.pathname == '/home' ? 'sidebarActiveLink' : 'sidebarLink'
             }
           >
             <span className="flex">
               <HomeIcon
                 className={
-                  router.pathname == '/' ? 'sidebarActiveIcon' : 'sidebarIcon'
+                  router.pathname == '/home'
+                    ? 'sidebarActiveIcon'
+                    : 'sidebarIcon'
                 }
               />
               <span
                 className={
-                  router.pathname == '/' ? 'sidebarActiveText' : 'sidebarText'
+                  router.pathname == '/home'
+                    ? 'sidebarActiveText'
+                    : 'sidebarText'
                 }
               >
                 Home

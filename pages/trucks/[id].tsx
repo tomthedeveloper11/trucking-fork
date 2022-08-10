@@ -8,6 +8,7 @@ import {
   DataTableAdditionalTransaction,
   TruckTransaction,
   AdditionalTruckTransaction,
+  redirectToLogin,
 } from '../../types/common';
 import TruckTransactionDataTable from '../../components/truck-transaction-data-table';
 import AdditionalTruckTransactionDataTable from '../../components/additional-truck-transaction-data-table';
@@ -112,7 +113,7 @@ export default function TruckDetails({
   async function filterByMonth() {
     const truckTransactions =
       await truckTransactionBloc.getTruckTransactionsByTruckId(
-        access_token,
+        user.access_token,
         truckId,
         startDate,
         endDate
@@ -120,6 +121,7 @@ export default function TruckDetails({
 
     const miscTruckTransactions =
       await truckTransactionBloc.getAdditionalTruckTransactionsByTruckId(
+        user.access_token,
         truckId,
         startDate,
         endDate
@@ -225,24 +227,23 @@ export default function TruckDetails({
   );
 }
 
-export const getServerSideProps = async (context) => {
+export const getServerSideProps = async (context: any) => {
   const access_token = getCookie('access_token', {
     req: context.req,
     res: context.res,
   });
 
+  if (!access_token) return redirectToLogin;
+  
   try {
-    jwt.verify(access_token, process.env.SECRET_KEY);
+    jwt.verify(access_token.toString(), process.env.SECRET_KEY);
   } catch (e) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: `/login`,
-      },
-    };
+    return redirectToLogin;
   }
+
   const truckId: string = context.params.id;
   const truckName: string = context.query.truckName;
+
   const truckTransactions =
     await truckTransactionBloc.getTruckTransactionsByTruckId(
       access_token,
@@ -258,6 +259,7 @@ export const getServerSideProps = async (context) => {
     );
   const autoCompleteData =
     await truckTransactionBloc.getTruckTransactionAutoComplete();
+    
   return {
     props: {
       truckName,

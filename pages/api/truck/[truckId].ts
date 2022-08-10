@@ -2,11 +2,11 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import transactionService from '../../../src/transaction/transaction.service';
 import connectDb from '../../../src/mongodb/connection';
 import * as jwt from 'jsonwebtoken';
-import { CookieValueTypes } from 'cookies-next';
+import { JwtPayload } from 'jsonwebtoken';
 
 interface TruckDetailProps extends NextApiRequest {
   headers: {
-    access_token: CookieValueTypes;
+    access_token: string;
   };
   query: {
     truckId: string;
@@ -23,14 +23,17 @@ export default async function handler(
   switch (req.method) {
     case 'GET':
       const { access_token } = req.headers;
-      const user = jwt.decode(access_token, process.env.SECRET_KEY);
+      const user = jwt.verify(
+        access_token,
+        process.env.SECRET_KEY
+      ) as JwtPayload;
 
       conn = await connectDb();
       const transactions =
         await transactionService.getTruckTransactionsByTruckId(req.query);
       await conn.close();
 
-      if (user?.role === 'user') {
+      if (user.role === 'user') {
         transactions.forEach((transaction) => {
           transaction.sellingPrice = 0;
         });

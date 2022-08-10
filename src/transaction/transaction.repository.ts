@@ -13,8 +13,6 @@ import { Document } from 'mongoose';
 import _ from 'lodash';
 import { CustomerModel } from '../customer/customer.model';
 
-import moment from 'moment';
-
 const convertDocumentToObject = <T>(document: Document) =>
   document.toObject({ getters: true }) as T;
 

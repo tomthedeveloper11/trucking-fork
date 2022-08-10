@@ -12,8 +12,6 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { PlusIcon } from '@heroicons/react/solid';
 import { useToastContext } from '../../lib/toast-context';
-import { getCookie } from 'cookies-next';
-import * as jwt from 'jsonwebtoken';
 import authorizeUser from '../../helpers/auth';
 
 interface AddTruckTransactionButtonProps {

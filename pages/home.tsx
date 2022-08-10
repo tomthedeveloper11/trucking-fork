@@ -1,16 +1,16 @@
 import Head from 'next/head';
-import { InferGetServerSidePropsType } from 'next';
+import { InferGetServerSidePropsType, GetServerSideProps } from 'next';
 import truckTransactionBloc from '../lib/truckTransaction';
 import { formatRupiah } from '../helpers/hbsHelpers';
 import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { GetServerSideProps } from 'next';
 import { getCookie } from 'cookies-next';
 import * as jwt from 'jsonwebtoken';
 import { useRouter } from 'next/router';
 import { PrinterIcon } from '@heroicons/react/solid';
 import authorizeUser from '../helpers/auth';
+import { redirectToLogin } from '../types/common';
 
 const defaultStartDate = new Date(2020, 1, 1);
 const defaultEndDate = new Date(new Date().setHours(23, 59, 59));
@@ -42,12 +42,12 @@ export default function Home({
   async function filterByMonth() {
     const truckSummaries =
       await truckTransactionBloc.getGroupedTruckTransactions({
-        access_token,
+        access_token: user.access_token,
         startDate,
         endDate,
       });
     const summaries = await truckTransactionBloc.getTotalSummary({
-      access_token,
+      access_token: user.access_token,
       startDate,
       endDate,
     });
@@ -207,15 +207,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     res: context.res,
   });
 
+  if (!access_token) return redirectToLogin;
+
   try {
-    jwt.verify(access_token, process.env.SECRET_KEY);
+    jwt.verify(access_token.toString(), process.env.SECRET_KEY);
   } catch (e) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: `/login`,
-      },
-    };
+    return redirectToLogin;
   }
 
   const truckSummaries = await truckTransactionBloc.getGroupedTruckTransactions(
@@ -230,6 +227,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     startDate: defaultStartDate,
     endDate: defaultEndDate,
   });
+
   return {
     props: {
       truckSummaries,

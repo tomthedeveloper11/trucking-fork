@@ -6,6 +6,7 @@ import AddCustomerButton from '../../components/add-customer-button';
 import * as jwt from 'jsonwebtoken';
 import { getCookie } from 'cookies-next';
 import authorizeUser from '../../helpers/auth';
+import { redirectToLogin } from '../../types/common';
 
 export default function Print({
   customers,
@@ -48,20 +49,18 @@ export const getServerSideProps = async (context: any) => {
   const access_token = getCookie('access_token', {
     req: context.req,
     res: context.res,
-  }) as string;
+  });
 
+  if (!access_token) return redirectToLogin;
+  
   try {
-    jwt.verify(access_token, process.env.SECRET_KEY);
+    jwt.verify(access_token.toString(), process.env.SECRET_KEY);
   } catch (e) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: `/login`,
-      },
-    };
+    return redirectToLogin;
   }
 
   const customers = await customerBloc.getCustomers();
+  
   return {
     props: {
       customers,

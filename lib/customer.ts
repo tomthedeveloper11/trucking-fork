@@ -20,7 +20,7 @@ const getCustomerByCustomerId = async (customerId: string) => {
   if (response && response.data) {
     return response.data.data as Customer;
   }
-  return [];
+  return {} as Customer;
 };
 
 const customerBloc = { getCustomers, getCustomerByCustomerId };

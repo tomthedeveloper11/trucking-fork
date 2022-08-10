@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { InferGetServerSidePropsType } from 'next';
 import AddTransactionButton from '../components/add-transaction-button';
 import transactionBloc from '../lib/transactions';
-import { Transaction } from '../types/common';
+import { redirectToLogin, Transaction } from '../types/common';
 import TransactionDataTable from '../components/transaction-data-table';
 import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
@@ -51,6 +51,7 @@ export default function TransactionPage({
 
   async function filterByMonth() {
     const transactions = await transactionBloc.getTransactions({
+      access_token: user.access_token,
       startDate,
       endDate,
     });
@@ -109,17 +110,14 @@ export const getServerSideProps = async (context: any) => {
   const access_token = getCookie('access_token', {
     req: context.req,
     res: context.res,
-  }) as string;
+  });
+
+  if (!access_token) return redirectToLogin;
 
   try {
-    jwt.verify(access_token, process.env.SECRET_KEY);
+    jwt.verify(access_token.toString(), process.env.SECRET_KEY);
   } catch (e) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: `/login`,
-      },
-    };
+    return redirectToLogin;
   }
 
   const transactions = await transactionBloc.getTransactions({
@@ -127,6 +125,7 @@ export const getServerSideProps = async (context: any) => {
     startDate: defaultStartDate,
     endDate: defaultEndDate,
   });
+
   return {
     props: { transactions },
   };

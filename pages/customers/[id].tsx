@@ -2,7 +2,9 @@ import Head from 'next/head';
 import { InferGetServerSidePropsType } from 'next';
 import truckTransactionBloc from '../../lib/truckTransaction';
 import {
+  Customer,
   DataTableTruckTransaction,
+  redirectToLogin,
   TruckTransaction,
 } from '../../types/common';
 import TruckTransactionDataTable from '../../components/truck-transaction-data-table';
@@ -38,14 +40,16 @@ export default function CustomerDetails({
     'Info Tambahan': 'w-1/12',
   };
 
-  if (user?.role === 'user') {
+  if (user.role === 'user') {
     delete dataTableHeaders.Pembayaran;
   }
 
   const formatTruckTransaction = (
-    truckTransaction: TruckTransaction
+    truckTransaction: TruckTransaction,
+    index: number
   ): DataTableTruckTransaction => {
     return {
+      no: index,
       id: truckTransaction.id,
       date: new Date(truckTransaction.date).toLocaleDateString('id-ID'),
       containerNo: truckTransaction.containerNo,
@@ -79,15 +83,11 @@ export default function CustomerDetails({
   async function filterByMonth() {
     const truckTransactions =
       await truckTransactionBloc.getTruckTransactionsByCustomerId(
-        access_token,
+        user.access_token,
         customerId,
         startDate,
         endDate
       );
-
-    truckTransactions.forEach((trax) => {
-      trax.selected = false;
-    });
 
     setTruckTransactionsState(truckTransactions);
   }
@@ -127,7 +127,9 @@ export default function CustomerDetails({
 
         <TruckTransactionDataTable
           headers={dataTableHeaders}
-          data={truckTransactionsState.map((t) => formatTruckTransaction(t))}
+          data={truckTransactionsState.map((t, i) =>
+            formatTruckTransaction(t, i + 1)
+          )}
           hiddenFields={[
             'id',
             'truckId',
@@ -147,21 +149,19 @@ export const getServerSideProps = async (context: any) => {
   const access_token = getCookie('access_token', {
     req: context.req,
     res: context.res,
-  }) as string;
+  });
+
+  if (!access_token) return redirectToLogin;
 
   try {
-    jwt.verify(access_token, process.env.SECRET_KEY);
+    jwt.verify(access_token.toString(), process.env.SECRET_KEY);
   } catch (e) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: `/login`,
-      },
-    };
+    return redirectToLogin;
   }
 
   const customerId: string = context.params.id;
-  const customer = await customerBloc.getCustomerByCustomerId(customerId);
+
+  const customer: Customer = await customerBloc.getCustomerByCustomerId(customerId);
   const truckTransactions =
     await truckTransactionBloc.getTruckTransactionsByCustomerId(
       access_token,

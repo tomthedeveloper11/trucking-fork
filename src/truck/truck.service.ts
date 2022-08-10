@@ -11,15 +11,9 @@ const getTrucks = async () => {
   return trucks;
 };
 
-const getTruckByTruckId = async (truckId: string) => {
-  const truck = await truckRepository.getTruckByTruckId(truckId);
-  return truck;
-};
-
 const truckService = {
   createTruck,
   getTrucks,
-  getTruckByTruckId,
 };
 
 export default truckService;

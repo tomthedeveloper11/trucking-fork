@@ -4,11 +4,11 @@ import transactionService from '../../../src/transaction/transaction.service';
 import _ from 'lodash';
 
 interface PrintSummaryRequest extends NextApiRequest {
-    query: {
-      startDate: Date;
-      endDate: Date;
-    };
-  }
+  query: {
+    startDate: Date;
+    endDate: Date;
+  };
+}
 
 export default async function handler(
   req: PrintSummaryRequest,

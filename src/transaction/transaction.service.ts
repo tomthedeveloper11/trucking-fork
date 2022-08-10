@@ -1,3 +1,4 @@
+import { CustomerIdQuery, TruckIdQuery, DateQuery } from './../../types/common';
 import {
   TruckTransaction,
   TruckTransactionPayload,
@@ -184,7 +185,7 @@ const getTruckTransactionsByCustomerId = async ({
   customerId,
   startDate,
   endDate,
-}) => {
+}: CustomerIdQuery) => {
   const transactions =
     await transactionRepository.getTruckTransactionsByCustomerId(
       customerId,
@@ -198,7 +199,7 @@ const getTruckTransactionsByTruckId = async ({
   truckId,
   startDate,
   endDate,
-}) => {
+}: TruckIdQuery) => {
   const transactions =
     await transactionRepository.getTruckTransactionsByTruckId(
       truckId,
@@ -212,7 +213,7 @@ const getAdditionalTruckTransactionsByTruckId = async ({
   truckId,
   startDate,
   endDate,
-}) => {
+}: TruckIdQuery) => {
   const transactions =
     await transactionRepository.getAdditionalTruckTransactionsByTruckId(
       truckId,
@@ -315,7 +316,7 @@ const printTransaction = async (transactionIds: string[], type: string) => {
   return pdf;
 };
 
-const printSummary = async ({ startDate, endDate }) => {
+const printSummary = async ({ startDate, endDate }: DateQuery) => {
   handlers.registerHelper('formatRupiah', formatRupiah);
   handlers.registerHelper('formatDate', formatDate);
 
@@ -341,8 +342,8 @@ const printSummary = async ({ startDate, endDate }) => {
     (acc, obj) => acc + obj.cost,
     0
   );
-  const totalCost = totalAdditionalCost + transactionsTotal
-  const totalMargin = totalSellingPrice - totalCost - totalTruckCost
+  const totalCost = totalAdditionalCost + transactionsTotal;
+  const totalMargin = totalSellingPrice - totalCost - totalTruckCost;
 
   const content = {
     startDate: new Date(startDate).toLocaleDateString('id-ID', {
@@ -360,7 +361,7 @@ const printSummary = async ({ startDate, endDate }) => {
     totalSellingPrice,
     totalTruckCost,
     totalCost,
-    totalMargin
+    totalMargin,
   };
 
   const file = fs.readFileSync('./templates/laporan.html', 'utf8');

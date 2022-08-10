@@ -73,7 +73,6 @@ export default function TruckTransactionDataTable({
 }: DataTableProperties) {
   const user = authorizeUser();
 
-  const refreshData = useRouterRefresh();
   const addToast = useToastContext();
   const [truckTransactions, setTruckTransactions] = useState(
     prepareTruckTransactions(data)
@@ -126,6 +125,8 @@ export default function TruckTransactionDataTable({
           {emkl && user?.role !== 'guest' && (
             <Table.HeadCell className="text-center">Print</Table.HeadCell>
           )}
+          {emkl && <Table.HeadCell className="text-center">No</Table.HeadCell>}
+
           {Object.entries(headers).map(([header, columnWidth], index) => (
             <Table.HeadCell
               key={index}
@@ -150,7 +151,7 @@ export default function TruckTransactionDataTable({
                   <Table.Cell>
                     <div className="flex gap-3">
                       <input
-                        className="mt-7 rounded checked:bg-green-400 checked:border-green-400 focus:ring-green-500"
+                        className="mt-5 rounded checked:bg-green-400 checked:border-green-400 focus:ring-green-500"
                         type="checkbox"
                         onClick={() => {
                           truckTransactions[index].selected =
@@ -159,33 +160,25 @@ export default function TruckTransactionDataTable({
                         }}
                       ></input>
                       <div>
-                        <button
-                          className={`flex my-1 border border-gray-300 rounded shadow-sm px-2 ${
+                        <div
+                          className={`my-1 border border-gray-300 rounded px-2 ${
                             truckTransaction.isPrintedBon
-                              ? 'text-gray-600 hover:bg-white'
-                              : 'bg-green-400 hover:bg-green-500 text-gray-100'
+                              ? 'bg-green-400 text-gray-100'
+                              : 'text-gray-600'
                           }`}
-                          onClick={() =>
-                            print(truckTransactions[index].id, 'bon')
-                          }
                         >
-                          <PrinterIcon className="h-5 mt-1" />
-                          <p className={`text-lg font-bold`}>Bon</p>
-                        </button>
+                          <p className={`text-center font-bold`}>Bon</p>
+                        </div>
 
-                        <button
-                          className={`flex my-1 border border-gray-300 rounded shadow-sm px-2 ${
+                        <div
+                          className={`my-1 border border-gray-300 rounded px-2 ${
                             truckTransaction.isPrintedInvoice
-                              ? 'text-gray-600 hover:bg-white'
-                              : 'bg-green-400 hover:bg-green-500 text-gray-100'
+                              ? 'bg-green-400 text-gray-100'
+                              : 'text-gray-600'
                           }`}
-                          onClick={() =>
-                            print(truckTransactions[index].id, 'tagihan')
-                          }
                         >
-                          <PrinterIcon className="h-5 mt-1" />
-                          <p className={`text-lg font-bold`}>Tagihan</p>
-                        </button>
+                          <p className={`text-center font-bold`}>Tagihan</p>
+                        </div>
                       </div>
                     </div>
                   </Table.Cell>

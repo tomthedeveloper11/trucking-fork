@@ -1,4 +1,8 @@
-import { BASE_URL, TransactionSummaryQuery } from './../types/common';
+import {
+  BASE_URL,
+  TransactionSummaryQuery,
+  DateQuery,
+} from './../types/common';
 import axios from 'axios';
 import { TruckTransaction, AdditionalTruckTransaction } from '../types/common';
 import { CookieValueTypes } from 'cookies-next';
@@ -43,11 +47,13 @@ const getTotalSummary = async ({
   startDate,
   endDate,
 }: TransactionSummaryQuery) => {
+  if (!access_token) return {};
+
   const response = await axios({
     method: 'GET',
     url: `${BASE_URL}/api/transaction/summary/`,
     headers: {
-      access_token,
+      access_token: access_token.toString(),
     },
     params: {
       startDate,
@@ -62,10 +68,10 @@ const getTotalSummary = async ({
 };
 
 const getTruckTransactionsByCustomerId = async (
-  access_token,
-  customerId,
-  startDate,
-  endDate
+  access_token: CookieValueTypes,
+  customerId: string,
+  startDate: Date,
+  endDate: Date
 ) => {
   if (!access_token) throw new Error('Invalid token');
 
@@ -155,7 +161,7 @@ const printTransactions = async (transactionIds: string[], type: string) => {
     responseType: 'blob',
   });
 
-  const saveAsPDF = async (response: any) => {
+  const saveAsPDF = async (response: BlobPart) => {
     const blob = new Blob([response]);
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
@@ -169,7 +175,7 @@ const printTransactions = async (transactionIds: string[], type: string) => {
   return 'Print Failed';
 };
 
-const printSummary = async ({ startDate, endDate }) => {
+const printSummary = async ({ startDate, endDate }: DateQuery) => {
   const response = await axios({
     method: 'GET',
     url: `${BASE_URL}/api/transaction/printSummary`,
@@ -180,7 +186,7 @@ const printSummary = async ({ startDate, endDate }) => {
     },
   });
 
-  const saveAsPDF = async (response: any) => {
+  const saveAsPDF = async (response: BlobPart) => {
     const blob = new Blob([response]);
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);

@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import Link from 'next/link';
-import { Truck } from '../../types/common';
+import { redirectToLogin, Truck } from '../../types/common';
 import truckBloc from '../../lib/truck';
 import { InferGetServerSidePropsType } from 'next';
 import AddTruckButton from '../../components/truck/add-truck-button';
@@ -52,20 +52,18 @@ export const getServerSideProps = async (context: any) => {
   const access_token = getCookie('access_token', {
     req: context.req,
     res: context.res,
-  }) as string;
+  });
 
+  if (!access_token) return redirectToLogin;
+  
   try {
-    jwt.verify(access_token, process.env.SECRET_KEY);
+    jwt.verify(access_token.toString(), process.env.SECRET_KEY);
   } catch (e) {
-    return {
-      redirect: {
-        permanent: false,
-        destination: `/login`,
-      },
-    };
+    return redirectToLogin;
   }
 
   const trucks: Truck[] = await truckBloc.getTrucks();
+  
   return {
     props: {
       trucks,

@@ -8,8 +8,6 @@ import 'react-datepicker/dist/react-datepicker.css';
 import axios from 'axios';
 import { useToastContext } from '../../lib/toast-context';
 import { PencilAltIcon } from '@heroicons/react/solid';
-import { getCookie } from 'cookies-next';
-import * as jwt from 'jsonwebtoken';
 import authorizeUser from '../../helpers/auth';
 
 interface EditTruckTransactionButtonProps {
@@ -216,7 +214,7 @@ export default function EditTruckTransactionButton({
                 />
               </div>
 
-              {user?.role !== 'user' && (
+              {user.role !== 'user' && (
                 <div className="form-group row-span-1 col-span-1">
                   <TextInput
                     label="Pembayaran"
