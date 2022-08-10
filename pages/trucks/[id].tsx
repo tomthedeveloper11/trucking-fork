@@ -42,6 +42,7 @@ export default function TruckDetails({
   }, [truckTransactions, miscTruckTransactions]);
 
   const truckDataTableHeaders = {
+    No: '',
     Tanggal: 'w-1/12',
     'No. Container': 'w-2/12',
     'No. Bon': 'w-1/12',
@@ -58,15 +59,18 @@ export default function TruckDetails({
   }
 
   const miscDataTableHeaders = {
+    No: '',
     Tanggal: 'w-3/12',
     Deskripsi: 'w-4/12',
     Harga: 'w-3/12',
   };
 
   const formatTruckTransaction = (
-    truckTransaction: TruckTransaction
+    truckTransaction: TruckTransaction,
+    index: number
   ): DataTableTruckTransaction => {
     return {
+      no: index,
       id: truckTransaction.id,
       date: new Date(truckTransaction.date).toLocaleDateString('id-ID'),
       containerNo: truckTransaction.containerNo,
@@ -84,10 +88,11 @@ export default function TruckDetails({
   };
 
   const formatMiscTransaction = (
-    transaction: AdditionalTruckTransaction
+    transaction: AdditionalTruckTransaction,
+    index: number
   ): DataTableAdditionalTransaction => {
-    //
     return {
+      no: index,
       id: transaction.id,
       date: new Date(transaction.date).toLocaleDateString('id-ID'),
       details: transaction.details,
@@ -193,7 +198,9 @@ export default function TruckDetails({
         {table === 'trip' ? (
           <TruckTransactionDataTable
             headers={truckDataTableHeaders}
-            data={truckTransactionsState.map((t) => formatTruckTransaction(t))}
+            data={truckTransactionsState.map((t, i) =>
+              formatTruckTransaction(t, i + 1)
+            )}
             hiddenFields={[
               'id',
               'isPrinted',
@@ -207,8 +214,8 @@ export default function TruckDetails({
         ) : (
           <AdditionalTruckTransactionDataTable
             headers={miscDataTableHeaders}
-            data={miscTruckTransactionsState.map((t) =>
-              formatMiscTransaction(t)
+            data={miscTruckTransactionsState.map((t, i) =>
+              formatMiscTransaction(t, i + 1)
             )}
             hiddenFields={['id', 'isPrinted', 'truckId']}
           />

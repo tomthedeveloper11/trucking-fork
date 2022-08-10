@@ -31,7 +31,10 @@ export default function AdditionalTruckTransactionDataTable({
     return (
       <>
         {Object.values(tableTransaction).map((val, i) => (
-          <Table.Cell className="whitespace-nowrap" key={`td-${obj.id}-${i}`}>
+          <Table.Cell
+            className="text-center whitespace-nowrap"
+            key={`td-${obj.id}-${i}`}
+          >
             {val ? val.toString() : ''}
           </Table.Cell>
         ))}
@@ -44,7 +47,7 @@ export default function AdditionalTruckTransactionDataTable({
   return (
     <>
       <Table hoverable={true}>
-        <Table.Head className="whitespace-nowrap">
+        <Table.Head className="text-center whitespace-nowrap">
           {Object.entries(headers).map(([header, columnWidth], index) => (
             <Table.HeadCell key={index} className={`${columnWidth}`}>
               {header}
@@ -75,13 +78,18 @@ export default function AdditionalTruckTransactionDataTable({
               </Table.Row>
             );
           })}
+          <Table.Row>
+            {new Array(3).fill('').map((_, i) => (
+              <Table.Cell key={`c${i}`}></Table.Cell>
+            ))}
+            {data.length > 0 && (
+              <Table.Cell className="text-center font-bold">
+                Rp{totalCost.toLocaleString()}
+              </Table.Cell>
+            )}
+          </Table.Row>
         </Table.Body>
       </Table>
-      {totalCost != 0 && (
-        <div className="mt-5 pl-[50.5vw] border">
-          <p className="text-lg font-bold">{totalCost}</p>
-        </div>
-      )}
     </>
   );
 }

@@ -20,13 +20,15 @@ export default function TransactionPage({
   const user = authorizeUser();
 
   const transactionDataTableHeaders = {
+    No: '',
     Tanggal: 'w-3/12',
     Deskripsi: 'w-4/12',
     Harga: 'w-3/12',
   };
 
-  const formatTransaction = (transaction: Transaction) => {
+  const formatTransaction = (transaction: Transaction, index: number) => {
     return {
+      no: index,
       id: transaction.id,
       date: new Date(transaction.date).toLocaleDateString('id-ID'),
       details: transaction.details,
@@ -95,7 +97,7 @@ export default function TransactionPage({
         )}
         <TransactionDataTable
           headers={transactionDataTableHeaders}
-          data={transactionsState.map((t) => formatTransaction(t))}
+          data={transactionsState.map((t, i) => formatTransaction(t, i + 1))}
           hiddenFields={['id', 'isPrinted', 'truckId']}
         />
       </div>

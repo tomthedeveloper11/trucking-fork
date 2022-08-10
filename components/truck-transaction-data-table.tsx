@@ -11,8 +11,6 @@ import truckTransactionBloc from '../lib/truckTransaction';
 import DeleteVariousTransactionButton from './delete-various-transaction-button';
 import { useToastContext } from '../lib/toast-context';
 import { useRouterRefresh } from '../hooks/hooks';
-import { getCookie } from 'cookies-next';
-import * as jwt from 'jsonwebtoken';
 import authorizeUser from '../helpers/auth';
 
 interface DataTableProperties {
@@ -39,11 +37,17 @@ function buildTransactionRow(
 
   return (
     <>
-      {Object.values(tableTransaction).map((val, i) => (
-        <Table.Cell className="px-0 text-center" key={`td-${obj.id}-${i}`}>
-          {val ? val.toString() : ''}
-        </Table.Cell>
-      ))}
+      {Object.entries(tableTransaction).map(([key, val], i) => {
+        let rowValue = val.toString();
+        if (['sellingPrice', 'cost'].includes(key)) {
+          rowValue = val.toLocaleString();
+        }
+        return (
+          <Table.Cell className="px-0 text-center" key={`td-${obj.id}-${i}`}>
+            {rowValue}
+          </Table.Cell>
+        );
+      })}
     </>
   );
 }
@@ -79,16 +83,15 @@ export default function TruckTransactionDataTable({
     setTruckTransactions(prepareTruckTransactions(data));
   }, [data]);
 
-  async function print(truckTransactionId: string, type: string) {
+  async function print(type: string) {
     addToast('Loading...');
 
     const markedTransactions = truckTransactions
       .filter((t) => t.selected)
       .map((t) => t.id);
-    const transactionIds =
-      markedTransactions.length > 0 ? markedTransactions : [truckTransactionId];
+
     const response = await truckTransactionBloc.printTransactions(
-      transactionIds,
+      markedTransactions,
       type
     );
 
@@ -97,8 +100,6 @@ export default function TruckTransactionDataTable({
     } else {
       addToast('Mohon coba kembali');
     }
-
-    refreshData();
   }
 
   const totalCost = data.reduce((acc, obj) => acc + obj.cost, 0);
@@ -106,6 +107,20 @@ export default function TruckTransactionDataTable({
 
   return (
     <>
+      <button
+        className={`flex my-1 border border-gray-300 rounded shadow-sm px-2 text-gray-600 hover:bg-white`}
+        onClick={() => print('tagihan')}
+      >
+        <PrinterIcon className="h-5 mt-1" />
+        <p className={`text-lg font-bold`}>Tagihan</p>
+      </button>
+      <button
+        className={`flex my-1 border border-gray-300 rounded shadow-sm px-2 text-gray-600 hover:bg-white`}
+        onClick={() => print('bon')}
+      >
+        <PrinterIcon className="h-5 mt-1" />
+        <p className={`text-lg font-bold`}>Bon</p>
+      </button>
       <Table>
         <Table.Head className="whitespace-nowrap">
           {emkl && user?.role !== 'guest' && (
@@ -195,14 +210,24 @@ export default function TruckTransactionDataTable({
               </Table.Row>
             );
           })}
+          <Table.Row>
+            {new Array(5).fill('').map((_, i) => (
+              <Table.Cell key={`c${i}`}></Table.Cell>
+            ))}
+
+            {data.length > 0 && (
+              <>
+                <Table.Cell className="text-center font-bold">
+                  Rp{totalCost.toLocaleString()}
+                </Table.Cell>
+                <Table.Cell className="text-center font-bold">
+                  Rp{totalSell.toLocaleString()}
+                </Table.Cell>
+              </>
+            )}
+          </Table.Row>
         </Table.Body>
       </Table>
-      {totalCost != 0 && totalSell != 0 && (
-        <div className="mt-5 pl-[39.5vw] border flex gap-8">
-          <p className="text-lg font-bold">{totalCost}</p>
-          <p className="text-lg font-bold">{totalSell}</p>
-        </div>
-      )}
     </>
   );
 }
