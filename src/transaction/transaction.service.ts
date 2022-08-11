@@ -318,10 +318,7 @@ const printTransaction = async (
   const template = handlers.compile(`${file}`);
   const html = template(content);
 
-  const browser = await puppeteer.launch({
-    executablePath:
-      '/node_modules/puppeteer/.local-chromium/win64-1011831/chrome-win/chrome.exe',
-  });
+  const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
   await page.setContent(html, { waitUntil: 'networkidle0' });
@@ -386,10 +383,7 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
   const template = handlers.compile(`${file}`);
   const html = template(content);
 
-  const browser = await puppeteer.launch({
-    executablePath:
-      '/node_modules/puppeteer/.local-chromium/win64-1011831/chrome-win/chrome.exe',
-  });
+  const browser = await puppeteer.launch();
   const page = await browser.newPage();
 
   await page.setContent(html, { waitUntil: 'networkidle0' });
