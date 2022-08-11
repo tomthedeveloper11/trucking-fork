@@ -320,7 +320,7 @@ const printTransaction = async (
 
   const browser = await puppeteer.launch({
     executablePath:
-      './node_modules/puppeteer/.local-chromium/win64-1011831/chrome-win/chrome.exe',
+      '/node_modules/puppeteer/.local-chromium/win64-1011831/chrome-win/chrome.exe',
   });
   const page = await browser.newPage();
 
@@ -388,7 +388,7 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
 
   const browser = await puppeteer.launch({
     executablePath:
-      './node_modules/puppeteer/.local-chromium/win64-1011831/chrome-win/chrome.exe',
+      '/node_modules/puppeteer/.local-chromium/win64-1011831/chrome-win/chrome.exe',
   });
   const page = await browser.newPage();
 
