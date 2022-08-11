@@ -246,11 +246,11 @@ export default function TruckTransactionDataTable({
 
             {data.length > 0 && (
               <>
-                <Table.Cell className="text-center font-bold">
-                  Rp{totalCost.toLocaleString()}
+                <Table.Cell className="text-center font-bold whitespace-nowrap">
+                  Rp {totalCost.toLocaleString()}
                 </Table.Cell>
-                <Table.Cell className="text-center font-bold">
-                  Rp{totalSell.toLocaleString()}
+                <Table.Cell className="text-center font-bold whitespace-nowrap">
+                  Rp {totalSell.toLocaleString()}
                 </Table.Cell>
               </>
             )}

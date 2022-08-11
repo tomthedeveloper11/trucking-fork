@@ -83,8 +83,8 @@ export default function AdditionalTruckTransactionDataTable({
               <Table.Cell key={`c${i}`}></Table.Cell>
             ))}
             {data.length > 0 && (
-              <Table.Cell className="text-center font-bold">
-                Rp{totalCost.toLocaleString()}
+              <Table.Cell className="text-center font-bold whitespace-nowrap">
+                Rp {totalCost.toLocaleString()}
               </Table.Cell>
             )}
           </Table.Row>

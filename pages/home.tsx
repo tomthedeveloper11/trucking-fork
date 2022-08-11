@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 import { PrinterIcon } from '@heroicons/react/solid';
 import authorizeUser from '../helpers/auth';
 import { redirectToLogin } from '../types/common';
+import Link from 'next/link';
 
 const defaultStartDate = new Date(2020, 1, 1);
 const defaultEndDate = new Date(new Date().setHours(23, 59, 59));
@@ -162,37 +163,38 @@ export default function Home({
         <div className="grid grid-cols-3">
           {entries.map((entry, i: number) => {
             return (
-              <a
+              <Link
                 href={`/trucks/${entry[1].truckId}?truckName=${entry[0]}`}
                 key={i}
-                className="gap-40 px-6 py-3 m-5 rounded-lg border border-gray-200 shadow-md hover:bg-gray-100"
               >
-                <div className="relative">
-                  <h3 className="text-5xl whitespace-nowrap text-center justify-center align-middle">
-                    {entry[0]}
-                  </h3>
-                </div>
+                <div className="gap-40 px-6 py-3 m-5 rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 cursor-pointer">
+                  <div className="relative">
+                    <h3 className="text-5xl whitespace-nowrap text-center justify-center align-middle">
+                      {entry[0]}
+                    </h3>
+                  </div>
 
-                <div>
-                  {user?.role !== 'user' && (
-                    <h3 className="my-2 text-green-400 text-center font-medium">
-                      Pembayaran: {formatRupiah(entry[1].sellingPrice)}
+                  <div>
+                    {user?.role !== 'user' && (
+                      <h3 className="my-2 text-green-400 text-center font-medium">
+                        Pembayaran: {formatRupiah(entry[1].sellingPrice)}
+                      </h3>
+                    )}
+                    <h3 className="my-2 text-red-400 text-center font-medium">
+                      Borongan: {formatRupiah(entry[1].cost)}
                     </h3>
-                  )}
-                  <h3 className="my-2 text-red-400 text-center font-medium">
-                    Borongan: {formatRupiah(entry[1].cost)}
-                  </h3>
-                  <h3 className="my-2 text-red-400 text-center font-medium">
-                    Biaya: {formatRupiah(entry[1].additionalCost)}
-                  </h3>
-                  <hr />
-                  {user?.role !== 'user' && (
-                    <h3 className="my-2 text-center font-medium">
-                      Margin: {formatRupiah(entry[1].margin)}
+                    <h3 className="my-2 text-red-400 text-center font-medium">
+                      Biaya: {formatRupiah(entry[1].additionalCost)}
                     </h3>
-                  )}
+                    <hr />
+                    {user?.role !== 'user' && (
+                      <h3 className="my-2 text-center font-medium">
+                        Margin: {formatRupiah(entry[1].margin)}
+                      </h3>
+                    )}
+                  </div>
                 </div>
-              </a>
+              </Link>
             );
           })}
         </div>
