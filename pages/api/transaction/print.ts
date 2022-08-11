@@ -8,6 +8,7 @@ interface PrintTransactionsAPIRequest extends NextApiRequest {
     invoiceNum: string;
     transactionIds: string[];
     type: string;
+    endDate: Date
   };
 }
 
@@ -20,15 +21,23 @@ export default async function handler(
     case 'POST':
       try {
         conn = await connectDb();
-        const {invoiceNum, transactionIds, type } = req.body;
+        const { invoiceNum, transactionIds, type, endDate } = req.body;
         const pdf = await transactionService.printTransaction(
           invoiceNum,
           transactionIds,
-          type
+          type,
+          endDate
         );
+
+        try {
+          res.statusCode = 200;
+          res.send(pdf);
+
+          await transactionService.updatePrintStatus(transactionIds, type);
+        } catch (err) {
+          res.status(500).json({ message: _.get(err, 'message') });
+        }
         await conn.close();
-        res.statusCode = 200;
-        res.send(pdf);
       } catch (err) {
         console.log(err);
         res.status(500).json({ message: _.get(err, 'message') });

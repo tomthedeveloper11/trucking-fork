@@ -139,6 +139,7 @@ export default function CustomerDetails({
           ]}
           autoCompleteData={autoCompleteData}
           emkl={true}
+          endDate={endDate}
         />
       </div>
     </>

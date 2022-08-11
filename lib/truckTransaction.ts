@@ -150,7 +150,7 @@ const getTruckTransactionAutoComplete = async (): Promise<
   return {};
 };
 
-const printTransactions = async (invoiceNum:string, transactionIds: string[], type: string) => {
+const printTransactions = async (invoiceNum:string, transactionIds: string[], type: string, endDate: Date) => {
   const response = await axios({
     method: 'POST',
     url: `${BASE_URL}/api/transaction/print`,
@@ -158,6 +158,7 @@ const printTransactions = async (invoiceNum:string, transactionIds: string[], ty
       invoiceNum,
       transactionIds,
       type,
+      endDate
     },
     responseType: 'blob',
   });

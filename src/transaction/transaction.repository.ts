@@ -202,22 +202,10 @@ const getTruckTransactionAutoComplete = async (): Promise<
   return result;
 };
 
-const printTransaction = async (transactionIds: string[], type: string) => {
-  let option = {};
-  if (type === 'bon') {
-    option = { isPrintedBon: true };
-  } else {
-    option = { isPrintedInvoice: true };
-  }
-
-  const promiseAll = await Promise.all([
-    TransactionModel.find({
-      _id: { $in: transactionIds },
-    }),
-    TransactionModel.updateMany({ _id: { $in: transactionIds } }, option),
-  ]);
-
-  const documents = promiseAll[0];
+const printTransaction = async (transactionIds: string[]) => {
+  const documents = await TransactionModel.find({
+    _id: { $in: transactionIds },
+  });
 
   const truckTransactions = documents.map((doc) => mapTruckTransaction(doc));
   return truckTransactions;
@@ -225,6 +213,18 @@ const printTransaction = async (transactionIds: string[], type: string) => {
 
 const filterTruckTransactions = async (query: FilterTransactionsQuery) => {
   // TODO
+};
+
+const updatePrintStatus = async (transactionIds: string[], type: string) => {
+  let option = {};
+  if (type === 'bon') {
+    option = { isPrintedBon: true };
+  } else {
+    option = { isPrintedInvoice: true };
+  }
+
+  const response = await TransactionModel.updateMany({ _id: { $in: transactionIds } }, option)
+  return response
 };
 
 const transactionRepository = {
@@ -244,6 +244,7 @@ const transactionRepository = {
   filterTruckTransactions,
   createTransaction,
   editTransaction,
+  updatePrintStatus
 };
 
 export default transactionRepository;

@@ -257,15 +257,15 @@ const getTruckTransactionAutoComplete = async () => {
 const printTransaction = async (
   invoiceNum: string,
   transactionIds: string[],
-  type: string
+  type: string,
+  endDate: Date
 ) => {
   handlers.registerHelper('formatRupiah', formatRupiah);
   handlers.registerHelper('formatDate', formatDate);
   handlers.registerHelper('indexPlusOne', indexPlusOne);
 
   const truckTransactions = await transactionRepository.printTransaction(
-    transactionIds,
-    type
+    transactionIds
   );
 
   const sortedTruckTransactions = truckTransactions.sort(
@@ -292,6 +292,7 @@ const printTransaction = async (
 
   const content = {
     main: {
+      endDate,
       invoiceNum,
       currentDate: new Date(),
       customerInitial: sortedTruckTransactions[0].customer,
@@ -388,6 +389,10 @@ const filterTruckTransactions = async (query: FilterTransactionsQuery) => {
   transactionRepository.filterTruckTransactions(query);
 };
 
+const updatePrintStatus = async (transactionIds: string[], type: string) => {
+  transactionRepository.updatePrintStatus(transactionIds, type);
+}
+
 const transactionService = {
   createTruckTransaction,
   createAdditionalTruckTransaction,
@@ -407,6 +412,7 @@ const transactionService = {
   createTransaction,
   editTransaction,
   printSummary,
+  updatePrintStatus
 };
 
 export default transactionService;

@@ -12,6 +12,7 @@ import truckTransactionBloc from '../lib/truckTransaction';
 import DeleteVariousTransactionButton from './delete-various-transaction-button';
 import { useToastContext } from '../lib/toast-context';
 import authorizeUser from '../helpers/auth';
+import { useRouterRefresh } from '../hooks/hooks';
 
 interface DataTableProperties {
   headers: Record<string, string>;
@@ -19,6 +20,7 @@ interface DataTableProperties {
   hiddenFields?: string[];
   autoCompleteData: Record<string, string[]>;
   emkl?: boolean;
+  endDate: Date
 }
 
 function buildTransactionRow(
@@ -70,9 +72,10 @@ export default function TruckTransactionDataTable({
   hiddenFields,
   autoCompleteData,
   emkl = false,
+  endDate,
 }: DataTableProperties) {
   const user = authorizeUser();
-
+  const refreshData = useRouterRefresh();
   const addToast = useToastContext();
   const [truckTransactions, setTruckTransactions] = useState(
     prepareTruckTransactions(data)
@@ -109,7 +112,8 @@ export default function TruckTransactionDataTable({
     const response = await truckTransactionBloc.printTransactions(
       invoiceNum,
       markedTransactions,
-      type
+      type,
+      endDate
     );
 
     if (response === 'Print Success') {
@@ -121,6 +125,7 @@ export default function TruckTransactionDataTable({
       trax.selected = false;
     });
     setTruckTransactions([...truckTransactions]);
+    refreshData();
   }
 
   const totalCost = data.reduce((acc, obj) => acc + obj.cost, 0);
@@ -179,11 +184,15 @@ export default function TruckTransactionDataTable({
                   truckTransactions[index]?.selected &&
                   'bg-green-100 hover:bg-green-200'
                 } hover:bg-gray-100`}
-                onClick={() => {
-                  truckTransactions[index].selected =
-                    !truckTransactions[index].selected;
-                  setTruckTransactions([...truckTransactions]);
-                }}
+                onClick={
+                  emkl
+                    ? () => {
+                        truckTransactions[index].selected =
+                          !truckTransactions[index].selected;
+                        setTruckTransactions([...truckTransactions]);
+                      }
+                    : undefined
+                }
               >
                 {emkl && user?.role !== 'guest' && (
                   <Table.Cell>
