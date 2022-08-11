@@ -304,9 +304,9 @@ const printTransaction = async (
 
   let file;
   if (type === 'bon') {
-    file = fs.readFileSync('./templates/bon.html', 'utf8');
+    file = fs.readFileSync('/templates/bon.html', 'utf8');
   } else {
-    file = fs.readFileSync('./templates/tagihan.html', 'utf8');
+    file = fs.readFileSync('/templates/tagihan.html', 'utf8');
   }
 
   const template = handlers.compile(`${file}`);
@@ -370,7 +370,7 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
     totalMargin,
   };
 
-  const file = fs.readFileSync('./templates/laporan.html', 'utf8');
+  const file = fs.readFileSync('/templates/laporan.html', 'utf8');
   const template = handlers.compile(`${file}`);
   const html = template(content);
 
