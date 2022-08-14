@@ -5,6 +5,8 @@ import {
   TransactionType,
 } from '../types/common';
 import DeleteVariousTransactionButton from './delete-various-transaction-button';
+import { formatRupiah } from '../helpers/hbsHelpers';
+import authorizeUser from '../helpers/auth';
 
 interface DataTableProperties {
   headers: Record<string, string>;
@@ -17,6 +19,8 @@ export default function AdditionalTruckTransactionDataTable({
   data,
   hiddenFields,
 }: DataTableProperties) {
+  const user = authorizeUser();
+
   function buildTransactionRow(obj: DataTableAdditionalTransaction) {
     const tableTransaction: Record<string, string | number | Date | boolean> = {
       ...obj,
@@ -30,14 +34,17 @@ export default function AdditionalTruckTransactionDataTable({
 
     return (
       <>
-        {Object.values(tableTransaction).map((val, i) => (
-          <Table.Cell
-            className="text-center whitespace-nowrap"
-            key={`td-${obj.id}-${i}`}
-          >
-            {val ? val.toString() : ''}
-          </Table.Cell>
-        ))}
+        {Object.entries(tableTransaction).map(([key, val], i) => {
+          let rowValue = val.toString();
+          if (['sellingPrice', 'cost'].includes(key)) {
+            rowValue = val.toLocaleString().replace(/,/g, '.');
+          }
+          return (
+            <Table.Cell className="px-0 text-center" key={`td-${obj.id}-${i}`}>
+              {rowValue}
+            </Table.Cell>
+          );
+        })}
       </>
     );
   }
@@ -53,14 +60,14 @@ export default function AdditionalTruckTransactionDataTable({
               {header}
             </Table.HeadCell>
           ))}
-          <Table.HeadCell>Actions</Table.HeadCell>
+          {user?.role !== 'guest' && <Table.HeadCell>Actions</Table.HeadCell>}
         </Table.Head>
         <Table.Body className="divide-y">
           {data.map((transaction, index) => {
             return (
               <Table.Row key={`tr-${index}`}>
                 {buildTransactionRow(transaction)}
-                {
+                {user?.role !== 'guest' && (
                   <Table.Cell className="flex flex-row">
                     <EditAdditionalTruckTransactionButton
                       key={`edit-modal-key${index}`}
@@ -74,7 +81,7 @@ export default function AdditionalTruckTransactionDataTable({
                       transactionId={transaction.id}
                     />
                   </Table.Cell>
-                }
+                )}
               </Table.Row>
             );
           })}
@@ -84,7 +91,7 @@ export default function AdditionalTruckTransactionDataTable({
             ))}
             {data.length > 0 && (
               <Table.Cell className="text-center font-bold whitespace-nowrap">
-                Rp {totalCost.toLocaleString()}
+                {formatRupiah(totalCost)}
               </Table.Cell>
             )}
           </Table.Row>

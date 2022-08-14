@@ -3,6 +3,7 @@ import EditTransactionButton from './edit-transaction-button';
 import { DataTableTransaction, TransactionType } from '../types/common';
 import DeleteVariousTransactionButton from './delete-various-transaction-button';
 import authorizeUser from '../helpers/auth';
+import { formatRupiah } from '../helpers/hbsHelpers';
 
 interface DataTableProperties {
   headers: Record<string, string>;
@@ -30,21 +31,32 @@ export default function TransactionDataTable({
 
     return (
       <>
-        {Object.values(tableTransaction).map((val, i) => (
-          <Table.Cell className="whitespace-nowrap" key={`td-${obj.id}-${i}`}>
-            {val ? val.toString() : ''}
-          </Table.Cell>
-        ))}
+        {Object.entries(tableTransaction).map(([key, val], i) => {
+          let rowValue = val.toString();
+          if (['sellingPrice', 'cost'].includes(key)) {
+            rowValue = val.toLocaleString().replace(/,/g, '.');
+          }
+          return (
+            <Table.Cell className="px-0 text-center" key={`td-${obj.id}-${i}`}>
+              {rowValue}
+            </Table.Cell>
+          );
+        })}
       </>
     );
   }
+
+  const totalCost = data.reduce((acc, obj) => acc + obj.cost, 0);
 
   return (
     <>
       <Table hoverable={true}>
         <Table.Head className="whitespace-nowrap">
           {Object.entries(headers).map(([header, columnWidth], index) => (
-            <Table.HeadCell key={index} className={`${columnWidth}`}>
+            <Table.HeadCell
+              key={index}
+              className={`${columnWidth} text-center`}
+            >
               {header}
             </Table.HeadCell>
           ))}
@@ -53,25 +65,41 @@ export default function TransactionDataTable({
         <Table.Body className="divide-y">
           {data.map((transaction, index) => {
             return (
-              <Table.Row key={`tr-${index}`}>
-                {buildTransactionRow(transaction)}
-                {user.role !== 'guest' && (
-                  <Table.Cell className="flex flex-row">
-                    <EditTransactionButton
-                      key={`edit-modal-key${index}`}
-                      existingTransaction={{
-                        ...transaction,
-                        transactionType: TransactionType.ADDITIONAL_TRANSACTION,
-                      }}
-                    />
-                    <DeleteVariousTransactionButton
-                      transactionId={transaction.id}
-                    />
-                  </Table.Cell>
-                )}
-              </Table.Row>
+              <>
+                <Table.Row key={`tr-${index}`}>
+                  {buildTransactionRow(transaction)}
+                  {user.role !== 'guest' && (
+                    <Table.Cell className="flex flex-row">
+                      <EditTransactionButton
+                        key={`edit-modal-key${index}`}
+                        existingTransaction={{
+                          ...transaction,
+                          transactionType:
+                            TransactionType.ADDITIONAL_TRANSACTION,
+                        }}
+                      />
+                      <DeleteVariousTransactionButton
+                        transactionId={transaction.id}
+                      />
+                    </Table.Cell>
+                  )}
+                </Table.Row>
+              </>
             );
           })}
+          <Table.Row>
+            {new Array(3).fill('').map((_, i) => (
+              <Table.Cell key={`c${i}`}></Table.Cell>
+            ))}
+
+            {data.length > 0 && (
+              <>
+                <Table.Cell className="text-center font-bold whitespace-nowrap">
+                  {formatRupiah(totalCost)}
+                </Table.Cell>
+              </>
+            )}
+          </Table.Row>
         </Table.Body>
       </Table>
     </>

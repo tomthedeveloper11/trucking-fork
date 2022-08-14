@@ -13,6 +13,7 @@ import DeleteVariousTransactionButton from './delete-various-transaction-button'
 import { useToastContext } from '../lib/toast-context';
 import authorizeUser from '../helpers/auth';
 import { useRouterRefresh } from '../hooks/hooks';
+import { formatRupiah } from '../helpers/hbsHelpers';
 
 interface DataTableProperties {
   headers: Record<string, string>;
@@ -20,7 +21,7 @@ interface DataTableProperties {
   hiddenFields?: string[];
   autoCompleteData: Record<string, string[]>;
   emkl?: boolean;
-  endDate: Date
+  endDate: Date;
 }
 
 function buildTransactionRow(
@@ -42,7 +43,7 @@ function buildTransactionRow(
       {Object.entries(tableTransaction).map(([key, val], i) => {
         let rowValue = val.toString();
         if (['sellingPrice', 'cost'].includes(key)) {
-          rowValue = val.toLocaleString();
+          rowValue = val.toLocaleString().replace(/,/g, '.');
         }
         return (
           <Table.Cell className="px-0 text-center" key={`td-${obj.id}-${i}`}>
@@ -130,6 +131,7 @@ export default function TruckTransactionDataTable({
 
   const totalCost = data.reduce((acc, obj) => acc + obj.cost, 0);
   const totalSell = data.reduce((acc, obj) => acc + obj.sellingPrice, 0);
+
 
   return (
     <>
@@ -256,11 +258,13 @@ export default function TruckTransactionDataTable({
             {data.length > 0 && (
               <>
                 <Table.Cell className="text-center font-bold whitespace-nowrap">
-                  Rp {totalCost.toLocaleString()}
+                  {formatRupiah(totalCost)}
                 </Table.Cell>
-                <Table.Cell className="text-center font-bold whitespace-nowrap">
-                  Rp {totalSell.toLocaleString()}
-                </Table.Cell>
+                {totalSell !== 0 && (
+                  <Table.Cell className="text-center font-bold whitespace-nowrap">
+                    {formatRupiah(totalSell)}
+                  </Table.Cell>
+                )}
               </>
             )}
           </Table.Row>
