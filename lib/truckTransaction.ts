@@ -29,7 +29,7 @@ const getGroupedTruckTransactions = async ({
     method: 'GET',
     url: `${BASE_URL}/api/transaction/summary/trucks`,
     headers: {
-      access_token,
+      access_token: access_token.toString(),
     },
     params: {
       startDate,
