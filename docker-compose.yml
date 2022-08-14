@@ -2,7 +2,7 @@
 version: '2'
 services:
   app:
-    build: ./
+    build: /usr/src/app
     volumes:
       - ./:/usr/src/app
     ports:
