@@ -12,7 +12,9 @@ RUN npm install
 # RUN npm ci --only=production
 
 # Bundle app source
-COPY . .
+COPY . /usr/src/app/
 # EXPOSE 3000
 
-# CMD [ "node", "app.js" ]
+RUN npm run build
+RUN npm run start
+# CMD [ "npm", "run", "dev" ]
