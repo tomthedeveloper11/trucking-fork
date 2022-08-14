@@ -17,5 +17,4 @@ COPY . /usr/src/app/
 # EXPOSE 3000
 
 RUN npm run build
-RUN npm run start
 # CMD [ "npm", "run", "dev" ]
