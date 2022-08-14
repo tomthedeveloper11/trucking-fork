@@ -1,0 +1,29 @@
+# docker-compose.yml
+version: '2'
+services:
+  app:
+    build: ./
+    links:
+      - redis
+    volumes:
+      - ./:/usr/src/app
+    ports:
+      - 80:3000
+    environment:
+      - PORT=80
+    command: sh -c 'npm run dev'
+    restart: unless-stopped
+# letsencrypt:
+#   image: linuxserver/letsencrypt
+#   container_name: letsencrypt
+#   ports:
+#     - 443:443
+#     - 80:80
+#   volumes:
+#     - ./config/letsencrypt:/config
+#   environment:
+#     - EMAIL=filberttt@hotmail.com
+#     - URL=curly-lamp-server.fildabert.com
+#     - VALIDATION=http
+#     - PUID=1000
+#     - PGID=1000
