@@ -143,9 +143,9 @@ export interface DateQuery {
 }
 
 export interface CustomerIdQuery extends DateQuery {
-  customerId: string
+  customerId: string;
 }
 
 export interface TruckIdQuery extends DateQuery {
-  truckId: string
+  truckId: string;
 }
