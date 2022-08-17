@@ -27,7 +27,7 @@ const getGroupedTruckTransactions = async ({
 
   const response = await axios({
     method: 'GET',
-    url: `${BASE_URL}/api/transaction/summary/trucks`,
+    url: `/api/transaction/summary/trucks`,
     headers: {
       access_token: access_token.toString(),
     },
@@ -150,7 +150,12 @@ const getTruckTransactionAutoComplete = async (): Promise<
   return {};
 };
 
-const printTransactions = async (invoiceNum:string, transactionIds: string[], type: string, endDate: Date) => {
+const printTransactions = async (
+  invoiceNum: string,
+  transactionIds: string[],
+  type: string,
+  endDate: Date
+) => {
   const response = await axios({
     method: 'POST',
     url: `${BASE_URL}/api/transaction/print`,
@@ -158,7 +163,7 @@ const printTransactions = async (invoiceNum:string, transactionIds: string[], ty
       invoiceNum,
       transactionIds,
       type,
-      endDate
+      endDate,
     },
     responseType: 'blob',
   });
