@@ -27,7 +27,7 @@ const getGroupedTruckTransactions = async ({
 
   const response = await axios({
     method: 'GET',
-    url: `/api/transaction/summary/trucks`,
+    url: `${BASE_URL}/api/transaction/summary/trucks`,
     headers: {
       access_token: access_token.toString(),
     },
