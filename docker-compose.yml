@@ -2,12 +2,14 @@
 version: '2'
 services:
   app:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     ports:
       - 3000:3000
     env_file:
       - ./.env
-    command: sh -c 'npm run build && npm run start'
+    command: sh -c 'npm run start'
     restart: unless-stopped
   letsencrypt:
     image: linuxserver/letsencrypt
