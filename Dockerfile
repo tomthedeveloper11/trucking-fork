@@ -6,7 +6,7 @@ WORKDIR /usr/src/app
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
 RUN apt-get update
-RUN apt-get install chromium-browser
+RUN apt-get install chromium
 COPY package-lock.json /usr/src/app/package-lock.json
 COPY package.json /usr/src/app/package.json
 
