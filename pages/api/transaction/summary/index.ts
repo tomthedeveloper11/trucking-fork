@@ -3,11 +3,11 @@ import transactionService from '../../../../src/transaction/transaction.service'
 import connectDb from '../../../../src/mongodb/connection';
 import _ from 'lodash';
 import * as jwt from 'jsonwebtoken';
-import { JwtPayload } from 'jsonwebtoken'
+import { JwtPayload } from 'jsonwebtoken';
 
 interface TransactionSummaryRequest extends NextApiRequest {
   headers: {
-    access_token: string;
+    authorization: string;
   };
   query: {
     startDate: Date;
@@ -23,19 +23,22 @@ export default async function handler(
   try {
     switch (req.method) {
       case 'GET':
-        const { access_token } = req.headers;
-        const user = jwt.verify(access_token, process.env.SECRET_KEY) as JwtPayload;
+        const { authorization } = req.headers;
+        const user = jwt.verify(
+          authorization,
+          process.env.SECRET_KEY
+        ) as JwtPayload;
 
         conn = await connectDb();
 
         const transactions = await transactionService.getTotalSummary({
-          access_token,
+          access_token: authorization,
           startDate: req.query.startDate,
           endDate: req.query.endDate,
         });
         await conn.close();
 
-        if ( user.role === 'user') {
+        if (user.role === 'user') {
           transactions.totalTripSellingPrice = 0;
           transactions.totalMargin = 0;
         }

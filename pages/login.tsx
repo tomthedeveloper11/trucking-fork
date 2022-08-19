@@ -22,11 +22,13 @@ export default function Login() {
 
   async function loginFunction() {
     window.event?.preventDefault();
+    console.log('HOOOOO');
     const response = await axios({
       method: 'POST',
-      url: `${BASE_URL}/api/login`,
+      url: `https://trucking.fildabert.com/api/login`,
       data: user,
     });
+    console.log(response);
     setCookie('access_token', response.data.access_token);
     router.push('/home');
   }

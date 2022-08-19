@@ -7,7 +7,7 @@ import { JwtPayload } from 'jsonwebtoken';
 
 interface TransactionSummaryRequest extends NextApiRequest {
   headers: {
-    access_token: string;
+    authorization: string;
   };
   query: {
     startDate: Date;
@@ -23,18 +23,18 @@ export default async function handler(
   try {
     switch (req.method) {
       case 'GET':
-        const { access_token } = req.headers;
+        const { authorization } = req.headers;
         console.log(req.headers, 'WOT DIS');
-        console.log(access_token, process.env.SECRET_KEY, 'WOT HAPPENED');
+        console.log(authorization, process.env.SECRET_KEY, 'WOT HAPPENED');
         const user = jwt.verify(
-          access_token,
+          authorization,
           process.env.SECRET_KEY
         ) as JwtPayload;
 
         conn = await connectDb();
         const truckTransactions =
           await transactionService.getGroupedTruckTransactions({
-            access_token,
+            access_token: authorization,
             startDate: req.query.startDate,
             endDate: req.query.endDate,
           });

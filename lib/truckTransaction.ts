@@ -30,7 +30,6 @@ const getGroupedTruckTransactions = async ({
     url: `${BASE_URL}/api/transaction/summary/trucks`,
     headers: {
       Authorization: access_token.toString(),
-      access_token: access_token.toString(),
     },
     params: {
       startDate,
@@ -54,7 +53,7 @@ const getTotalSummary = async ({
     method: 'GET',
     url: `${BASE_URL}/api/transaction/summary/`,
     headers: {
-      access_token: access_token.toString(),
+      Authorization: access_token.toString(),
     },
     params: {
       startDate,
