@@ -9,7 +9,7 @@ import _ from 'lodash';
 
 interface TransactionsAPIRequest extends NextApiRequest {
   headers: {
-    access_token: string;
+    authorization: string;
   };
   body: Transaction;
   query: {
@@ -37,10 +37,10 @@ export default async function handler(
   try {
     switch (req.method) {
       case 'GET':
-        const { access_token } = req.headers;
+        const { authorization } = req.headers;
         conn = await connectDb();
         const transactions = await transactionService.getTransactions({
-          access_token,
+          access_token: authorization,
           startDate: req.query.startDate,
           endDate: req.query.endDate,
         });

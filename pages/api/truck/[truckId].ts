@@ -6,7 +6,7 @@ import { JwtPayload } from 'jsonwebtoken';
 
 interface TruckDetailProps extends NextApiRequest {
   headers: {
-    access_token: string;
+    authorization: string;
   };
   query: {
     truckId: string;
@@ -22,9 +22,9 @@ export default async function handler(
   let conn;
   switch (req.method) {
     case 'GET':
-      const { access_token } = req.headers;
+      const { authorization } = req.headers;
       const user = jwt.verify(
-        access_token,
+        authorization,
         process.env.SECRET_KEY
       ) as JwtPayload;
 

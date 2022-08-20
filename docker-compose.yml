@@ -2,6 +2,7 @@
 version: '2'
 services:
   app:
+    platform: linux/amd64
     build:
       context: .
       dockerfile: Dockerfile

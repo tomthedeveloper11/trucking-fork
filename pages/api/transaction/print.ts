@@ -8,7 +8,7 @@ interface PrintTransactionsAPIRequest extends NextApiRequest {
     invoiceNum: string;
     transactionIds: string[];
     type: string;
-    endDate: Date
+    endDate: Date;
   };
 }
 
@@ -28,10 +28,14 @@ export default async function handler(
           type,
           endDate
         );
-
         try {
           res.statusCode = 200;
-          res.send(pdf);
+          pdf.toBuffer((err, buffer) => {
+            if (err) {
+              console.log(err, 'FUCK ME');
+            }
+            res.send(buffer);
+          });
 
           await transactionService.updatePrintStatus(transactionIds, type);
         } catch (err) {

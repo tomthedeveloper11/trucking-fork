@@ -22,7 +22,12 @@ export default async function handler(
         const pdf = await transactionService.printSummary(req.query);
         await conn.close();
         res.statusCode = 200;
-        res.send(pdf);
+        pdf.toBuffer((err, buffer) => {
+          if (err) {
+            console.log(err, 'FUCK ME');
+          }
+          res.send(buffer);
+        });
       } catch (err) {
         console.log(err);
         res.status(500).json({ message: _.get(err, 'message') });

@@ -24,10 +24,6 @@ export default async function handler(
     switch (req.method) {
       case 'GET':
         const { authorization } = req.headers;
-        console.log(req.headers, 'WOT DIS');
-        console.log(typeof req.headers, 'NOOOOO');
-        console.log(req.headers.authorization, 'helloo???');
-        console.log(authorization, process.env.SECRET_KEY, 'WOT HAPPENED');
         const user = jwt.verify(
           authorization,
           process.env.SECRET_KEY

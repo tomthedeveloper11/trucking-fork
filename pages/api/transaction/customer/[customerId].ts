@@ -6,7 +6,7 @@ import { JwtPayload } from 'jsonwebtoken';
 
 interface customerDetailProps extends NextApiRequest {
   headers: {
-    access_token: string;
+    authorization: string;
   };
   query: {
     customerId: string;
@@ -23,9 +23,9 @@ export default async function handler(
   try {
     switch (req.method) {
       case 'GET':
-        const { access_token } = req.headers;
+        const { authorization } = req.headers;
         const user = jwt.verify(
-          access_token,
+          authorization,
           process.env.SECRET_KEY
         ) as JwtPayload;
 
@@ -33,7 +33,7 @@ export default async function handler(
 
         const transactions =
           await transactionService.getTruckTransactionsByCustomerId({
-            access_token,
+            access_token: authorization,
             customerId: req.query.customerId,
             startDate: req.query.startDate,
             endDate: req.query.endDate,

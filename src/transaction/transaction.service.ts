@@ -19,10 +19,10 @@ import {
   indexPlusOne,
 } from '../../helpers/hbsHelpers';
 import fs from 'fs';
-import puppeteer from 'puppeteer';
 import handlers from 'handlebars';
 import path from 'path';
 import customerService from '../customer/customer.service';
+import htmlToPdf from 'html-pdf';
 
 const templateDirectory = path.resolve(process.cwd(), 'templates');
 
@@ -304,7 +304,6 @@ const printTransaction = async (
     },
     transactions: sortedTruckTransactions,
   };
-
   let file;
   if (type === 'bon') {
     file = fs.readFileSync(path.join(templateDirectory, 'bon.html'), 'utf8');
@@ -318,12 +317,10 @@ const printTransaction = async (
   const template = handlers.compile(`${file}`);
   const html = template(content);
 
-  const browser = await puppeteer.launch({});
-  const page = await browser.newPage();
-
-  await page.setContent(html, { waitUntil: 'networkidle0' });
-
-  const pdf = await page.pdf({ format: 'A4' });
+  const pdf = htmlToPdf.create(html, {
+    format: 'A4',
+    phantomPath: '/usr/local/bin/phantomjs',
+  });
 
   return pdf;
 };
@@ -383,14 +380,10 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
   const template = handlers.compile(`${file}`);
   const html = template(content);
 
-  const browser = await puppeteer.launch({});
-  const page = await browser.newPage();
-
-  await page.setContent(html, { waitUntil: 'networkidle0' });
-
-  const pdf = await page.pdf({ format: 'A4' });
-
-  return pdf;
+  return htmlToPdf.create(html, {
+    format: 'A4',
+    phantomPath: '/usr/local/bin/phantomjs',
+  });
 };
 
 const filterTruckTransactions = async (query: FilterTransactionsQuery) => {

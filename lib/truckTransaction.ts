@@ -79,7 +79,7 @@ const getTruckTransactionsByCustomerId = async (
     method: 'GET',
     url: `${BASE_URL}/api/transaction/customer/${customerId}`,
     headers: {
-      access_token,
+      authorization: access_token,
     },
     params: {
       startDate,
@@ -104,7 +104,7 @@ const getTruckTransactionsByTruckId = async (
     method: 'GET',
     url: `${BASE_URL}/api/truck/${truckId}`,
     headers: {
-      access_token: access_token,
+      authorization: access_token,
     },
     params: {
       startDate,
