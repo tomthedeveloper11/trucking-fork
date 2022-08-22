@@ -253,6 +253,7 @@ export const getServerSideProps = async (context: any) => {
     );
   const miscTruckTransactions =
     await truckTransactionBloc.getAdditionalTruckTransactionsByTruckId(
+      access_token,
       truckId,
       defaultStartDate,
       defaultEndDate

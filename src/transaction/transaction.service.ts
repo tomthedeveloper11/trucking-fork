@@ -104,7 +104,6 @@ const getGroupedTruckTransactions = async (date: TransactionSummaryQuery) => {
   for (const transaction of transactions) {
     const truckName = trucks.find((t) => t.id === transaction.truckId)?.name;
     if (!truckName) {
-      console.log(`Truck id not found ${transaction.truckId}`);
       continue;
     }
 

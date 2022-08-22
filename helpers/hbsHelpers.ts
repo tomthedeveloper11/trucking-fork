@@ -33,3 +33,7 @@ export const formatRupiah = (number = 0, show_currency = true) => {
 export const indexPlusOne = (index: number) => {
   return index + 1;
 };
+
+export const capitalizeFirstLetter = (string: string) => {
+  return string.charAt(0).toUpperCase() + string.slice(1);
+};

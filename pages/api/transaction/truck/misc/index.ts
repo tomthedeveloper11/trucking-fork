@@ -9,6 +9,9 @@ import _ from 'lodash';
 
 interface TransactionsAPIRequest extends NextApiRequest {
   body: AdditionalTruckTransaction;
+  headers: {
+    authorization: string;
+  };
   query: {
     truckId: string;
     startDate: Date;
@@ -39,9 +42,11 @@ export default async function handler(
         conn = await connectDb();
 
         const miscTransactions =
-          await transactionService.getAdditionalTruckTransactionsByTruckId(
-            req.query
-          );
+          await transactionService.getAdditionalTruckTransactionsByTruckId({
+            truckId: req.query.truckId,
+            startDate: req.query.startDate,
+            endDate: req.query.endDate,
+          });
         await conn.close();
         res.status(200).json({ data: miscTransactions });
         break;

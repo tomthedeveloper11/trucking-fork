@@ -1,3 +1,4 @@
+import { capitalizeFirstLetter } from './../helpers/hbsHelpers';
 import {
   BASE_URL,
   TransactionSummaryQuery,
@@ -118,13 +119,19 @@ const getTruckTransactionsByTruckId = async (
 };
 
 const getAdditionalTruckTransactionsByTruckId = async (
+  access_token: CookieValueTypes,
   truckId: string,
   startDate: Date,
   endDate: Date
 ) => {
+  if (!access_token) throw new Error('Invalid token');
+
   const response = await axios({
     method: 'GET',
     url: `${BASE_URL}/api/transaction/truck/misc`,
+    headers: {
+      authorization: access_token,
+    },
     params: {
       truckId,
       startDate,
@@ -172,7 +179,7 @@ const printTransactions = async (
     const blob = new Blob([response]);
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = 'invoice.pdf';
+    link.download = `${capitalizeFirstLetter(type.toString())}.pdf`;
     link.click();
   };
 
@@ -197,7 +204,7 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
     const blob = new Blob([response]);
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = 'summary.pdf';
+    link.download = 'Rekap.pdf';
     link.click();
   };
 

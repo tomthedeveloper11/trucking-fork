@@ -32,7 +32,7 @@ export default async function handler(
           res.statusCode = 200;
           pdf.toBuffer((err, buffer) => {
             if (err) {
-              console.log(err, 'FUCK ME');
+              console.log(err, '=== Error in print');
             }
             res.send(buffer);
           });

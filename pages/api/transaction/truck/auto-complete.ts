@@ -13,7 +13,7 @@ export default async function handler(
       const autoCompleteData =
         await transactionService.getTruckTransactionAutoComplete();
       await conn.close();
-      res.status(200).json({ data: autoCompleteData, fuck: 'u' });
+      res.status(200).json({ data: autoCompleteData });
       break;
   }
 }
