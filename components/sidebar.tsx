@@ -131,7 +131,7 @@ export default function SidebarComponent() {
             </span>
           </li>
         </Link>
-        <Link href="/register">
+        {user.role === 'admin' && <Link href="/register">
           <li
             className={
               router.pathname == '/register'
@@ -156,7 +156,7 @@ export default function SidebarComponent() {
               Tambah User Baru
             </span>
           </li>
-        </Link>
+        </Link>}
         <li
           className="sidebarLink flex cursor-pointer"
           onClick={() => logOut()}

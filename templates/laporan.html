@@ -24,7 +24,6 @@
       }
 
       .page-title {
-        font-size: 14px;
         text-align: center;
         margin-bottom: 20px;
       }
@@ -67,6 +66,7 @@
       .tableBodyCol {
         border: 1px solid #050504;
         padding: 14px 7px;
+        white-space: nowrap;
       }
     </style>
     <meta charset="UTF-8" />
@@ -75,7 +75,7 @@
   </head>
 
   <body>
-    <h3 class="page-title">Laporan {{startDate}} - {{endDate}}</h3>
+    <h2 class="page-title">Laporan {{startDate}} - {{endDate}}</h2>
     <table class="table" border="1">
       <thead class="tableHead">
         <tr class="tableHeadRow">

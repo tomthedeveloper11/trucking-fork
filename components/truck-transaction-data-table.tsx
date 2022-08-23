@@ -135,7 +135,7 @@ export default function TruckTransactionDataTable({
 
   return (
     <>
-      {emkl && (
+      {emkl && user.role === 'admin' && (
         <div className="flex justify-end gap-5 my-2">
           <TextInput
             name="invoiceNum"

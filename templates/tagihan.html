@@ -88,14 +88,14 @@
 
 <body>
   
-  <h3>No Invoice: {{main.invoiceNum}}</h3>
+  <h2>No Invoice: {{main.invoiceNum}}</h2>
   {{#if main.customerName}}
-  <h3>Kepada: {{main.customerName}}</h3>
+  <h2>Kepada: {{main.customerName}}</h2>
   {{else}}
-  <h3>Kepada: {{main.customerInitial}}</h3>
+  <h2>Kepada: {{main.customerInitial}}</h2>
   {{/if}}
-  <h3>Perincian Tagihan</h3>
-  <h3>Tanggal {{formatDate main.endDate}}</h3>
+  <h2>Perincian Tagihan</h2>
+  <h2>Tanggal {{formatDate main.endDate}}</h2>
   <br><br>
 
   <table class="table" border="1">
