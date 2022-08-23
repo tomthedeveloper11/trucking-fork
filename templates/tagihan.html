@@ -7,7 +7,7 @@
       color: #050504;
       font-family: Montserrat,
         sans-serif;
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 500;
       margin: 20px
     }
@@ -38,7 +38,7 @@
     }
 
     .tableHead {
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 700;
       text-transform: uppercase;
       border: 1px solid #050504;
@@ -53,7 +53,7 @@
     }
 
     .tableBody {
-      font-size: 12px;
+      font-size: 10px;
     }
 
     .tableBodyRow {
@@ -88,14 +88,14 @@
 
 <body>
   
-  <h1>No Invoice: {{main.invoiceNum}}</h1>
+  <h3>No Invoice: {{main.invoiceNum}}</h3>
   {{#if main.customerName}}
-  <h1>Kepada: {{main.customerName}}</h1>
+  <h3>Kepada: {{main.customerName}}</h3>
   {{else}}
-  <h1>Kepada: {{main.customerInitial}}</h1>
+  <h3>Kepada: {{main.customerInitial}}</h3>
   {{/if}}
-  <h1>Perincian Tagihan</h1>
-  <h1>Tanggal {{formatDate main.endDate}}</h1>
+  <h3>Perincian Tagihan</h3>
+  <h3>Tanggal {{formatDate main.endDate}}</h3>
   <br><br>
 
   <table class="table" border="1">
@@ -126,7 +126,7 @@
   </table>
 <div class="signatureOuterDiv">
   <div class="signatureInnerDiv">
-    <p style="font-weight: bold; font-size: 24px; text-align: end;">Total {{formatRupiah main.totalSellingPrice}}</p>
+    <p style="font-weight: bold; font-size: 14px; text-align: end;">Total {{formatRupiah main.totalSellingPrice}}</p>
     <br><br>
   </div>
 </div>
