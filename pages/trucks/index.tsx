@@ -19,7 +19,7 @@ export default function Home({
         <title>{'Home'}</title>
       </Head>
       <div className="container p-8">
-        {user?.role !== 'guest' && (
+        {user.role === 'admin' && (
           <div className="flex justify-end mr-5 mb-3">
             <AddTruckButton />
           </div>
@@ -36,7 +36,7 @@ export default function Home({
               key={truck.id}
             >
               <a className="xl:w-64 xl:h-64 w-40 h-40 rounded-lg border border-gray-200 shadow-md hover:bg-gray-100">
-                <h1 className="xl:text-7xl text-5xl text-center xl:mt-20 mt-[52px]">
+                <h1 className="xl:text-5xl text-3xl text-center xl:mt-20 mt-[52px]">
                   {truck.name}
                 </h1>
               </a>

@@ -19,7 +19,7 @@ export default function Print({
         <title>{'Print'}</title>
       </Head>
       <div className="container p-8">
-        {user?.role !== 'guest' && (
+        {user.role === 'admin' && (
           <div className="flex justify-end mr-5 mb-3">
             <AddCustomerButton />
           </div>
@@ -33,7 +33,7 @@ export default function Print({
               key={customer.id}
             >
               <div className="xl:w-64 xl:h-64 w-40 h-40 rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 cursor-pointer">
-                <h1 className="xl:text-7xl text-5xl text-center xl:mt-20 mt-[52px]">
+                <h1 className="xl:text-5xl text-3xl text-center xl:mt-15 mt-[52px]">
                   {customer.initial}
                 </h1>
               </div>
