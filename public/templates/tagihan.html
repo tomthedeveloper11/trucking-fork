@@ -34,6 +34,7 @@
       margin-bottom: 21px;
       text-align: center;
       width: 100%;
+      page-break-inside: auto;
     }
 
     .tableHead {
@@ -41,6 +42,8 @@
       font-weight: 700;
       text-transform: uppercase;
       border: 1px solid #050504;
+      display: table-header-group;
+
     }
 
     .tableHeadCol {
@@ -74,7 +77,13 @@
 
     .avoid{
       page-break-inside: avoid !important;
+      page-break-after: auto;
       margin: 4px 0 4px 0;  
+    }
+
+    tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
     }
 
   </style>
