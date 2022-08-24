@@ -175,11 +175,17 @@ const printTransactions = async (
     responseType: 'blob',
   });
 
-  const saveAsPDF = async (response: BlobPart) => {
-    const blob = new Blob([response]);
+  const saveAsPDF = async (response) => {
+    const blob = new Blob([response.buffer]);
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `${capitalizeFirstLetter(type.toString())}.pdf`;
+
+    if (type == 'tagihan') {
+      link.download = `${response.customerInitial} ${invoiceNum}.pdf`;
+    } else {
+      link.download = `Bon.pdf`;
+    }
+
     link.click();
   };
 

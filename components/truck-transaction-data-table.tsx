@@ -135,7 +135,7 @@ export default function TruckTransactionDataTable({
 
   return (
     <>
-      {emkl && user.role === 'admin' && (
+      {emkl && user.role !== 'user' && (
         <div className="flex justify-end gap-5 my-2">
           <TextInput
             name="invoiceNum"
@@ -162,7 +162,7 @@ export default function TruckTransactionDataTable({
 
       <Table>
         <Table.Head className="whitespace-nowrap">
-          {emkl && user?.role !== 'guest' && (
+          {emkl && user.role !== 'user' && (
             <Table.HeadCell className="text-center">Print</Table.HeadCell>
           )}
           {emkl && <Table.HeadCell className="text-center">No</Table.HeadCell>}
@@ -196,7 +196,7 @@ export default function TruckTransactionDataTable({
                     : undefined
                 }
               >
-                {emkl && user?.role !== 'guest' && (
+                {emkl && user.role !== 'user' && (
                   <Table.Cell>
                     <div className="flex gap-3">
                       <input

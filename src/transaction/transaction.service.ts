@@ -269,7 +269,8 @@ const printTransaction = async (
   const truckTransactions = await transactionRepository.printTransaction(
     transactionIds
   );
-
+  console.log("🚀 ~ file: transaction.service.ts ~ line 272 ~ truckTransactions", truckTransactions)
+  // truckTransactions.sort((a, b) => a.truckId - b.truckId || new Date(a.date).getTime() - new Date(b.date).getTime());
   const sortedTruckTransactions = truckTransactions.sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );
@@ -321,7 +322,7 @@ const printTransaction = async (
     phantomPath: '/usr/local/bin/phantomjs',
   });
 
-  return pdf;
+  return { pdf, customerInitial: sortedTruckTransactions[0].customer };
 };
 
 const printSummary = async ({ startDate, endDate }: DateQuery) => {
