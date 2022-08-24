@@ -43,20 +43,12 @@
       border: 1px solid #050504;
     }
 
-    .tableHeadRow {
-      break-inside: avoid;
-    }
-
     .tableHeadCol {
       padding: 14px 7px;
     }
 
     .tableBody {
       font-size: 12px;
-    }
-
-    .tableBodyRow {
-      break-inside: avoid;
     }
 
     .tableBodyCol {
@@ -79,6 +71,12 @@
       padding: 0.5rem;
       text-align: center;
     }
+
+    .avoid{
+      page-break-inside: avoid !important;
+      margin: 4px 0 4px 0;  
+    }
+
   </style>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -112,13 +110,13 @@
     <tbody class="tableBody">
       {{#each transactions}}
       <tr class="tableBodyRow">
-        <td class="tableBodyCol">{{indexPlusOne @index}}</td>
-        <td class="tableBodyCol">{{formatDate this.date}}</td>
-        <td class="tableBodyCol">{{this.containerNo}}</td>
-        <td class="tableBodyCol">{{this.invoiceNo}}</td>
-        <td class="tableBodyCol">{{this.destination}}</p>
-        <td class="tableBodyCol">{{this.licenseNumber}}</td>
-        <td class="tableBodyCol">{{formatRupiah this.sellingPrice}}</td>
+        <td class="tableBodyCol"><div class="avoid">{{indexPlusOne @index}}</div></td>
+        <td class="tableBodyCol"><div class="avoid">{{formatDate this.date}}</div></td>
+        <td class="tableBodyCol"><div class="avoid">{{this.containerNo}}</div></td>
+        <td class="tableBodyCol"><div class="avoid">{{this.invoiceNo}}</div></td>
+        <td class="tableBodyCol"><div class="avoid">{{this.destination}}</div></p>
+        <td class="tableBodyCol"><div class="avoid">{{this.licenseNumber}}</div></td>
+        <td class="tableBodyCol"><div class="avoid">{{formatRupiah this.sellingPrice}}</div></td>
       </tr>
       {{/each}}
     </tbody>
