@@ -23,6 +23,7 @@ import handlers from 'handlebars';
 import path from 'path';
 import customerService from '../customer/customer.service';
 import htmlToPdf from 'html-pdf';
+import moment from 'moment';
 
 const templateDirectory = path.resolve(process.cwd(), 'templates');
 
@@ -270,9 +271,13 @@ const printTransaction = async (
     transactionIds
   );
 
-  const sortedTruckTransactions = truckTransactions.sort(
+  let sortedTruckTransactions = truckTransactions.sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );
+
+  sortedTruckTransactions = sortedTruckTransactions.map((t) => {
+    return { ...t, date: moment(t.date).utcOffset(7, false).toDate() };
+  });
 
   const totalSellingPrice = sortedTruckTransactions.reduce(
     (accumulator, obj) => accumulator + obj.sellingPrice,
