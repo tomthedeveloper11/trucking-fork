@@ -322,7 +322,7 @@ const printTransaction = async (
     phantomPath: '/usr/local/bin/phantomjs',
   });
 
-  return { pdf, customerInitial: sortedTruckTransactions[0].customer };
+  return pdf;
 };
 
 const printSummary = async ({ startDate, endDate }: DateQuery) => {

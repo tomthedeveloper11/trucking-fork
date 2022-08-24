@@ -22,7 +22,7 @@ export default async function handler(
       try {
         conn = await connectDb();
         const { invoiceNum, transactionIds, type, endDate } = req.body;
-        const response = await transactionService.printTransaction(
+        const pdf = await transactionService.printTransaction(
           invoiceNum,
           transactionIds,
           type,
@@ -30,11 +30,11 @@ export default async function handler(
         );
         try {
           res.statusCode = 200;
-          response.pdf.toBuffer((err, buffer) => {
+          pdf.toBuffer((err, buffer) => {
             if (err) {
               console.log(err, '=== Error in print');
             }
-            res.send({buffer, customerInitial: response.customerInitial});
+            res.send(buffer);
           });
 
           await transactionService.updatePrintStatus(transactionIds, type);

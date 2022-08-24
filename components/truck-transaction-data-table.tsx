@@ -97,6 +97,8 @@ export default function TruckTransactionDataTable({
     const markedTransactions = truckTransactions
       .filter((t) => t.selected)
       .map((t) => t.id);
+      
+    const customerInitial = truckTransactions.filter((t) => t.selected)[0].customer
 
     if (markedTransactions.length < 1) {
       addToast('Mohon pilih transaksi');
@@ -112,6 +114,7 @@ export default function TruckTransactionDataTable({
 
     const response = await truckTransactionBloc.printTransactions(
       invoiceNum,
+      customerInitial,
       markedTransactions,
       type,
       endDate

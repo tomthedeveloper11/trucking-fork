@@ -159,6 +159,7 @@ const getTruckTransactionAutoComplete = async (): Promise<
 
 const printTransactions = async (
   invoiceNum: string,
+  customerInitial: string,
   transactionIds: string[],
   type: string,
   endDate: Date
@@ -175,15 +176,15 @@ const printTransactions = async (
     responseType: 'blob',
   });
 
-  const saveAsPDF = async (response) => {
-    const blob = new Blob([response.buffer]);
+  const saveAsPDF = async (response: BlobPart) => {
+    const blob = new Blob([response]);
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
 
     if (type == 'tagihan') {
-      link.download = `${response.customerInitial} ${invoiceNum}.pdf`;
+      link.download = `${customerInitial} ${invoiceNum}.pdf`;
     } else {
-      link.download = `Bon.pdf`;
+      link.download = `${customerInitial} Bon ${endDate}.pdf`;
     }
 
     link.click();
