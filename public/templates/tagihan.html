@@ -57,13 +57,11 @@
 
     .tableBodyRow {
       break-inside: avoid;
-      page-break-inside: avoid;
     }
 
     .tableBodyCol {
       border: 1px solid #050504;
       padding: 14px 7px;
-      page-break-inside: avoid;
     }
 
     .signatureOuterDiv {
@@ -81,6 +79,16 @@
       padding: 0.5rem;
       text-align: center;
     }
+
+    @media print
+    {
+      table { page-break-after:auto }
+      tr    { page-break-inside:avoid; page-break-after:auto }
+      td    { page-break-inside:avoid; page-break-after:auto }
+      thead { display:table-header-group }
+      tfoot { display:table-footer-group }
+    }
+
   </style>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
