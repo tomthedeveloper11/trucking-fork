@@ -1,22 +1,8 @@
+import moment from 'moment';
+
 export const formatDate = (date: Date) => {
-  const months = [
-    { no: '01', name: 'Januari' },
-    { no: '02', name: 'Februari' },
-    { no: '03', name: 'Maret' },
-    { no: '04', name: 'April' },
-    { no: '05', name: 'Mei' },
-    { no: '06', name: 'Juni' },
-    { no: '07', name: 'Juli' },
-    { no: '08', name: 'Agustus' },
-    { no: '09', name: 'September' },
-    { no: '10', name: 'Oktober' },
-    { no: '11', name: 'November' },
-    { no: '12', name: 'Desember' },
-  ];
-  const parsed_date = new Date(date);
-  return `${parsed_date.getDate()} ${
-    months[parsed_date.getMonth()].name
-  } ${parsed_date.getFullYear()}`;
+  moment.locale('id');
+  return moment(date).utcOffset(7, false).format('LL');
 };
 
 export const formatRupiah = (number = 0, show_currency = true) => {
