@@ -271,27 +271,32 @@ const printTransaction = async (
     transactionIds
   );
 
-  const sortedTruckTransactions = truckTransactions.sort(
-    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
-  );
-
-  const totalSellingPrice = sortedTruckTransactions.reduce(
+  const totalSellingPrice = truckTransactions.reduce(
     (accumulator, obj) => accumulator + obj.sellingPrice,
     0
   );
 
   const trucks = await truckRepository.getTrucks();
   const customer = await customerService.getCustomerByInitial(
-    sortedTruckTransactions[0].customer
+    truckTransactions[0].customer
   );
 
-  for (const truckTransaction of sortedTruckTransactions) {
+  for (const truckTransaction of truckTransactions) {
     const licenseNumber = trucks.find(
       (t) => t.id === truckTransaction.truckId
     )?.licenseNumber;
 
     truckTransaction.licenseNumber = licenseNumber;
   }
+
+  console.log(truckTransactions);
+
+  const sortedTruckTransactions = truckTransactions.sort((a, b) => {
+    return (
+      a.licenseNumber.localeCompare(b.licenseNumber) ||
+      new Date(a.date).getTime() - new Date(b.date).getTime()
+    );
+  });
 
   const content = {
     main: {
