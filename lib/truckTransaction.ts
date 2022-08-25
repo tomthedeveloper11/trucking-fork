@@ -1,4 +1,4 @@
-import { capitalizeFirstLetter } from './../helpers/hbsHelpers';
+import { capitalizeFirstLetter, formatDate } from './../helpers/hbsHelpers';
 import {
   BASE_URL,
   TransactionSummaryQuery,
@@ -184,7 +184,7 @@ const printTransactions = async (
     if (type == 'tagihan') {
       link.download = `${customerInitial} ${invoiceNum}.pdf`;
     } else {
-      link.download = `${customerInitial} Bon ${endDate}.pdf`;
+      link.download = `${customerInitial} Bon ${formatDate(endDate)}.pdf`;
     }
 
     link.click();

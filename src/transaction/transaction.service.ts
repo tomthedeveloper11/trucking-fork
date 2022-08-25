@@ -324,7 +324,7 @@ const printTransaction = async (
 
   const pdf = htmlToPdf.create(html, {
     format: 'A4',
-    // phantomPath: '/usr/local/bin/phantomjs',
+    phantomPath: '/usr/local/bin/phantomjs',
   });
 
   return pdf;
@@ -387,7 +387,7 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
 
   return htmlToPdf.create(html, {
     format: 'A4',
-    // phantomPath: '/usr/local/bin/phantomjs',
+    phantomPath: '/usr/local/bin/phantomjs',
   });
 };
 
