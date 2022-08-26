@@ -34,7 +34,6 @@
       margin-bottom: 21px;
       text-align: center;
       width: 100%;
-      page-break-inside: auto;
     }
 
     .tableHead {
@@ -75,15 +74,8 @@
       text-align: center;
     }
 
-    .avoid{
-      page-break-inside: avoid !important;
-      page-break-after: auto;
-      margin: 4px 0 4px 0;  
-    }
-
-    tr {
-        page-break-inside: avoid;
-        page-break-after: auto;
+    td div, thead div{
+    page-break-inside: avoid;
     }
 
   </style>
@@ -119,13 +111,13 @@
     <tbody class="tableBody">
       {{#each transactions}}
       <tr class="tableBodyRow">
-        <td class="tableBodyCol"><div class="avoid">{{indexPlusOne @index}}</div></td>
-        <td class="tableBodyCol"><div class="avoid">{{formatDate this.date}}</div></td>
-        <td class="tableBodyCol"><div class="avoid">{{this.containerNo}}</div></td>
-        <td class="tableBodyCol"><div class="avoid">{{this.invoiceNo}}</div></td>
-        <td class="tableBodyCol"><div class="avoid">{{this.destination}}</div></p>
-        <td class="tableBodyCol"><div class="avoid">{{this.licenseNumber}}</div></td>
-        <td class="tableBodyCol"><div class="avoid">{{formatRupiah this.sellingPrice}}</div></td>
+        <td class="tableBodyCol"><div>{{indexPlusOne @index}}</div></td>
+        <td class="tableBodyCol"><div>{{formatDate this.date}}</div></td>
+        <td class="tableBodyCol"><div>{{this.containerNo}}</div></td>
+        <td class="tableBodyCol"><div>{{this.invoiceNo}}</div></td>
+        <td class="tableBodyCol"><div>{{this.destination}}</div></p>
+        <td class="tableBodyCol"><div>{{this.licenseNumber}}</div></td>
+        <td class="tableBodyCol"><div>{{formatRupiah this.sellingPrice}}</div></td>
       </tr>
       {{/each}}
     </tbody>
@@ -139,8 +131,8 @@
 
 <div>
   <p>Tagihan Dikirim Ke</p>
-  <p>No Rek.8195314663</p>
-  <p>Ali Martono</p>
+  <p>No Rek.{{main.noRek}}</p>
+  <p>{{main.atasNama}}</p>
   <p>BCA</p>
 </div>
 

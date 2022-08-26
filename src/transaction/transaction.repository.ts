@@ -185,8 +185,8 @@ const editAdditionalTruckTransaction = async (
 const getTruckTransactionAutoComplete = async (): Promise<
   Record<string, string[]>
 > => {
-  const fields = ['destination'];
-  const [destinations] = await Promise.all(
+  const fields = ['destination', 'bon'];
+  const [destinations, bon] = await Promise.all(
     fields.map((field) =>
       TransactionModel.distinct(field, {
         type: TransactionType.TRUCK_TRANSACTION,
@@ -195,10 +195,13 @@ const getTruckTransactionAutoComplete = async (): Promise<
   );
 
   const customers = (await CustomerModel.find({})).map((c) => c.initial);
+
   const result = {
     destination: destinations.filter((_) => _),
+    bon: bon.filter((_) => _),
     customer: customers.filter((_) => _),
   };
+  
   return result;
 };
 
@@ -223,8 +226,11 @@ const updatePrintStatus = async (transactionIds: string[], type: string) => {
     option = { isPrintedInvoice: true };
   }
 
-  const response = await TransactionModel.updateMany({ _id: { $in: transactionIds } }, option)
-  return response
+  const response = await TransactionModel.updateMany(
+    { _id: { $in: transactionIds } },
+    option
+  );
+  return response;
 };
 
 const transactionRepository = {
@@ -244,7 +250,7 @@ const transactionRepository = {
   filterTruckTransactions,
   createTransaction,
   editTransaction,
-  updatePrintStatus
+  updatePrintStatus,
 };
 
 export default transactionRepository;

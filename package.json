@@ -35,7 +35,8 @@
     "react-dom": "18.2.0",
     "react-spinners": "^0.13.4",
     "remark": "^14.0.1",
-    "remark-html": "^15.0.0"
+    "remark-html": "^15.0.0",
+    "sweetalert2": "^11.4.29"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

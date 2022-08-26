@@ -26,7 +26,8 @@ interface DataTableProperties {
 
 function buildTransactionRow(
   obj: DataTableTruckTransaction,
-  hiddenFields?: string[]
+  hiddenFields?: string[],
+  emkl?: boolean
 ) {
   const tableTransaction: Record<string, string | number | Date | boolean> = {
     ...obj,
@@ -46,7 +47,10 @@ function buildTransactionRow(
           rowValue = val.toLocaleString().replace(/,/g, '.');
         }
         return (
-          <Table.Cell className="px-0 text-center" key={`td-${obj.id}-${i}`}>
+          <Table.Cell
+            className={`px-0 text-center ${emkl ? 'cursor-pointer' : ''}`}
+            key={`td-${obj.id}-${i}`}
+          >
             {rowValue}
           </Table.Cell>
         );
@@ -97,15 +101,16 @@ export default function TruckTransactionDataTable({
     const markedTransactions = truckTransactions
       .filter((t) => t.selected)
       .map((t) => t.id);
-      
-    const customerInitial = truckTransactions.filter((t) => t.selected)[0].customer
+
+    const customerInitial = truckTransactions.filter((t) => t.selected)[0]
+      .customer;
 
     if (markedTransactions.length < 1) {
       addToast('Mohon pilih transaksi');
       return;
     }
 
-    if (type === 'tagihan' && !invoiceNum) {
+    if (type !== 'bon' && !invoiceNum) {
       addToast('Mohon isi no invoice');
       return;
     }
@@ -135,31 +140,78 @@ export default function TruckTransactionDataTable({
   const totalCost = data.reduce((acc, obj) => acc + obj.cost, 0);
   const totalSell = data.reduce((acc, obj) => acc + obj.sellingPrice, 0);
 
-
   return (
     <>
       {emkl && user.role !== 'user' && (
-        <div className="flex justify-end gap-5 my-2">
-          <TextInput
-            name="invoiceNum"
-            placeholder="No Invoice"
-            value={invoiceNum}
-            onChange={handleChange}
-          />
-          <button
-            className={`flex my-1 border border-gray-300 rounded shadow-sm px-2 text-gray-600 hover:bg-white`}
-            onClick={() => print('tagihan')}
-          >
-            <PrinterIcon className="h-5 mt-1" />
-            <p className={`text-lg font-bold`}>Tagihan</p>
-          </button>
-          <button
-            className={`flex my-1 border border-gray-300 rounded shadow-sm px-2 text-gray-600 hover:bg-white`}
-            onClick={() => print('bon')}
-          >
-            <PrinterIcon className="h-5 mt-1" />
-            <p className={`text-lg font-bold`}>Bon</p>
-          </button>
+        <div className="flex justify-between my-3">
+          <div className="flex gap-3">
+            <input
+              className="mt-5 ml-6 rounded checked:bg-green-400 checked:border-green-400 focus:ring-green-500 cursor-pointer"
+              type="checkbox"
+              {...(truckTransactions.every((trax) => trax.selected)
+                ? {
+                    checked: true,
+                  }
+                : { checked: false })}
+              onClick={
+                emkl
+                  ? () => {
+                      if (truckTransactions.some((trax) => !trax.selected)) {
+                        truckTransactions.forEach((trax) => {
+                          trax.selected = true;
+                        });
+                      } else {
+                        truckTransactions.forEach((trax) => {
+                          trax.selected = !trax.selected;
+                        });
+                      }
+
+                      setTruckTransactions([...truckTransactions]);
+                    }
+                  : undefined
+              }
+            ></input>
+            <p className="mt-4">Select all</p>
+          </div>
+
+          <div className="flex justify-end gap-5">
+            <TextInput
+              name="invoiceNum"
+              placeholder="No Invoice"
+              value={invoiceNum}
+              onChange={handleChange}
+            />
+            <div className="dropdown">
+              <button
+                className={`dropbtn flex my-1 border border-gray-300 rounded shadow-sm px-2 text-gray-600 hover:bg-white`}
+              >
+                <PrinterIcon className="h-5 mt-1" />
+                <p className={`text-lg font-bold`}>Tagihan</p>
+              </button>
+              <div className="dropdown-content">
+                <a
+                  className="cursor-pointer"
+                  onClick={() => print('tagihanYang')}
+                >
+                  Yang
+                </a>
+                <a
+                  className="cursor-pointer"
+                  onClick={() => print('tagihanMery')}
+                >
+                  Mery
+                </a>
+              </div>
+            </div>
+
+            <button
+              className={`flex my-1 border border-gray-300 rounded shadow-sm px-2 text-gray-600 hover:bg-white`}
+              onClick={() => print('bon')}
+            >
+              <PrinterIcon className="h-5 mt-1" />
+              <p className={`text-lg font-bold`}>Bon</p>
+            </button>
+          </div>
         </div>
       )}
 
@@ -233,7 +285,7 @@ export default function TruckTransactionDataTable({
                     </div>
                   </Table.Cell>
                 )}
-                {buildTransactionRow(truckTransaction, hiddenFields)}
+                {buildTransactionRow(truckTransaction, hiddenFields, emkl)}
                 {truckTransactions[index] && user?.role !== 'guest' && (
                   <Table.Cell>
                     <div className="flex flex-row">

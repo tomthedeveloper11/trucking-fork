@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 import { BASE_URL, User } from '../types/common';
 import { setCookie } from 'cookies-next';
+import Swal from 'sweetalert2';
 
 export default function Login() {
   const router = useRouter();
@@ -27,8 +28,17 @@ export default function Login() {
       url: `${BASE_URL}/api/login`,
       data: user,
     });
-    setCookie('access_token', response.data.access_token);
-    router.push('/home');
+
+    if (response.data.access_token) {
+      setCookie('access_token', response.data.access_token);
+      router.push('/home');
+    } else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops...',
+        text: 'Tolong cek kembali username & password anda',
+      });
+    }
   }
 
   return (

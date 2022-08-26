@@ -181,10 +181,10 @@ const printTransactions = async (
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
 
-    if (type == 'tagihan') {
-      link.download = `${customerInitial} ${invoiceNum}.pdf`;
-    } else {
+    if (type == 'bon') {
       link.download = `${customerInitial} Bon ${formatDate(endDate)}.pdf`;
+    } else {
+      link.download = `${customerInitial} ${invoiceNum}.pdf`;
     }
 
     link.click();

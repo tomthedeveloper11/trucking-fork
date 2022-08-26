@@ -288,9 +288,7 @@ const printTransaction = async (
 
     truckTransaction.licenseNumber = licenseNumber;
   }
-
-  console.log(truckTransactions);
-
+  
   const sortedTruckTransactions = truckTransactions.sort((a, b) => {
     return (
       a.licenseNumber.localeCompare(b.licenseNumber) ||
@@ -306,9 +304,20 @@ const printTransaction = async (
       customerInitial: sortedTruckTransactions[0].customer,
       customerName: customer?.name,
       totalSellingPrice,
+      noRek:'',
+      atasNama: ''
     },
     transactions: sortedTruckTransactions,
   };
+
+  if (type == 'tagihanYang'){
+    content.main.noRek = '8195314663'
+    content.main.atasNama = 'Ali Martono'
+  } else {
+    content.main.noRek = '2421210537'
+    content.main.atasNama = 'MERY'
+  }
+
   let file;
   if (type === 'bon') {
     file = fs.readFileSync(path.join(templateDirectory, 'bon.html'), 'utf8');
@@ -324,7 +333,7 @@ const printTransaction = async (
 
   const pdf = htmlToPdf.create(html, {
     format: 'A4',
-    phantomPath: '/usr/local/bin/phantomjs',
+    // phantomPath: '/usr/local/bin/phantomjs',
   });
 
   return pdf;
@@ -387,7 +396,7 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
 
   return htmlToPdf.create(html, {
     format: 'A4',
-    phantomPath: '/usr/local/bin/phantomjs',
+    // phantomPath: '/usr/local/bin/phantomjs',
   });
 };
 

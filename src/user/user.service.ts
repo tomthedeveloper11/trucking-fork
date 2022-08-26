@@ -18,7 +18,7 @@ const register = async (userPayload: Omit<User, 'id'>) => {
 const login = async (userPayload: Omit<User, 'id'>) => {
   const user = await userRepository.getUser(userPayload.username);
 
-  if (!user) throw new Error('User tidak terdaftar');
+  if (!user) return null;
 
   const correctPassword = bcrypt.compareSync(
     userPayload.password,

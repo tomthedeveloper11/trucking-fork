@@ -212,7 +212,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   if (!access_token) return redirectToLogin;
 
   try {
-    console.log(access_token.toString(), process.env.SECRET_KEY, 'PLSSS');
     jwt.verify(access_token.toString(), process.env.SECRET_KEY);
   } catch (e) {
     return redirectToLogin;

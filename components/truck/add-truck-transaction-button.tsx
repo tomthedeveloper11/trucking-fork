@@ -47,6 +47,7 @@ export default function AddTruckTransactionButton({
   const [modal, setModal] = useState(false);
   const [recommendation, setRecommendation] = useState({
     destination: [],
+    bon: [],
     customer: [],
   });
 
@@ -238,12 +239,37 @@ export default function AddTruckTransactionButton({
               )}
 
               <div className="form-group row-span-1 col-span-5">
-                <TextInput
-                  label="Bon"
-                  name="bon"
-                  value={truckTransaction.bon}
-                  onChange={handleChange}
-                />
+                <div className="relative w-full">
+                  <TextInput
+                    label="Bon"
+                    name="bon"
+                    value={truckTransaction.bon}
+                    onChange={(e) => handleAutoComplete(e, 'bon')}
+                  />
+                  {/* autoComplete bon */}
+                  <div
+                    className={`absolute left-0 w-full ${
+                      recommendation.bon.length ? '' : 'hidden'
+                    }`}
+                    style={{ zIndex: 2 }}
+                  >
+                    <ListGroup>
+                      {recommendation.bon.map((bon, i) => {
+                        return (
+                          <ListGroup.Item
+                            key={`destination-auto-${i}`}
+                            onClick={() =>
+                              selectAutocomplete('bon', bon)
+                            }
+                          >
+                            <div>{bon}</div>
+                          </ListGroup.Item>
+                        );
+                      })}
+                    </ListGroup>
+                  </div>
+                  {/* autoComplete destination */}
+                </div>
               </div>
 
               <div className="form-group row-span-1 col-span-5">
