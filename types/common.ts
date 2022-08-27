@@ -45,6 +45,8 @@ export interface TruckTransaction extends Transaction {
   invoiceNo: string;
   destination: string;
   sellingPrice: number;
+  pph: number;
+  income?: number;
   customer: string;
   bon: string;
   isPrintedBon: boolean;

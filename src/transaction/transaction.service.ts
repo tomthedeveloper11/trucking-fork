@@ -23,7 +23,6 @@ import handlers from 'handlebars';
 import path from 'path';
 import customerService from '../customer/customer.service';
 import htmlToPdf from 'html-pdf';
-import moment from 'moment';
 
 const templateDirectory = path.resolve(process.cwd(), 'templates');
 
@@ -43,6 +42,15 @@ const validateAndModifyPayload = async (
       initial: customer.initial,
     },
   };
+
+  if (truckTransactionPayload.pph) {
+    modifiedPayload.income =
+    truckTransactionPayload.sellingPrice -
+    truckTransactionPayload.sellingPrice * (truckTransactionPayload.pph / 100);
+  } else {
+    modifiedPayload.income = truckTransactionPayload.sellingPrice
+  }
+
   return modifiedPayload;
 };
 
@@ -288,7 +296,7 @@ const printTransaction = async (
 
     truckTransaction.licenseNumber = licenseNumber;
   }
-  
+
   const sortedTruckTransactions = truckTransactions.sort((a, b) => {
     return (
       a.licenseNumber.localeCompare(b.licenseNumber) ||
@@ -304,18 +312,18 @@ const printTransaction = async (
       customerInitial: sortedTruckTransactions[0].customer,
       customerName: customer?.name,
       totalSellingPrice,
-      noRek:'',
-      atasNama: ''
+      noRek: '',
+      atasNama: '',
     },
     transactions: sortedTruckTransactions,
   };
 
-  if (type == 'tagihanYang'){
-    content.main.noRek = '8195314663'
-    content.main.atasNama = 'Ali Martono'
+  if (type == 'tagihanYang') {
+    content.main.noRek = '8195314663';
+    content.main.atasNama = 'Ali Martono';
   } else {
-    content.main.noRek = '2421210537'
-    content.main.atasNama = 'MERY'
+    content.main.noRek = '2421210537';
+    content.main.atasNama = 'MERY';
   }
 
   let file;

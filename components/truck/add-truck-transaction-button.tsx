@@ -13,6 +13,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { PlusIcon } from '@heroicons/react/solid';
 import { useToastContext } from '../../lib/toast-context';
 import authorizeUser from '../../helpers/auth';
+import { formatRupiah } from '../../helpers/hbsHelpers';
 
 interface AddTruckTransactionButtonProps {
   truckId: string;
@@ -32,6 +33,7 @@ export default function AddTruckTransactionButton({
     destination: '',
     cost: 0,
     sellingPrice: 0,
+    pph: 0,
     customer: '',
     details: '',
     bon: '',
@@ -122,8 +124,8 @@ export default function AddTruckTransactionButton({
         <Modal.Header>Transaksi Trip</Modal.Header>
         <Modal.Body>
           <form action="post">
-            <div className="grid grid-rows-2 grid-cols-7 grid-flow-row gap-4">
-              <div className="form-group row-span-1 col-span-2">
+            <div className="grid grid-rows-2 grid-cols-10 grid-flow-row gap-4">
+              <div className="form-group row-span-1 col-span-3">
                 <TextInput
                   label="No. Container"
                   name="containerNo"
@@ -131,7 +133,7 @@ export default function AddTruckTransactionButton({
                   onChange={handleChange}
                 />
               </div>
-              <div className="form-group row-span-1 col-span-2">
+              <div className="form-group row-span-1 col-span-3">
                 <TextInput
                   label="No. Bon"
                   name="invoiceNo"
@@ -182,7 +184,7 @@ export default function AddTruckTransactionButton({
                   onChange={(date: Date) => setDate(date)}
                 />
               </div>
-              <div className="form-group row-span-1 col-span-3">
+              <div className="form-group row-span-1 col-span-4">
                 <div className="relative w-full">
                   <TextInput
                     label="Tujuan"
@@ -215,30 +217,8 @@ export default function AddTruckTransactionButton({
                   {/* autoComplete destination */}
                 </div>
               </div>
-              <div className="form-group row-span-1 col-span-1">
-                <TextInput
-                  label="Borongan"
-                  name="cost"
-                  type="currency"
-                  value={truckTransaction.cost}
-                  prefix="Rp"
-                  onChange={handleChange}
-                />
-              </div>
-              {user?.role === 'admin' && (
-                <div className="form-group row-span-1 col-span-1">
-                  <TextInput
-                    label="Pembayaran"
-                    name="sellingPrice"
-                    type="currency"
-                    value={truckTransaction.sellingPrice}
-                    prefix="Rp"
-                    onChange={handleChange}
-                  />
-                </div>
-              )}
 
-              <div className="form-group row-span-1 col-span-5">
+              <div className="form-group row-span-1 col-span-3">
                 <div className="relative w-full">
                   <TextInput
                     label="Bon"
@@ -258,9 +238,7 @@ export default function AddTruckTransactionButton({
                         return (
                           <ListGroup.Item
                             key={`destination-auto-${i}`}
-                            onClick={() =>
-                              selectAutocomplete('bon', bon)
-                            }
+                            onClick={() => selectAutocomplete('bon', bon)}
                           >
                             <div>{bon}</div>
                           </ListGroup.Item>
@@ -271,8 +249,48 @@ export default function AddTruckTransactionButton({
                   {/* autoComplete destination */}
                 </div>
               </div>
+              <div className="form-group row-span-1 col-span-2">
+                <TextInput
+                  label="Borongan"
+                  name="cost"
+                  type="currency"
+                  value={truckTransaction.cost}
+                  prefix="Rp"
+                  onChange={handleChange}
+                />
+              </div>
+              {user?.role === 'admin' && (
+                <>
+                  <div className="form-group row-span-1 col-span-2">
+                  <TextInput
+                      label="Harga"
+                      name="sellingPrice"
+                      type="currency"
+                      value={truckTransaction.sellingPrice}
+                      prefix="Rp"
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="form-group row-span-1 col-span-1">
+                    <TextInput
+                      label="PPH"
+                      name="pph"
+                      type="currency"
+                      value={truckTransaction.pph}
+                      prefix="%"
+                      onChange={handleChange}
+                    />
+                  </div>
 
-              <div className="form-group row-span-1 col-span-5">
+                  <div className="form-group row-span-1 col-span-1">
+                    <p className='block text-sm font-medium text-gray-700'>Pembayaran</p>
+                    <p className='mt-1.5 whitespace-nowrap'> {formatRupiah(truckTransaction.sellingPrice - (truckTransaction.sellingPrice * (truckTransaction.pph / 100)))}</p>
+                    
+                  </div>
+                </>
+              )}
+
+              <div className="form-group row-span-1 col-span-7">
                 <TextInput
                   label="Deskripsi/Info Tambahan"
                   name="details"

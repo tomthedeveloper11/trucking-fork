@@ -48,6 +48,12 @@ const transactionSchema = new Schema<any>(
     sellingPrice: {
       type: Number,
     },
+    pph: {
+      type: Number
+    },
+    income: {
+      type: Number
+    },
     customer: {
       type: customerTransactionSchema,
     },
