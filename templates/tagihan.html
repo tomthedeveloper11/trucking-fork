@@ -7,7 +7,7 @@
       color: #050504;
       font-family: Montserrat,
         sans-serif;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 500;
     }
 
@@ -92,14 +92,14 @@
 
 <body>
   
-  <h1>No Invoice: {{main.invoiceNum}}</h1>
+  <h2>No Invoice: {{main.invoiceNum}}</h2>
   {{#if main.customerName}}
-  <h1>Kepada: {{main.customerName}}</h1>
+  <h2>Kepada: {{main.customerName}}</h2>
   {{else}}
-  <h1>Kepada: {{main.customerInitial}}</h1>
+  <h2>Kepada: {{main.customerInitial}}</h2>
   {{/if}}
-  <h1>Perincian Tagihan</h1>
-  <h1>Tanggal {{formatDate main.endDate}}</h1>
+  <h2>Perincian Tagihan</h2>
+  <h2>Tanggal {{formatDate main.endDate}}</h2>
   <br><br>
 
   {{#each transactionsInPage}}
@@ -134,8 +134,8 @@
   </div>
     {{#if @last}} 
     <div class="signatureOuterDiv">
-      <p style="font-weight: bold; font-size: 24px; text-align: end;">Total</p>
-      <p style="font-weight: bold; font-size: 24px; text-align: end;">{{formatRupiah ../main.totalSellingPrice}}</p>
+      <p style="font-weight: bold; font-size: 20px; text-align: end;">Total</p>
+      <p style="font-weight: bold; font-size: 20px; text-align: end;">{{formatRupiah ../main.totalSellingPrice}}</p>
     </div>
 
     <div>
