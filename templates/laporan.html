@@ -81,6 +81,7 @@
     <h2 class="page-title">
       Laporan {{formatDate startDate}} - {{formatDate endDate}}
     </h2>
+    <h3 style="text-align: center">Rekap Truk</h3>
     <table class="table" border="1">
       <thead class="tableHead">
         <tr class="tableHeadRow">
@@ -104,21 +105,22 @@
         <tr class="tableBodyRow">
           <td class="tableBodyCol" style="font-weight: bold">TOTAL</td>
           <td class="tableBodyCol" style="font-weight: bold">
-            {{formatRupiah ../totalAdditionalCost}}
+            {{formatRupiah totalAdditionalCost}}
           </td>
           <td class="tableBodyCol" style="font-weight: bold">
-            {{formatRupiah ../totalTruckCost}}
+            {{formatRupiah totalTruckCost}}
           </td>
           <td class="tableBodyCol" style="font-weight: bold">
-            {{formatRupiah ../totalSellingPrice}}
+            {{formatRupiah totalSellingPrice}}
           </td>
           <td class="tableBodyCol" style="font-weight: bold">
-            {{formatRupiah ../totalMargin}}
+            {{formatRupiah totalMargin}}
           </td>
         </tr>
       </tbody>
     </table>
-    <br /><br />
+    <br />
+    <h3 style="text-align: center">Rekap Pengeluaran Lain</h3>
     {{#each transactionsInPage}}
     <table class="table" border="1">
       <thead class="tableHead">
@@ -133,7 +135,7 @@
           <td class="tableBodyCol">{{this.details}}</td>
           <td class="tableBodyCol">{{formatRupiah this.cost}}</td>
         </tr>
-        {{/each}}
+        {{/each}} {{#if @last}}
         <tr class="tableBodyRow">
           <td class="tableBodyCol" style="font-weight: bold">TOTAL</td>
           <td class="tableBodyCol" style="font-weight: bold">
@@ -142,7 +144,7 @@
         </tr>
       </tbody>
     </table>
-    {{#if @last}}
+    <br />
     <table class="table" border="1">
       <thead class="tableHead">
         <tr class="tableHeadRow">
@@ -154,7 +156,6 @@
       </thead>
       <tbody class="tableBody">
         <tr class="tableBodyRow">
-          <td class="tableBodyCol" style="font-weight: bold">TOTAL</td>
           <td class="tableBodyCol" style="font-weight: bold">
             {{formatRupiah ../totalCost}}
           </td>
