@@ -400,11 +400,11 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
     (acc, obj) => acc + obj.additionalCost,
     0
   );
-  const transactionsTotal = transactions.reduce(
+  const miscTransactionsTotal = transactions.reduce(
     (acc, obj) => acc + obj.cost,
     0
   );
-  const totalCost = totalAdditionalCost + transactionsTotal;
+  const totalCost = totalAdditionalCost + miscTransactionsTotal;
   const totalMargin = totalSellingPrice - totalCost - totalTruckCost;
 
 const transactionsInPage = transactions.reduce(
@@ -436,8 +436,10 @@ const transactionsInPage = transactions.reduce(
     transactions,
     totalSellingPrice,
     totalTruckCost,
+    totalAdditionalCost,
     totalCost,
     totalMargin,
+    miscTransactionsTotal,
     transactionsInPage
   };
 

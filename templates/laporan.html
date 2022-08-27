@@ -101,6 +101,21 @@
           <td class="tableBodyCol">{{formatRupiah this.margin}}</td>
         </tr>
         {{/each}}
+        <tr class="tableBodyRow">
+          <td class="tableBodyCol" style="font-weight: bold">TOTAL</td>
+          <td class="tableBodyCol" style="font-weight: bold">
+            {{formatRupiah ../totalAdditionalCost}}
+          </td>
+          <td class="tableBodyCol" style="font-weight: bold">
+            {{formatRupiah ../totalTruckCost}}
+          </td>
+          <td class="tableBodyCol" style="font-weight: bold">
+            {{formatRupiah ../totalSellingPrice}}
+          </td>
+          <td class="tableBodyCol" style="font-weight: bold">
+            {{formatRupiah ../totalMargin}}
+          </td>
+        </tr>
       </tbody>
     </table>
     <br /><br />
@@ -110,9 +125,6 @@
         <tr class="tableHeadRow">
           <td class="tableHeadCol">Deskripsi</td>
           <td class="tableHeadCol">Biaya</td>
-          <td class="tableHeadCol"></td>
-          <td class="tableHeadCol"></td>
-          <td class="tableHeadCol"></td>
         </tr>
       </thead>
       {{#each this}}
@@ -120,29 +132,44 @@
         <tr class="tableBodyRow">
           <td class="tableBodyCol">{{this.details}}</td>
           <td class="tableBodyCol">{{formatRupiah this.cost}}</td>
-          <td class="tableBodyCol"></td>
-          <td class="tableBodyCol"></td>
-          <td class="tableBodyCol"></td>
+        </tr>
+        {{/each}}
+        <tr class="tableBodyRow">
+          <td class="tableBodyCol" style="font-weight: bold">TOTAL</td>
+          <td class="tableBodyCol" style="font-weight: bold">
+            {{formatRupiah ../miscTransactionsTotal}}
+          </td>
         </tr>
       </tbody>
-      {{/each}}
     </table>
     {{#if @last}}
-    <tr class="tableBodyRow">
-      <td class="tableBodyCol" style="font-weight: bold">TOTAL</td>
-      <td class="tableBodyCol" style="font-weight: bold">
-        {{formatRupiah ../totalCost}}
-      </td>
-      <td class="tableBodyCol" style="font-weight: bold">
-        {{formatRupiah ../totalTruckCost}}
-      </td>
-      <td class="tableBodyCol" style="font-weight: bold">
-        {{formatRupiah ../totalSellingPrice}}
-      </td>
-      <td class="tableBodyCol" style="font-weight: bold">
-        {{formatRupiah ../totalMargin}}
-      </td>
-    </tr>
+    <table class="table" border="1">
+      <thead class="tableHead">
+        <tr class="tableHeadRow">
+          <td class="tableHeadCol">Grand Total Biaya</td>
+          <td class="tableHeadCol">Grand Total Borongan</td>
+          <td class="tableHeadCol">Grand Total Pembayaran</td>
+          <td class="tableHeadCol">Grand Total Margin</td>
+        </tr>
+      </thead>
+      <tbody class="tableBody">
+        <tr class="tableBodyRow">
+          <td class="tableBodyCol" style="font-weight: bold">TOTAL</td>
+          <td class="tableBodyCol" style="font-weight: bold">
+            {{formatRupiah ../totalCost}}
+          </td>
+          <td class="tableBodyCol" style="font-weight: bold">
+            {{formatRupiah ../totalTruckCost}}
+          </td>
+          <td class="tableBodyCol" style="font-weight: bold">
+            {{formatRupiah ../totalSellingPrice}}
+          </td>
+          <td class="tableBodyCol" style="font-weight: bold">
+            {{formatRupiah ../totalMargin}}
+          </td>
+        </tr>
+      </tbody>
+    </table>
     {{else}}
     <div class="newPage"></div>
     {{/if}} {{/each}}
