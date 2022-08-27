@@ -430,16 +430,8 @@ const transactionsInPage = transactions.reduce(
 
 
   const content = {
-    startDate: new Date(startDate).toLocaleDateString('id-ID', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    }),
-    endDate: new Date(endDate).toLocaleDateString('id-ID', {
-      day: 'numeric',
-      month: 'long',
-      year: 'numeric',
-    }),
+    startDate: new Date(startDate),
+    endDate: new Date(endDate),
     summary,
     transactions,
     totalSellingPrice,

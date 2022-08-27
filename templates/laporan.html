@@ -65,8 +65,12 @@
 
       .tableBodyCol {
         border: 1px solid #050504;
-        padding: 14px 7px;
+        padding: 5px;
       }
+
+      .newPage {
+      page-break-after: always;
+    }
     </style>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -104,21 +108,21 @@
             <td class="tableBodyCol"></td>
             <td class="tableBodyCol"></td>
           </tr>
-          {{/each}} 
           {{#if @last}}
+          {{/each}} 
           <tr class="tableBodyRow">
             <td class="tableBodyCol" style="font-weight: bold">TOTAL</td>
             <td class="tableBodyCol" style="font-weight: bold">
-              {{formatRupiah totalCost}}
+              {{formatRupiah ../totalCost}}
             </td>
             <td class="tableBodyCol" style="font-weight: bold">
-              {{formatRupiah totalTruckCost}}
+              {{formatRupiah ../totalTruckCost}}
             </td>
             <td class="tableBodyCol" style="font-weight: bold">
-              {{formatRupiah totalSellingPrice}}
+              {{formatRupiah ../totalSellingPrice}}
             </td>
             <td class="tableBodyCol" style="font-weight: bold">
-              {{formatRupiah totalMargin}}
+              {{formatRupiah ../totalMargin}}
             </td>
           </tr>
           {{else}}
