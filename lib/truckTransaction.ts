@@ -7,6 +7,7 @@ import {
 import axios from 'axios';
 import { TruckTransaction, AdditionalTruckTransaction } from '../types/common';
 import { CookieValueTypes } from 'cookies-next';
+import { formatDate } from './../helpers/hbsHelpers';
 
 const getTruckTransactions = async () => {
   const response = await axios({
@@ -211,7 +212,7 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
     const blob = new Blob([response]);
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = 'Rekap.pdf';
+    link.download = `Rekap ${formatDate(startDate)} - ${formatDate(endDate)}.pdf`;
     link.click();
   };
 

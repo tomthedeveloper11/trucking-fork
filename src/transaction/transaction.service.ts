@@ -315,15 +315,16 @@ const printTransaction = async (
       }
       if (result.length <= 1) {
         // first page
-        insertTransactionToPage(20);
+        insertTransactionToPage(19);
       } else {
-        insertTransactionToPage(24);
+        insertTransactionToPage(20);
       }
 
       return result;
     },
     [[]] as TruckTransaction[][]
   );
+  console.log("🚀 ~ file: transaction.service.ts ~ line 327 ~ transactionsInPage", transactionsInPage)
 
   const content = {
     main: {
@@ -419,6 +420,7 @@ const transactionsInPage = transactions.reduce(
     },
     [[]] as Transaction[][]
   );
+console.log("🚀 ~ file: transaction.service.ts ~ line 423 ~ printSummary ~ transactionsInPage", transactionsInPage)
 
 
   const content = {
