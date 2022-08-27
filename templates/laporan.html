@@ -74,7 +74,7 @@
   </head>
 
   <body>
-    <h2 class="page-title">Laporan {{startDate}} - {{endDate}}</h2>
+    <h2 class="page-title">Laporan {{formatDate startDate}} - {{formatDate endDate}}</h2>
     <table class="table" border="1">
       <thead class="tableHead">
         <tr class="tableHeadRow">
@@ -94,33 +94,37 @@
           <td class="tableBodyCol">{{formatRupiah this.sellingPrice}}</td>
           <td class="tableBodyCol">{{formatRupiah this.margin}}</td>
         </tr>
-        {{/each}} {{#each transactionsInPage}} {{#each this}}
-        <tr class="tableBodyRow">
-          <td class="tableBodyCol">{{this.details}}</td>
-          <td class="tableBodyCol">{{formatRupiah this.cost}}</td>
-          <td class="tableBodyCol"></td>
-          <td class="tableBodyCol"></td>
-          <td class="tableBodyCol"></td>
-        </tr>
-        {{/each}} {{/each}} {{#if @last}}
-        <tr class="tableBodyRow">
-          <td class="tableBodyCol" style="font-weight: bold">TOTAL</td>
-          <td class="tableBodyCol" style="font-weight: bold">
-            {{formatRupiah totalCost}}
-          </td>
-          <td class="tableBodyCol" style="font-weight: bold">
-            {{formatRupiah totalTruckCost}}
-          </td>
-          <td class="tableBodyCol" style="font-weight: bold">
-            {{formatRupiah totalSellingPrice}}
-          </td>
-          <td class="tableBodyCol" style="font-weight: bold">
-            {{formatRupiah totalMargin}}
-          </td>
-        </tr>
-        {{else}}
-        <div class="newPage"></div>
-        {{/if}}
+        {{/each}} 
+        {{#each transactionsInPage}} 
+          {{#each this}}
+          <tr class="tableBodyRow">
+            <td class="tableBodyCol">{{this.details}}</td>
+            <td class="tableBodyCol">{{formatRupiah this.cost}}</td>
+            <td class="tableBodyCol"></td>
+            <td class="tableBodyCol"></td>
+            <td class="tableBodyCol"></td>
+          </tr>
+          {{/each}} 
+          {{#if @last}}
+          <tr class="tableBodyRow">
+            <td class="tableBodyCol" style="font-weight: bold">TOTAL</td>
+            <td class="tableBodyCol" style="font-weight: bold">
+              {{formatRupiah totalCost}}
+            </td>
+            <td class="tableBodyCol" style="font-weight: bold">
+              {{formatRupiah totalTruckCost}}
+            </td>
+            <td class="tableBodyCol" style="font-weight: bold">
+              {{formatRupiah totalSellingPrice}}
+            </td>
+            <td class="tableBodyCol" style="font-weight: bold">
+              {{formatRupiah totalMargin}}
+            </td>
+          </tr>
+          {{else}}
+          <div class="newPage"></div>
+          {{/if}}
+        {{/each}} 
       </tbody>
     </table>
   </body>

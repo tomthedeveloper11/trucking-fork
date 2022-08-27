@@ -418,9 +418,9 @@ const transactionsInPage = transactions.reduce(
       }
       if (result.length <= 1) {
         // first page
-        insertTransactionToPage(8);
+        insertTransactionToPage(6);
       } else {
-        insertTransactionToPage(15);
+        insertTransactionToPage(13);
       }
 
       return result;
