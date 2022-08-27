@@ -32,7 +32,8 @@
 
     .table {
       border-collapse: collapse;
-      margin-bottom: 21px;
+      margin-bottom: 15px;
+      margin-top: 15px;
       text-align: center;
       width: 100%;
     }
@@ -99,7 +100,6 @@
   <br><br>
 
   {{#each transactionsInPage}}
-  <div class="tableMargin">
     <table class="table" border="1">
       <thead class="tableHead">
         <tr class="tableHeadRow">
@@ -127,7 +127,6 @@
         </tbody>
         {{/each}}
       </table>
-  </div>
     {{#if @last}} 
     <div class="signatureOuterDiv">
       <p style="font-weight: bold; font-size: 20px; text-align: end;">Total</p>
