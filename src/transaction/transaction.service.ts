@@ -304,6 +304,27 @@ const printTransaction = async (
     );
   });
 
+  const transactionsInPage = sortedTruckTransactions.reduce(
+    (result, transaction) => {
+      function insertTransactionToPage(limit: number) {
+        if (result[result.length - 1].length < limit) {
+          result[result.length - 1].push(transaction);
+        } else {
+          result.push([]);
+        }
+      }
+      if (result.length <= 1) {
+        // first page
+        insertTransactionToPage(14);
+      } else {
+        insertTransactionToPage(20);
+      }
+
+      return result;
+    },
+    [[]] as TruckTransaction[][]
+  );
+
   const content = {
     main: {
       endDate,
@@ -316,6 +337,7 @@ const printTransaction = async (
       atasNama: '',
     },
     transactions: sortedTruckTransactions,
+    transactionsInPage,
   };
 
   if (type == 'tagihanYang') {
@@ -338,10 +360,11 @@ const printTransaction = async (
 
   const template = handlers.compile(`${file}`);
   const html = template(content);
+  // fs.writeFileSync('temp.html', html, 'utf-8');
 
   const pdf = htmlToPdf.create(html, {
     format: 'A4',
-    // phantomPath: '/usr/local/bin/phantomjs',
+    phantomPath: '/usr/local/bin/phantomjs',
   });
 
   return pdf;
@@ -404,7 +427,7 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
 
   return htmlToPdf.create(html, {
     format: 'A4',
-    // phantomPath: '/usr/local/bin/phantomjs',
+    phantomPath: '/usr/local/bin/phantomjs',
   });
 };
 
