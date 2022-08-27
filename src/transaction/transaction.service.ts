@@ -314,17 +314,24 @@ const printTransaction = async (
         }
       }
       if (result.length <= 1) {
+        if (type == 'bon') {
+          insertTransactionToPage(19);
+        } else {
+          insertTransactionToPage(17);
+        }
         // first page
-        insertTransactionToPage(19);
       } else {
-        insertTransactionToPage(20);
+        if (type == 'bon') {
+          insertTransactionToPage(20);
+        } else {
+          insertTransactionToPage(18);
+        }
       }
 
       return result;
     },
     [[]] as TruckTransaction[][]
   );
-  console.log("🚀 ~ file: transaction.service.ts ~ line 327 ~ transactionsInPage", transactionsInPage)
 
   const content = {
     main: {
@@ -420,7 +427,6 @@ const transactionsInPage = transactions.reduce(
     },
     [[]] as Transaction[][]
   );
-console.log("🚀 ~ file: transaction.service.ts ~ line 423 ~ printSummary ~ transactionsInPage", transactionsInPage)
 
 
   const content = {
