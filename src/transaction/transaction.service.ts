@@ -420,9 +420,9 @@ const transactionsInPage = transactions.reduce(
       }
       if (result.length <= 1) {
         // first page
-        insertTransactionToPage(20);
+        insertTransactionToPage(11);
       } else {
-        insertTransactionToPage(25);
+        insertTransactionToPage(23);
       }
 
       return result;
