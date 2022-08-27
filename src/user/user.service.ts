@@ -25,7 +25,7 @@ const login = async (userPayload: Omit<User, 'id'>) => {
     user.password
   );
 
-  if (!correctPassword) throw new Error('Username atau Password Salah');
+  if (!correctPassword) return null;
 
   const payload = {
     id: user.id,
