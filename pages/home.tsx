@@ -15,7 +15,12 @@ import Link from 'next/link';
 
 const date = new Date();
 const defaultStartDate = new Date(date.getFullYear(), date.getMonth(), 1);
+console.log(
+  '🚀 ~ file: home.tsx ~ line 18 ~ defaultStartDate',
+  defaultStartDate
+);
 const defaultEndDate = new Date(new Date().setHours(23, 59, 59));
+console.log('🚀 ~ file: home.tsx ~ line 19 ~ defaultEndDate', defaultEndDate);
 
 export default function Home({
   truckSummaries,
@@ -41,11 +46,17 @@ export default function Home({
   const [startDate, setStartDate] = useState(
     new Date(date.getFullYear(), date.getMonth(), 1)
   );
+  console.log('🚀 ~ file: home.tsx ~ line 45 ~ startDate', startDate);
   const [endDate, setEndDate] = useState(
     new Date(new Date().setHours(23, 59, 59))
   );
+  console.log('🚀 ~ file: home.tsx ~ line 48 ~ endDate', endDate);
 
   async function filterByMonth() {
+    console.log(
+      '🚀 ~ file: home.tsx ~ line 60 ~ filterByMonth ~ endDate',
+      endDate
+    );
     const truckSummaries =
       await truckTransactionBloc.getGroupedTruckTransactions({
         access_token: user.access_token,
