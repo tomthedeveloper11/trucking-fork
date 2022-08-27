@@ -19,7 +19,8 @@ import * as jwt from 'jsonwebtoken';
 import { getCookie } from 'cookies-next';
 import authorizeUser from '../../helpers/auth';
 
-const defaultStartDate = new Date(2020, 1, 1);
+const date = new Date()
+const defaultStartDate = new Date(date.getFullYear(), date.getMonth(), 1);
 const defaultEndDate = new Date(new Date().setHours(23, 59, 59));
 
 export default function TruckDetails({
@@ -79,6 +80,7 @@ export default function TruckDetails({
       destination: truckTransaction.destination,
       cost: truckTransaction.cost,
       sellingPrice: truckTransaction.sellingPrice,
+      pph: truckTransaction?.pph,
       customer: truckTransaction.customer,
       bon: truckTransaction.bon,
       details: truckTransaction.details,
@@ -103,9 +105,7 @@ export default function TruckDetails({
   };
 
   const [table, setTable] = useState('trip');
-  const [startDate, setStartDate] = useState(
-    new Date(new Date().setHours(0, 0, 0))
-  );
+  const [startDate, setStartDate] = useState(new Date(date.getFullYear(), date.getMonth(), 1));
   const [endDate, setEndDate] = useState(
     new Date(new Date().setHours(23, 59, 59))
   );
@@ -209,6 +209,7 @@ export default function TruckDetails({
               'truckId',
               'isPrintedBon',
               'isPrintedInvoice',
+              'pph',
               user?.role === 'user' ? 'sellingPrice' : '',
             ]}
             autoCompleteData={autoCompleteData}

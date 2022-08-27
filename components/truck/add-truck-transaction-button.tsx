@@ -133,7 +133,7 @@ export default function AddTruckTransactionButton({
                   onChange={handleChange}
                 />
               </div>
-              <div className="form-group row-span-1 col-span-3">
+              <div className="form-group row-span-1 col-span-2">
                 <TextInput
                   label="No. Bon"
                   name="invoiceNo"
@@ -141,7 +141,7 @@ export default function AddTruckTransactionButton({
                   onChange={handleChange}
                 />
               </div>
-              <div className="form-group row-span-1 col-span-1">
+              <div className="form-group row-span-1 col-span-2">
                 <div className="relative w-full">
                   <TextInput
                     label="EMKL"
@@ -246,7 +246,7 @@ export default function AddTruckTransactionButton({
                       })}
                     </ListGroup>
                   </div>
-                  {/* autoComplete destination */}
+                  {/* autoComplete bon */}
                 </div>
               </div>
               <div className="form-group row-span-1 col-span-2">
@@ -284,7 +284,7 @@ export default function AddTruckTransactionButton({
 
                   <div className="form-group row-span-1 col-span-1">
                     <p className='block text-sm font-medium text-gray-700'>Pembayaran</p>
-                    <p className='mt-1.5 whitespace-nowrap'> {formatRupiah(truckTransaction.sellingPrice - (truckTransaction.sellingPrice * (truckTransaction.pph / 100)))}</p>
+                    <p className='mt-1.5 whitespace-nowrap'>{formatRupiah(truckTransaction.sellingPrice - (truckTransaction.sellingPrice * (truckTransaction.pph / 100)))}</p>
                     
                   </div>
                 </>

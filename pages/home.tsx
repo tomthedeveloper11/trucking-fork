@@ -13,7 +13,8 @@ import authorizeUser from '../helpers/auth';
 import { redirectToLogin } from '../types/common';
 import Link from 'next/link';
 
-const defaultStartDate = new Date(2020, 1, 1);
+const date = new Date();
+const defaultStartDate = new Date(date.getFullYear(), date.getMonth(), 1);
 const defaultEndDate = new Date(new Date().setHours(23, 59, 59));
 
 export default function Home({
@@ -37,7 +38,7 @@ export default function Home({
   const entries = Object.entries(truckSummariesState);
   entries.sort();
 
-  const [startDate, setStartDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(new Date(date.getFullYear(), date.getMonth(), 1));
   const [endDate, setEndDate] = useState(new Date());
 
   async function filterByMonth() {

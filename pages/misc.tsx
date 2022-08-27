@@ -11,7 +11,8 @@ import * as jwt from 'jsonwebtoken';
 import { getCookie } from 'cookies-next';
 import authorizeUser from '../helpers/auth';
 
-const defaultStartDate = new Date(2020, 1, 1);
+const date = new Date()
+const defaultStartDate = new Date(date.getFullYear(), date.getMonth(), 1);
 const defaultEndDate = new Date(new Date().setHours(23, 59, 59));
 
 export default function TransactionPage({
@@ -38,9 +39,7 @@ export default function TransactionPage({
 
   const [transactionsState, setTransactionsState] = useState(transactions);
 
-  const [startDate, setStartDate] = useState(
-    new Date(new Date().setHours(0, 0, 0))
-  );
+  const [startDate, setStartDate] = useState(new Date(date.getFullYear(), date.getMonth(), 1));
   const [endDate, setEndDate] = useState(
     new Date(new Date().setHours(23, 59, 59))
   );

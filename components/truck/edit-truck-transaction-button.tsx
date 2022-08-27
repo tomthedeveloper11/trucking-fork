@@ -9,6 +9,7 @@ import axios from 'axios';
 import { useToastContext } from '../../lib/toast-context';
 import { PencilAltIcon } from '@heroicons/react/solid';
 import authorizeUser from '../../helpers/auth';
+import { formatRupiah } from '../../helpers/hbsHelpers';
 
 interface EditTruckTransactionButtonProps {
   existingTruckTransaction: TruckTransaction;
@@ -33,6 +34,7 @@ export default function EditTruckTransactionButton({
   );
   const [recommendation, setRecommendation] = useState({
     destination: [],
+    bon: [],
     customer: [],
   });
 
@@ -108,8 +110,8 @@ export default function EditTruckTransactionButton({
         <Modal.Header>Edit Transaksi</Modal.Header>
         <Modal.Body>
           <form action="post">
-            <div className="grid grid-rows-2 grid-cols-7 grid-flow-row gap-4">
-              <div className="form-group row-span-1 col-span-2">
+            <div className="grid grid-rows-2 grid-cols-10 grid-flow-row gap-4">
+              <div className="form-group row-span-1 col-span-3">
                 <TextInput
                   label="No. Container"
                   name="containerNo"
@@ -119,14 +121,14 @@ export default function EditTruckTransactionButton({
               </div>
               <div className="form-group row-span-1 col-span-2">
                 <TextInput
-                  label="No. Invoice"
+                  label="No. Bon"
                   name="invoiceNo"
                   value={truckTransaction.invoiceNo}
                   onChange={handleChange}
                 />
               </div>
 
-              <div className="form-group row-span-1 col-span-1">
+              <div className="form-group row-span-1 col-span-2">
                 <div className="relative w-full">
                   <TextInput
                     label="EMKL"
@@ -170,7 +172,7 @@ export default function EditTruckTransactionButton({
                 />
               </div>
 
-              <div className="form-group row-span-1 col-span-3">
+              <div className="form-group row-span-1 col-span-4">
                 <div className="relative w-full">
                   <TextInput
                     label="Tujuan"
@@ -203,7 +205,39 @@ export default function EditTruckTransactionButton({
                   {/* autoComplete destination */}
                 </div>
               </div>
-              <div className="form-group row-span-1 col-span-1">
+
+              <div className="form-group row-span-1 col-span-3">
+                <div className="relative w-full">
+                  <TextInput
+                    label="Bon"
+                    name="bon"
+                    value={truckTransaction.bon}
+                    onChange={(e) => handleAutoComplete(e, 'bon')}
+                  />
+                  {/* autoComplete bon */}
+                  <div
+                    className={`absolute left-0 w-full ${
+                      recommendation.bon.length ? '' : 'hidden'
+                    }`}
+                    style={{ zIndex: 2 }}
+                  >
+                    <ListGroup>
+                      {recommendation.bon.map((bon, i) => {
+                        return (
+                          <ListGroup.Item
+                            key={`destination-auto-${i}`}
+                            onClick={() => selectAutocomplete('bon', bon)}
+                          >
+                            <div>{bon}</div>
+                          </ListGroup.Item>
+                        );
+                      })}
+                    </ListGroup>
+                  </div>
+                  {/* autoComplete bon */}
+                </div>
+              </div>
+              <div className="form-group row-span-1 col-span-2">
                 <TextInput
                   label="Borongan"
                   name="cost"
@@ -214,29 +248,51 @@ export default function EditTruckTransactionButton({
                 />
               </div>
 
-              {user.role !== 'user' && (
-                <div className="form-group row-span-1 col-span-1">
-                  <TextInput
-                    label="Pembayaran"
-                    name="sellingPrice"
-                    type="currency"
-                    value={truckTransaction.sellingPrice}
-                    prefix="Rp"
-                    onChange={handleChange}
-                  />
-                </div>
+              {user.role === 'admin' && (
+                <>
+                  <div className="form-group row-span-1 col-span-2">
+                    <TextInput
+                      label="Harga"
+                      name="sellingPrice"
+                      type="currency"
+                      value={truckTransaction.sellingPrice}
+                      prefix="Rp"
+                      onChange={handleChange}
+                    />
+                  </div>
+                  <div className="form-group row-span-1 col-span-1">
+                    <TextInput
+                      label="PPH"
+                      name="pph"
+                      type="currency"
+                      {...(truckTransaction.pph
+                        ? {
+                            value: truckTransaction.pph,
+                          }
+                        : { value: 0 })}
+                      prefix="%"
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="form-group row-span-1 col-span-1">
+                    <p className="block text-sm font-medium text-gray-700">
+                      Pembayaran
+                    </p>
+                    <p className="mt-1.5 whitespace-nowrap">
+                      {formatRupiah(
+                        truckTransaction.sellingPrice -
+                          truckTransaction.sellingPrice *
+                            (truckTransaction.pph
+                              ? truckTransaction.pph / 100
+                              : 0 / 100)
+                      )}
+                    </p>
+                  </div>
+                </>
               )}
 
-              <div className="form-group row-span-1 col-span-5">
-                <TextInput
-                  label="Bon"
-                  name="bon"
-                  value={truckTransaction.bon}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div className="form-group row-span-1 col-span-5">
+              <div className="form-group row-span-1 col-span-7">
                 <TextInput
                   label="Deskripsi/Info Tambahan"
                   name="details"

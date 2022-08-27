@@ -36,6 +36,7 @@
       .table {
         border-collapse: collapse;
         margin-bottom: 15px;
+        margin-top: 15px;
         text-align: center;
         width: 100%;
       }
@@ -141,12 +142,11 @@
             {{formatRupiah ../miscTransactionsTotal}}
           </td>
         </tr>
-        {{else}}
-        <div class="newPage"></div>
-        {{/if}} 
       </tbody>
     </table>
-    {{/each}}
+    {{else}}
+    <div class="newPage"></div>
+    {{/if}} {{/each}}
     <table class="table" border="1">
       <thead class="tableHead">
         <tr class="tableHeadRow">
