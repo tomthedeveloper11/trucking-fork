@@ -387,6 +387,7 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
     startDate,
     endDate,
   });
+  console.log("🚀 ~ file: transaction.service.ts ~ line 390 ~ printSummary ~ transactions", transactions)
 
   const totalSellingPrice = Object.values(summary).reduce(
     (acc, obj) => acc + obj.sellingPrice,
@@ -405,6 +406,7 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
     0
   );
   const totalCost = totalAdditionalCost + miscTransactionsTotal;
+  const totalTruckMargin = totalSellingPrice - totalTruckCost;
   const totalMargin = totalSellingPrice - totalCost - totalTruckCost;
 
 const transactionsInPage = transactions.reduce(
@@ -438,6 +440,7 @@ const transactionsInPage = transactions.reduce(
     totalTruckCost,
     totalAdditionalCost,
     totalCost,
+    totalTruckMargin,
     totalMargin,
     miscTransactionsTotal,
     transactionsInPage
