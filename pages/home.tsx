@@ -38,8 +38,12 @@ export default function Home({
   const entries = Object.entries(truckSummariesState);
   entries.sort();
 
-  const [startDate, setStartDate] = useState(new Date(date.getFullYear(), date.getMonth(), 1));
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState(
+    new Date(date.getFullYear(), date.getMonth(), 1)
+  );
+  const [endDate, setEndDate] = useState(
+    new Date(new Date().setHours(23, 59, 59))
+  );
 
   async function filterByMonth() {
     const truckSummaries =

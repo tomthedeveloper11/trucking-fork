@@ -100,7 +100,7 @@
   {{/if}}
   <h2>Perincian Bon</h2>
   <h2>Tanggal {{formatDate main.endDate}}</h2>
-  <br><br>
+  <br>
 
   {{#each transactionsInPage}}
   <table class="table" border="1">
@@ -118,7 +118,7 @@
     {{#each this}}
     <tbody class="tableBody">
       <tr class="tableBodyRow">
-        <td class="tableBodyCol">{{indexPlusOne @index}}</td>
+        <td class="tableBodyCol">{{this.index}}</td>
         <td class="tableBodyCol">{{formatDate this.date}}</td>
         <td class="tableBodyCol">{{this.containerNo}}</td>
         <td class="tableBodyCol">{{this.invoiceNo}}</td>

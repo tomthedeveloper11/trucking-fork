@@ -45,10 +45,11 @@ const validateAndModifyPayload = async (
 
   if (truckTransactionPayload.pph) {
     modifiedPayload.income =
-    truckTransactionPayload.sellingPrice -
-    truckTransactionPayload.sellingPrice * (truckTransactionPayload.pph / 100);
+      truckTransactionPayload.sellingPrice -
+      truckTransactionPayload.sellingPrice *
+        (truckTransactionPayload.pph / 100);
   } else {
-    modifiedPayload.income = truckTransactionPayload.sellingPrice
+    modifiedPayload.income = truckTransactionPayload.sellingPrice;
   }
 
   return modifiedPayload;
@@ -333,6 +334,15 @@ const printTransaction = async (
     [[]] as TruckTransaction[][]
   );
 
+  let runningCounter = 1;
+
+  transactionsInPage.forEach((page) => {
+    page.forEach((trax) => {
+      trax.index = runningCounter;
+      runningCounter += 1;
+    });
+  });
+
   const content = {
     main: {
       endDate,
@@ -372,7 +382,7 @@ const printTransaction = async (
 
   const pdf = htmlToPdf.create(html, {
     format: 'A4',
-    phantomPath: '/usr/local/bin/phantomjs',
+    // phantomPath: '/usr/local/bin/phantomjs',
   });
 
   return pdf;
@@ -387,7 +397,10 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
     startDate,
     endDate,
   });
-  console.log("🚀 ~ file: transaction.service.ts ~ line 390 ~ printSummary ~ transactions", transactions)
+  console.log(
+    '🚀 ~ file: transaction.service.ts ~ line 390 ~ printSummary ~ transactions',
+    transactions
+  );
 
   const totalSellingPrice = Object.values(summary).reduce(
     (acc, obj) => acc + obj.sellingPrice,
@@ -406,10 +419,11 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
     0
   );
   const totalCost = totalAdditionalCost + miscTransactionsTotal;
-  const totalTruckMargin = totalSellingPrice - totalTruckCost - totalAdditionalCost;
+  const totalTruckMargin =
+    totalSellingPrice - totalTruckCost - totalAdditionalCost;
   const totalMargin = totalSellingPrice - totalCost - totalTruckCost;
 
-const transactionsInPage = transactions.reduce(
+  const transactionsInPage = transactions.reduce(
     (result, transaction) => {
       function insertTransactionToPage(limit: number) {
         if (result[result.length - 1].length < limit) {
@@ -430,7 +444,6 @@ const transactionsInPage = transactions.reduce(
     [[]] as Transaction[][]
   );
 
-
   const content = {
     startDate: new Date(startDate),
     endDate: new Date(endDate),
@@ -443,7 +456,7 @@ const transactionsInPage = transactions.reduce(
     totalTruckMargin,
     totalMargin,
     miscTransactionsTotal,
-    transactionsInPage
+    transactionsInPage,
   };
 
   const file = fs.readFileSync(
@@ -455,7 +468,7 @@ const transactionsInPage = transactions.reduce(
 
   return htmlToPdf.create(html, {
     format: 'A4',
-    phantomPath: '/usr/local/bin/phantomjs',
+    // phantomPath: '/usr/local/bin/phantomjs',
   });
 };
 
