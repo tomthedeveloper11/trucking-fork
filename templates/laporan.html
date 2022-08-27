@@ -81,7 +81,6 @@
     <h2 class="page-title">
       Laporan {{formatDate startDate}} - {{formatDate endDate}}
     </h2>
-    <h3 style="text-align: center">Rekap Truk</h3>
     <table class="table" border="1">
       <thead class="tableHead">
         <tr class="tableHeadRow">
@@ -119,8 +118,7 @@
         </tr>
       </tbody>
     </table>
-    <br />
-    <h3 style="text-align: center">Rekap Pengeluaran Lain</h3>
+    <br /><br />
     {{#each transactionsInPage}}
     <table class="table" border="1">
       <thead class="tableHead">
@@ -144,10 +142,6 @@
         </tr>
       </tbody>
     </table>
-    {{else}}
-    <div class="newPage"></div>
-    {{/if}} {{/each}}
-    <br />
     <table class="table" border="1">
       <thead class="tableHead">
         <tr class="tableHeadRow">
@@ -174,5 +168,8 @@
         </tr>
       </tbody>
     </table>
+    {{else}}
+    <div class="newPage"></div>
+    {{/if}} {{/each}}
   </body>
 </html>

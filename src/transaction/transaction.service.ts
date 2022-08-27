@@ -406,7 +406,7 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
     0
   );
   const totalCost = totalAdditionalCost + miscTransactionsTotal;
-  const totalTruckMargin = totalSellingPrice - totalTruckCost;
+  const totalTruckMargin = totalSellingPrice - totalTruckCost - totalAdditionalCost;
   const totalMargin = totalSellingPrice - totalCost - totalTruckCost;
 
 const transactionsInPage = transactions.reduce(
