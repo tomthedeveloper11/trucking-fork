@@ -94,8 +94,7 @@
           <td class="tableBodyCol">{{formatRupiah this.sellingPrice}}</td>
           <td class="tableBodyCol">{{formatRupiah this.margin}}</td>
         </tr>
-        {{/each}} 
-        {{#each transactionsInPage}}
+        {{/each}} {{#each transactionsInPage}} {{#each this}}
         <tr class="tableBodyRow">
           <td class="tableBodyCol">{{this.details}}</td>
           <td class="tableBodyCol">{{formatRupiah this.cost}}</td>
@@ -103,7 +102,7 @@
           <td class="tableBodyCol"></td>
           <td class="tableBodyCol"></td>
         </tr>
-        {{/each}}
+        {{/each}} {{/each}} {{#if @last}}
         <tr class="tableBodyRow">
           <td class="tableBodyCol" style="font-weight: bold">TOTAL</td>
           <td class="tableBodyCol" style="font-weight: bold">
@@ -119,6 +118,9 @@
             {{formatRupiah totalMargin}}
           </td>
         </tr>
+        {{else}}
+        <div class="newPage"></div>
+        {{/if}}
       </tbody>
     </table>
   </body>
