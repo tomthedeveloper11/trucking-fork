@@ -315,9 +315,9 @@ const printTransaction = async (
       }
       if (result.length <= 1) {
         // first page
-        insertTransactionToPage(14);
-      } else {
         insertTransactionToPage(20);
+      } else {
+        insertTransactionToPage(24);
       }
 
       return result;
@@ -399,6 +399,28 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
   const totalCost = totalAdditionalCost + transactionsTotal;
   const totalMargin = totalSellingPrice - totalCost - totalTruckCost;
 
+const transactionsInPage = transactions.reduce(
+    (result, transaction) => {
+      function insertTransactionToPage(limit: number) {
+        if (result[result.length - 1].length < limit) {
+          result[result.length - 1].push(transaction);
+        } else {
+          result.push([]);
+        }
+      }
+      if (result.length <= 1) {
+        // first page
+        insertTransactionToPage(8);
+      } else {
+        insertTransactionToPage(15);
+      }
+
+      return result;
+    },
+    [[]] as Transaction[][]
+  );
+
+
   const content = {
     startDate: new Date(startDate).toLocaleDateString('id-ID', {
       day: 'numeric',
@@ -416,6 +438,7 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
     totalTruckCost,
     totalCost,
     totalMargin,
+    transactionsInPage
   };
 
   const file = fs.readFileSync(

@@ -9,6 +9,7 @@
         sans-serif;
       font-size: 14px;
       font-weight: 500;
+      margin: 25px;
     }
 
     *,
@@ -42,7 +43,6 @@
       text-transform: uppercase;
       border: 1px solid #050504;
       display: table-header-group;
-      background-color: lightgrey;
     }
 
     .tableHeadCol {
@@ -79,10 +79,6 @@
       page-break-after: always;
     }
 
-    .tableMargin {
-      margin: 8;
-    }
-
   </style>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -104,7 +100,7 @@
 
   {{#each transactionsInPage}}
   <div class="tableMargin">
-    <table class="table print-frienldy" border="1">
+    <table class="table" border="1">
       <thead class="tableHead">
         <tr class="tableHeadRow">
           <td class="tableHeadCol">NO</td>
@@ -140,8 +136,8 @@
 
     <div>
       <p>Tagihan Dikirim Ke</p>
-      <p>No Rek.{{main.noRek}}</p>
-      <p>{{main.atasNama}}</p>
+      <p>No Rek.{{../main.noRek}}</p>
+      <p>{{../main.atasNama}}</p>
       <p>BCA</p>
     </div>
     {{else}}

@@ -80,6 +80,11 @@
       padding: 0.5rem;
       text-align: center;
     }
+
+    .newPage {
+      page-break-after: always;
+    }
+
   </style>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -96,6 +101,7 @@
   <h2>Tanggal {{formatDate main.endDate}}</h2>
   <br><br>
 
+  {{#each transactionsInPage}}
   <table class="table" border="1">
     <thead class="tableHead">
       <tr class="tableHeadRow">
@@ -108,8 +114,8 @@
         <td class="tableHeadCol">KETERANGAN</td>
       </tr>
     </thead>
+    {{#each this}}
     <tbody class="tableBody">
-      {{#each transactions}}
       <tr class="tableBodyRow">
         <td class="tableBodyCol">{{indexPlusOne @index}}</td>
         <td class="tableBodyCol">{{formatDate this.date}}</td>
@@ -122,14 +128,17 @@
       {{/each}}
     </tbody>
   </table>
-<div class="signatureOuterDiv">
-  <div class="signatureInnerDiv">
-    <p>Yang Menerima</p>
-    <br><br><br><br>
+  {{#if @last}} 
+  <div class="signatureOuterDiv">
+    <div class="signatureInnerDiv">
+      <p>Yang Menerima</p>
+      <br><br><br><br>
+    </div>
   </div>
-
-</div>
-
+  {{else}}
+      <div class="newPage"></div>
+      {{/if}}
+    {{/each}}
 </body>
 
 </html>
