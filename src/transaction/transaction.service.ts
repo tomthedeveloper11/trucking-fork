@@ -312,6 +312,7 @@ const printTransaction = async (
           result[result.length - 1].push(transaction);
         } else {
           result.push([]);
+          result[result.length - 1].push(transaction)
         }
       }
       if (result.length <= 1) {
@@ -333,6 +334,7 @@ const printTransaction = async (
     },
     [[]] as TruckTransaction[][]
   );
+  console.log("🚀 ~ file: transaction.service.ts ~ line 339 ~ transactionsInPage", transactionsInPage)
 
   let runningCounter = 1;
 
