@@ -334,7 +334,6 @@ const printTransaction = async (
     },
     [[]] as TruckTransaction[][]
   );
-  console.log("🚀 ~ file: transaction.service.ts ~ line 339 ~ transactionsInPage", transactionsInPage)
 
   let runningCounter = 1;
 
@@ -399,10 +398,6 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
     startDate,
     endDate,
   });
-  console.log(
-    '🚀 ~ file: transaction.service.ts ~ line 390 ~ printSummary ~ transactions',
-    transactions
-  );
 
   const totalSellingPrice = Object.values(summary).reduce(
     (acc, obj) => acc + obj.sellingPrice,

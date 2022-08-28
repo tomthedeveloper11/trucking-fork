@@ -101,11 +101,6 @@ export default function TruckTransactionDataTable({
     const markedTransactions = truckTransactions
       .filter((t) => t.selected)
       .map((t) => t.id);
-    console.log(markedTransactions.length);
-    console.log(
-      '🚀 ~ file: truck-transaction-data-table.tsx ~ line 104 ~ print ~ markedTransactions',
-      markedTransactions
-    );
 
     const customerInitial = truckTransactions.filter((t) => t.selected)[0]
       .customer;
