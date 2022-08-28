@@ -108,7 +108,13 @@
           <td class="tableHeadCol">NO. BON</td>
           <td class="tableHeadCol">TUJUAN</td>
           <td class="tableHeadCol">NOPOL</td>
+          {{#if ../havePPH}}
           <td class="tableHeadCol">HARGA</td>
+          <td class="tableHeadCol">PPH</td>
+          <td class="tableHeadCol">PEMBAYARAN</td>
+          {{else}}
+          <td class="tableHeadCol">PEMBAYARAN</td>
+          {{/if}}
         </tr>
       </thead>
       {{#each this}} 
@@ -120,7 +126,19 @@
             <td class="tableBodyCol"><div>{{this.invoiceNo}}</div></td>
             <td class="tableBodyCol"><div>{{this.destination}}</div></p>
             <td class="tableBodyCol"><div>{{this.licenseNumber}}</div></td>
+            {{#if ../../havePPH}}
+              {{#if this.pph}}
+                <td class="tableHeadCol"><div>{{formatRupiah this.sellingPrice}}</div></td>
+                <td class="tableHeadCol"><div>{{this.pph}}%</div></td>
+                <td class="tableHeadCol"><div>{{formatRupiah this.income}}</div></td>
+              {{else}}
+                <td class="tableHeadCol"><div>{{formatRupiah this.sellingPrice}}</div></td>
+                <td class="tableHeadCol"><div>0%</div></td>
+                <td class="tableHeadCol"><div>{{formatRupiah this.income}}</div></td>
+              {{/if}}
+            {{else}}
             <td class="tableBodyCol"><div>{{formatRupiah this.sellingPrice}}</div></td>
+            {{/if}}
           </tr>
         </tbody>
         {{/each}}

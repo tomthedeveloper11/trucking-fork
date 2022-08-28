@@ -19,7 +19,7 @@ import * as jwt from 'jsonwebtoken';
 import { getCookie } from 'cookies-next';
 import authorizeUser from '../../helpers/auth';
 
-const date = new Date()
+const date = new Date();
 const defaultStartDate = new Date(date.getFullYear(), date.getMonth(), 1);
 const defaultEndDate = new Date(new Date().setHours(23, 59, 59));
 
@@ -80,6 +80,9 @@ export default function TruckDetails({
       destination: truckTransaction.destination,
       cost: truckTransaction.cost,
       sellingPrice: truckTransaction.sellingPrice,
+      income: truckTransaction.income
+        ? truckTransaction.income
+        : truckTransaction.sellingPrice,
       pph: truckTransaction?.pph,
       customer: truckTransaction.customer,
       bon: truckTransaction.bon,
@@ -105,7 +108,9 @@ export default function TruckDetails({
   };
 
   const [table, setTable] = useState('trip');
-  const [startDate, setStartDate] = useState(new Date(date.getFullYear(), date.getMonth(), 1));
+  const [startDate, setStartDate] = useState(
+    new Date(date.getFullYear(), date.getMonth(), 1)
+  );
   const [endDate, setEndDate] = useState(
     new Date(new Date().setHours(23, 59, 59))
   );
@@ -210,7 +215,8 @@ export default function TruckDetails({
               'isPrintedBon',
               'isPrintedInvoice',
               'pph',
-              user?.role === 'user' ? 'sellingPrice' : '',
+              'sellingPrice',
+              user?.role === 'user' ? 'income' : '',
             ]}
             autoCompleteData={autoCompleteData}
           />
@@ -235,7 +241,7 @@ export const getServerSideProps = async (context: any) => {
   });
 
   if (!access_token) return redirectToLogin;
-  
+
   try {
     jwt.verify(access_token.toString(), process.env.SECRET_KEY);
   } catch (e) {
@@ -261,7 +267,7 @@ export const getServerSideProps = async (context: any) => {
     );
   const autoCompleteData =
     await truckTransactionBloc.getTruckTransactionAutoComplete();
-    
+
   return {
     props: {
       truckName,

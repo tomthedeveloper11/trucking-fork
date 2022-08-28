@@ -43,7 +43,7 @@ function buildTransactionRow(
     <>
       {Object.entries(tableTransaction).map(([key, val], i) => {
         let rowValue = val.toString();
-        if (['sellingPrice', 'cost'].includes(key)) {
+        if (['sellingPrice', 'cost', 'income'].includes(key)) {
           rowValue = val.toLocaleString().replace(/,/g, '.');
         }
         return (

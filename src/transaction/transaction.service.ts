@@ -17,6 +17,7 @@ import {
   formatRupiah,
   formatDate,
   indexPlusOne,
+  checkIfHavePPH,
 } from '../../helpers/hbsHelpers';
 import fs from 'fs';
 import handlers from 'handlebars';
@@ -275,13 +276,15 @@ const printTransaction = async (
   handlers.registerHelper('formatRupiah', formatRupiah);
   handlers.registerHelper('formatDate', formatDate);
   handlers.registerHelper('indexPlusOne', indexPlusOne);
+  handlers.registerHelper('checkIfHavePPH', checkIfHavePPH);
 
   const truckTransactions = await transactionRepository.printTransaction(
     transactionIds
   );
 
   const totalSellingPrice = truckTransactions.reduce(
-    (accumulator, obj) => accumulator + obj.sellingPrice,
+    (accumulator, obj) =>
+      accumulator + (obj.income ? obj.income : obj.sellingPrice),
     0
   );
 
@@ -312,7 +315,7 @@ const printTransaction = async (
           result[result.length - 1].push(transaction);
         } else {
           result.push([]);
-          result[result.length - 1].push(transaction)
+          result[result.length - 1].push(transaction);
         }
       }
       if (result.length <= 1) {
@@ -336,14 +339,17 @@ const printTransaction = async (
   );
 
   let runningCounter = 1;
-
+  let havePPH = false;
   transactionsInPage.forEach((page) => {
     page.forEach((trax) => {
+      if (trax.pph){
+        havePPH = true
+      }
       trax.index = runningCounter;
       runningCounter += 1;
     });
   });
-
+  
   const content = {
     main: {
       endDate,
@@ -357,6 +363,7 @@ const printTransaction = async (
     },
     transactions: sortedTruckTransactions,
     transactionsInPage,
+    havePPH
   };
 
   if (type == 'tagihanYang') {
