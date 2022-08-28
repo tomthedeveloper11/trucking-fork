@@ -70,7 +70,7 @@ export default function TransactionDataTable({
                   {buildTransactionRow(transaction)}
                   {user.role !== 'guest' && (
                     <Table.Cell className="flex flex-row">
-                      <EditTransactionButton
+                      {/* <EditTransactionButton
                         key={`edit-modal-key${index}`}
                         existingTransaction={{
                           ...transaction,
@@ -80,7 +80,7 @@ export default function TransactionDataTable({
                       />
                       <DeleteVariousTransactionButton
                         transactionId={transaction.id}
-                      />
+                      /> */}
                     </Table.Cell>
                   )}
                 </Table.Row>
