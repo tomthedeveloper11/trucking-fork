@@ -17,7 +17,6 @@ import {
   formatRupiah,
   formatDate,
   indexPlusOne,
-  checkIfHavePPH,
 } from '../../helpers/hbsHelpers';
 import fs from 'fs';
 import handlers from 'handlebars';
@@ -276,7 +275,6 @@ const printTransaction = async (
   handlers.registerHelper('formatRupiah', formatRupiah);
   handlers.registerHelper('formatDate', formatDate);
   handlers.registerHelper('indexPlusOne', indexPlusOne);
-  handlers.registerHelper('checkIfHavePPH', checkIfHavePPH);
 
   const truckTransactions = await transactionRepository.printTransaction(
     transactionIds

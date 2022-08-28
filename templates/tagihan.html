@@ -7,7 +7,7 @@
       color: #050504;
       font-family: Montserrat,
         sans-serif;
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 500;
       margin: 15px;
     }
@@ -78,8 +78,25 @@
     .newPage {
       page-break-after: always;
     }
-
   </style>
+
+  {{#if havePPH}}
+  <style>
+    body{
+      font-size: 12px;
+    }    
+    
+    .tableHead {
+      font-size: 14px;
+    }
+
+    .tableBody {
+      font-size: 8px;
+    }
+  </style>
+  {{/if}}
+
+
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -87,7 +104,6 @@
 
 
 <body>
-  
   <h2>No Invoice: {{main.invoiceNum}}</h2>
   {{#if main.customerName}}
   <h2>Kepada: {{main.customerName}}</h2>
