@@ -296,12 +296,17 @@ const printTransaction = async (
       (t) => t.id === truckTransaction.truckId
     )?.licenseNumber;
 
+    const truckName = trucks.find(
+      (t) => t.id === truckTransaction.truckId
+    )?.name;
+
     truckTransaction.licenseNumber = licenseNumber;
+    truckTransaction.truckName = truckName;
   }
 
   const sortedTruckTransactions = truckTransactions.sort((a, b) => {
     return (
-      a.licenseNumber.localeCompare(b.licenseNumber) ||
+      a.truckName.localeCompare(b.truckName) ||
       new Date(a.date).getTime() - new Date(b.date).getTime()
     );
   });
@@ -329,7 +334,7 @@ const printTransaction = async (
       }
       if (result.length <= 1) {
         if (type == 'bon') {
-          insertTransactionToPage(19);
+          insertTransactionToPage(17);
         } else {
           if (havePPH) {
             insertTransactionToPage(13);
@@ -340,7 +345,7 @@ const printTransaction = async (
         // first page
       } else {
         if (type == 'bon') {
-          insertTransactionToPage(20);
+          insertTransactionToPage(18);
         } else {
           if (havePPH) {
             insertTransactionToPage(14);
