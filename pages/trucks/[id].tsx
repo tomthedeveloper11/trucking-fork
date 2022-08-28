@@ -18,6 +18,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import * as jwt from 'jsonwebtoken';
 import { getCookie } from 'cookies-next';
 import authorizeUser from '../../helpers/auth';
+import { useRouterRefresh } from '../../hooks/hooks';
 
 const date = new Date();
 const defaultStartDate = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -31,6 +32,7 @@ export default function TruckDetails({
   autoCompleteData,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const user = authorizeUser();
+  const refreshData = useRouterRefresh();
 
   const [truckTransactionsState, setTruckTransactionsState] =
     useState(truckTransactions);
