@@ -103,7 +103,6 @@
   {{/if}}
   <h2>Perincian Tagihan</h2>
   <h2>Tanggal {{formatDate main.endDate}}</h2>
-  <br>
 
   {{#each transactionsInPage}}
     <table class="table" border="1">
@@ -141,7 +140,7 @@
               {{else}}
                 <td class="tableHeadCol"><div>{{formatRupiah this.sellingPrice}}</div></td>
                 <td class="tableHeadCol"><div>0%</div></td>
-                <td class="tableHeadCol"><div>{{formatRupiah this.income}}</div></td>
+                <td class="tableHeadCol"><div>{{formatRupiah this.sellingPrice}}</div></td>
               {{/if}}
             {{else}}
             <td class="tableBodyCol"><div>{{formatRupiah this.sellingPrice}}</div></td>
