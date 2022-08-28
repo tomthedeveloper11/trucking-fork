@@ -306,6 +306,17 @@ const printTransaction = async (
     );
   });
 
+  let runningCounter = 1;
+  let havePPH = false;
+
+  sortedTruckTransactions.forEach((trax) => {
+    if (trax.pph) {
+      havePPH = true;
+    }
+    trax.index = runningCounter;
+    runningCounter += 1;
+  });
+
   const transactionsInPage = sortedTruckTransactions.reduce(
     (result, transaction) => {
       function insertTransactionToPage(limit: number) {
@@ -320,14 +331,22 @@ const printTransaction = async (
         if (type == 'bon') {
           insertTransactionToPage(19);
         } else {
-          insertTransactionToPage(17);
+          if (havePPH) {
+            insertTransactionToPage(15);
+          } else {
+            insertTransactionToPage(17);
+          }
         }
         // first page
       } else {
         if (type == 'bon') {
           insertTransactionToPage(20);
         } else {
-          insertTransactionToPage(18);
+          if (havePPH) {
+            insertTransactionToPage(16);
+          } else {
+            insertTransactionToPage(18);
+          }
         }
       }
 
@@ -336,18 +355,6 @@ const printTransaction = async (
     [[]] as TruckTransaction[][]
   );
 
-  let runningCounter = 1;
-  let havePPH = false;
-  transactionsInPage.forEach((page) => {
-    page.forEach((trax) => {
-      if (trax.pph){
-        havePPH = true
-      }
-      trax.index = runningCounter;
-      runningCounter += 1;
-    });
-  });
-  
   const content = {
     main: {
       endDate,
@@ -361,7 +368,7 @@ const printTransaction = async (
     },
     transactions: sortedTruckTransactions,
     transactionsInPage,
-    havePPH
+    havePPH,
   };
 
   if (type == 'tagihanYang') {

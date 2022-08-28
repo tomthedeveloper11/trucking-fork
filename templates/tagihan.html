@@ -62,12 +62,7 @@
     .signatureOuterDiv {
       display: flex;
       flex-direction: row;
-      justify-content: end;
-    }
-
-    .signatureInnerDiv {
-      padding: 0.5rem;
-      text-align: center;
+      justify-content: space-between;
     }
 
     .relative{
@@ -157,10 +152,9 @@
       </table>
     {{#if @last}} 
     <div class="signatureOuterDiv">
-      <p style="font-weight: bold; font-size: 20px; text-align: end;">Total</p>
-      <p style="font-weight: bold; font-size: 20px; text-align: end;">{{formatRupiah ../main.totalSellingPrice}}</p>
+      <p style="font-weight: bold; font-size: 18px; text-align: end;">Total</p>
+      <p style="font-weight: bold; font-size: 18px; text-align: end;">{{formatRupiah ../main.totalSellingPrice}}</p>
     </div>
-
     <div>
       <p>Tagihan Dikirim Ke</p>
       <p>No Rek.{{../main.noRek}}</p>
