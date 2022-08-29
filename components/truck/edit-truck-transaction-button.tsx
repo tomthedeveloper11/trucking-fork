@@ -22,7 +22,6 @@ export default function EditTruckTransactionButton({
   autoCompleteData,
   disabled = false,
 }: EditTruckTransactionButtonProps) {
-  console.log("🚀 ~ file: edit-truck-transaction-button.tsx ~ line 25 ~ existingTruckTransaction", existingTruckTransaction)
   const user = authorizeUser();
 
   const [truckTransaction, setTruckTransaction] = useState(

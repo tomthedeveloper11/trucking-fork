@@ -289,16 +289,17 @@ export default function TruckTransactionDataTable({
                 {truckTransactions[index] && user?.role !== 'guest' && (
                   <Table.Cell>
                     <div className="flex flex-row">
-                      {/* <EditTruckTransactionButton
-                        key={`edit-modal-key${index}`}
+                      <EditTruckTransactionButton
+                        key={`edit-modal-key${truckTransactions[index].id}`}
                         existingTruckTransaction={truckTransactions[index]}
                         autoCompleteData={autoCompleteData}
                         disabled={truckTransactions[index]?.selected}
                       />
                       <DeleteVariousTransactionButton
+                        key={`delete-button-${truckTransactions[index].id}`}
                         transactionId={truckTransaction.id}
                         disabled={truckTransactions[index]?.selected}
-                      /> */}
+                      />
                     </div>
                   </Table.Cell>
                 )}
