@@ -334,23 +334,23 @@ const printTransaction = async (
       }
       if (result.length <= 1) {
         if (type == 'bon') {
-          insertTransactionToPage(17);
+          insertTransactionToPage(16);
         } else {
           if (havePPH) {
-            insertTransactionToPage(13);
+            insertTransactionToPage(12);
           } else {
-            insertTransactionToPage(15);
+            insertTransactionToPage(14);
           }
         }
         // first page
       } else {
         if (type == 'bon') {
-          insertTransactionToPage(19);
+          insertTransactionToPage(18);
         } else {
           if (havePPH) {
-            insertTransactionToPage(15);
+            insertTransactionToPage(14);
           } else {
-            insertTransactionToPage(16);
+            insertTransactionToPage(15);
           }
         }
       }
