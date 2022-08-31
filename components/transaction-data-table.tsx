@@ -71,7 +71,7 @@ export default function TransactionDataTable({
                   {user.role !== 'guest' && (
                     <Table.Cell className="flex flex-row">
                       <EditTransactionButton
-                        key={`edit-modal-key${index}`}
+                        key={`edit-modal-key${transaction.id}`}
                         existingTransaction={{
                           ...transaction,
                           transactionType:
@@ -79,6 +79,7 @@ export default function TransactionDataTable({
                         }}
                       />
                       <DeleteVariousTransactionButton
+                        key={`delete-button-${transaction.id}`}
                         transactionId={transaction.id}
                       />
                     </Table.Cell>
