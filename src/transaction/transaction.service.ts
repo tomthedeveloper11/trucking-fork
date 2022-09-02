@@ -444,6 +444,7 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
           result[result.length - 1].push(transaction);
         } else {
           result.push([]);
+          result[result.length - 1].push(transaction);
         }
       }
       if (result.length <= 1) {
