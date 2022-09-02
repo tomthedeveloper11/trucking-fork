@@ -38,15 +38,20 @@ const getAllTransactions = async ({
   startDate,
   endDate,
 }: TransactionSummaryQuery) => {
+  const startDateISO = new Date(startDate);
+  console.log("🚀 ~ file: transaction.repository.ts ~ line 42 ~ startDateISO", startDateISO)
+  const endDateISO = new Date(endDate);
+  console.log("🚀 ~ file: transaction.repository.ts ~ line 44 ~ endDateISO", endDateISO)
   const documents = await TransactionModel.find({
     date: {
-      $gte: startDate,
-      $lte: endDate,
+      $gte: startDateISO,
+      $lte: endDateISO,
     },
   });
   const allTransactions = documents.map((doc) =>
     convertDocumentToObject<TruckTransaction>(doc)
   );
+  console.log("🚀 ~ file: transaction.repository.ts ~ line 52 ~ allTransactions", allTransactions.length)
 
   return allTransactions;
 };
@@ -201,7 +206,7 @@ const getTruckTransactionAutoComplete = async (): Promise<
     bon: bon.filter((_) => _),
     customer: customers.filter((_) => _),
   };
-  
+
   return result;
 };
 
