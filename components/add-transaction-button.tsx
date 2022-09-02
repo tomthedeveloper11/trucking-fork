@@ -8,6 +8,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { PlusIcon } from '@heroicons/react/solid';
 import { useToastContext } from '../lib/toast-context';
+import moment from 'moment';
 
 export default function AddTransactionButton() {
   const addToast = useToastContext();
@@ -15,6 +16,7 @@ export default function AddTransactionButton() {
     details: '',
     cost: 0,
     transactionType: TransactionType.ADDITIONAL_TRANSACTION,
+    editableByUserUntil: moment().endOf("month").add(3, 'days').utcOffset(7, false).toDate()
   };
   const refreshData = useRouterRefresh();
   const [transaction, setTransaction] = useState(baseTransaction);

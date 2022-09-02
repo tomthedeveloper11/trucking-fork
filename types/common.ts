@@ -36,6 +36,7 @@ export interface Transaction {
   details?: string;
   cost: number;
   transactionType: TransactionType;
+  editableByUserUntil: Date
 }
 
 export interface TruckTransaction extends Transaction {

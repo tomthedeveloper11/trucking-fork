@@ -14,6 +14,7 @@ import { PlusIcon } from '@heroicons/react/solid';
 import { useToastContext } from '../../lib/toast-context';
 import authorizeUser from '../../helpers/auth';
 import { formatRupiah } from '../../helpers/hbsHelpers';
+import moment from 'moment';
 
 interface AddTruckTransactionButtonProps {
   truckId: string;
@@ -41,6 +42,7 @@ export default function AddTruckTransactionButton({
     truckId,
     isPrintedBon: false,
     isPrintedInvoice: false,
+    editableByUserUntil: moment().endOf("month").add(3, 'days').utcOffset(7, false).toDate()
   };
   const refreshData = useRouterRefresh();
   const [truckTransaction, setTruckTransaction] =

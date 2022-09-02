@@ -7,6 +7,7 @@ import {
 import DeleteVariousTransactionButton from './delete-various-transaction-button';
 import { formatRupiah } from '../helpers/hbsHelpers';
 import authorizeUser from '../helpers/auth';
+import moment from 'moment';
 
 interface DataTableProperties {
   headers: Record<string, string>;
@@ -67,7 +68,7 @@ export default function AdditionalTruckTransactionDataTable({
             return (
               <Table.Row key={`tr-${index}`}>
                 {buildTransactionRow(transaction)}
-                {user?.role !== 'guest' && (
+                {user.role === 'admin' ? (
                   <Table.Cell className="flex flex-row">
                     <EditAdditionalTruckTransactionButton
                       key={`edit-modal-key${transaction.id}`}
@@ -82,6 +83,25 @@ export default function AdditionalTruckTransactionDataTable({
                       transactionId={transaction.id}
                     />
                   </Table.Cell>
+                ) : (
+                  user.role === 'user' &&
+                  moment().utcOffset(7, false).valueOf() <
+                    new Date(transaction.editableByUserUntil).getTime() && (
+                    <Table.Cell className="flex flex-row">
+                      <EditAdditionalTruckTransactionButton
+                        key={`edit-modal-key${transaction.id}`}
+                        existingTransaction={{
+                          ...transaction,
+                          transactionType:
+                            TransactionType.TRUCK_ADDITIONAL_TRANSACTION,
+                        }}
+                      />
+                      <DeleteVariousTransactionButton
+                        key={`delete-button-${transaction.id}`}
+                        transactionId={transaction.id}
+                      />
+                    </Table.Cell>
+                  )
                 )}
               </Table.Row>
             );

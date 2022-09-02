@@ -34,6 +34,7 @@ export default function TransactionPage({
       date: new Date(transaction.date).toLocaleDateString('id-ID'),
       details: transaction.details,
       cost: transaction.cost,
+      editableByUserUntil: transaction.editableByUserUntil
     };
   };
 
@@ -98,7 +99,7 @@ export default function TransactionPage({
         <TransactionDataTable
           headers={transactionDataTableHeaders}
           data={transactionsState.map((t, i) => formatTransaction(t, i + 1))}
-          hiddenFields={['id', 'isPrinted', 'truckId']}
+              hiddenFields={['id', 'isPrinted', 'truckId', 'editableByUserUntil']}
         />
       </div>
     </>

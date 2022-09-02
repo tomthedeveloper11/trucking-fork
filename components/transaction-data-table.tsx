@@ -4,6 +4,7 @@ import { DataTableTransaction, TransactionType } from '../types/common';
 import DeleteVariousTransactionButton from './delete-various-transaction-button';
 import authorizeUser from '../helpers/auth';
 import { formatRupiah } from '../helpers/hbsHelpers';
+import moment from 'moment';
 
 interface DataTableProperties {
   headers: Record<string, string>;
@@ -68,7 +69,7 @@ export default function TransactionDataTable({
               <>
                 <Table.Row key={`tr-${index}`}>
                   {buildTransactionRow(transaction)}
-                  {user.role !== 'guest' && (
+                  {user.role === 'admin' ? (
                     <Table.Cell className="flex flex-row">
                       <EditTransactionButton
                         key={`edit-modal-key${transaction.id}`}
@@ -83,6 +84,25 @@ export default function TransactionDataTable({
                         transactionId={transaction.id}
                       />
                     </Table.Cell>
+                  ) : (
+                    user.role === 'user' &&
+                    moment().utcOffset(7, false).valueOf() <
+                      new Date(transaction.editableByUserUntil).getTime() && (
+                      <Table.Cell className="flex flex-row">
+                        <EditTransactionButton
+                          key={`edit-modal-key${transaction.id}`}
+                          existingTransaction={{
+                            ...transaction,
+                            transactionType:
+                              TransactionType.ADDITIONAL_TRANSACTION,
+                          }}
+                        />
+                        <DeleteVariousTransactionButton
+                          key={`delete-button-${transaction.id}`}
+                          transactionId={transaction.id}
+                        />
+                      </Table.Cell>
+                    )
                   )}
                 </Table.Row>
               </>

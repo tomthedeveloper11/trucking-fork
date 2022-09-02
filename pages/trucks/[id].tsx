@@ -92,6 +92,7 @@ export default function TruckDetails({
       truckId: truckTransaction.truckId,
       isPrintedBon: truckTransaction.isPrintedBon,
       isPrintedInvoice: truckTransaction.isPrintedInvoice,
+      editableByUserUntil: truckTransaction.editableByUserUntil,
     };
   };
 
@@ -106,6 +107,7 @@ export default function TruckDetails({
       details: transaction.details,
       cost: transaction.cost,
       truckId: transaction.truckId,
+      editableByUserUntil: transaction.editableByUserUntil,
     };
   };
 
@@ -218,6 +220,7 @@ export default function TruckDetails({
               'isPrintedInvoice',
               'pph',
               'sellingPrice',
+              'editableByUserUntil',
               user?.role === 'user' ? 'income' : '',
             ]}
             autoCompleteData={autoCompleteData}
@@ -228,7 +231,7 @@ export default function TruckDetails({
             data={miscTruckTransactionsState.map((t, i) =>
               formatMiscTransaction(t, i + 1)
             )}
-            hiddenFields={['id', 'isPrinted', 'truckId']}
+            hiddenFields={['id', 'isPrinted', 'truckId', 'editableByUserUntil']}
           />
         )}
       </div>

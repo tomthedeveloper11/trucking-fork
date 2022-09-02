@@ -39,9 +39,7 @@ const getAllTransactions = async ({
   endDate,
 }: TransactionSummaryQuery) => {
   const startDateISO = new Date(startDate);
-  console.log("🚀 ~ file: transaction.repository.ts ~ line 42 ~ startDateISO", startDateISO)
   const endDateISO = new Date(endDate);
-  console.log("🚀 ~ file: transaction.repository.ts ~ line 44 ~ endDateISO", endDateISO)
   const documents = await TransactionModel.find({
     date: {
       $gte: startDateISO,
@@ -51,7 +49,6 @@ const getAllTransactions = async ({
   const allTransactions = documents.map((doc) =>
     convertDocumentToObject<TruckTransaction>(doc)
   );
-  console.log("🚀 ~ file: transaction.repository.ts ~ line 52 ~ allTransactions", allTransactions.length)
 
   return allTransactions;
 };

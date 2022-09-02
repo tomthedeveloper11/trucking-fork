@@ -68,6 +68,7 @@ export default function CustomerDetails({
       truckId: truckTransaction.truckId,
       isPrintedBon: truckTransaction.isPrintedBon,
       isPrintedInvoice: truckTransaction.isPrintedInvoice,
+      editableByUserUntil: truckTransaction.editableByUserUntil,
     };
   };
 
@@ -142,6 +143,7 @@ export default function CustomerDetails({
             'isPrintedInvoice',
             'pph',
             'sellingPrice',
+            'editableByUserUntil',
             user?.role === 'user' ? 'income' : '',
           ]}
           autoCompleteData={autoCompleteData}

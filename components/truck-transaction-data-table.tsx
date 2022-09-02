@@ -14,6 +14,8 @@ import { useToastContext } from '../lib/toast-context';
 import authorizeUser from '../helpers/auth';
 import { useRouterRefresh } from '../hooks/hooks';
 import { formatRupiah } from '../helpers/hbsHelpers';
+import transactionBloc from '../lib/transactions';
+import moment from 'moment';
 
 interface DataTableProperties {
   headers: Record<string, string>;
@@ -138,7 +140,10 @@ export default function TruckTransactionDataTable({
   }
 
   const totalCost = data.reduce((acc, obj) => acc + obj.cost, 0);
-  const totalSell = data.reduce((acc, obj) => acc + obj.sellingPrice, 0);
+  const totalSell = data.reduce(
+    (acc, obj) => acc + (obj.income ? obj.income : obj.sellingPrice),
+    0
+  );
 
   return (
     <>
@@ -256,7 +261,7 @@ export default function TruckTransactionDataTable({
                     <div className="flex gap-3">
                       <input
                         className="mt-5 rounded checked:bg-green-400 checked:border-green-400 focus:ring-green-500"
-                        {...(truckTransactions[index].selected && {
+                        {...(truckTransactions[index]?.selected && {
                           checked: true,
                         })}
                         type="checkbox"
@@ -286,7 +291,7 @@ export default function TruckTransactionDataTable({
                   </Table.Cell>
                 )}
                 {buildTransactionRow(truckTransaction, hiddenFields, emkl)}
-                {truckTransactions[index] && user?.role !== 'guest' && (
+                {truckTransactions[index] && user.role === 'admin' ? (
                   <Table.Cell>
                     <div className="flex flex-row">
                       <EditTruckTransactionButton
@@ -302,12 +307,34 @@ export default function TruckTransactionDataTable({
                       />
                     </div>
                   </Table.Cell>
+                ) : (
+                  user.role === 'user' &&
+                  moment().utcOffset(7, false).valueOf() <
+                    new Date(
+                      truckTransaction.editableByUserUntil
+                    ).getTime() && (
+                    <Table.Cell>
+                      <div className="flex flex-row">
+                        <EditTruckTransactionButton
+                          key={`edit-modal-key${truckTransactions[index].id}`}
+                          existingTruckTransaction={truckTransactions[index]}
+                          autoCompleteData={autoCompleteData}
+                          disabled={truckTransactions[index]?.selected}
+                        />
+                        <DeleteVariousTransactionButton
+                          key={`delete-button-${truckTransactions[index].id}`}
+                          transactionId={truckTransaction.id}
+                          disabled={truckTransactions[index]?.selected}
+                        />
+                      </div>
+                    </Table.Cell>
+                  )
                 )}
               </Table.Row>
             );
           })}
           <Table.Row>
-            {new Array(emkl ? 6 : 5).fill('').map((_, i) => (
+            {new Array(emkl && user.role !== 'user' ? 6 : 5).fill('').map((_, i) => (
               <Table.Cell key={`c${i}`}></Table.Cell>
             ))}
 
@@ -316,7 +343,7 @@ export default function TruckTransactionDataTable({
                 <Table.Cell className="text-center font-bold whitespace-nowrap">
                   {formatRupiah(totalCost)}
                 </Table.Cell>
-                {totalSell !== 0 && (
+                {totalSell !== 0 && user.role !== 'user' && (
                   <Table.Cell className="text-center font-bold whitespace-nowrap">
                     {formatRupiah(totalSell)}
                   </Table.Cell>

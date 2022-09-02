@@ -12,6 +12,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { PlusIcon } from '@heroicons/react/solid';
 import { useToastContext } from '../../lib/toast-context';
+import moment from 'moment';
 
 interface AddAdditionalTruckTransactionButtonProps {
   truckId: string;
@@ -26,6 +27,7 @@ export default function AddAdditionalTruckTransactionButton({
     cost: 0,
     transactionType: TransactionType.TRUCK_ADDITIONAL_TRANSACTION,
     truckId,
+    editableByUserUntil: moment().endOf("month").add(3, 'days').utcOffset(7, false).toDate()
   };
   const refreshData = useRouterRefresh();
   const [transaction, setTransaction] = useState(baseTransaction);
