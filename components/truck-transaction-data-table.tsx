@@ -210,6 +210,12 @@ export default function TruckTransactionDataTable({
                 >
                   Mery
                 </a>
+                <a
+                  className="cursor-pointer"
+                  onClick={() => print('tagihanKasim')}
+                >
+                  Kasim Ratna
+                </a>
               </div>
             </div>
 
