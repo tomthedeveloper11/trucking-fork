@@ -363,7 +363,7 @@ const printTransaction = async (
           if (havePPH) {
             insertTransactionToPage(12);
           } else {
-            insertTransactionToPage(14);
+            insertTransactionToPage(15);
           }
         }
         // first page
