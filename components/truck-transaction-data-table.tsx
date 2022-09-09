@@ -145,6 +145,10 @@ export default function TruckTransactionDataTable({
     0
   );
 
+  if (truckTransactions.length == 0) {
+    return <h1 className="text-3xl text-center">Tidak ada Transaksi</h1>;
+  }
+
   return (
     <>
       {emkl && user.role !== 'user' && (
@@ -334,9 +338,11 @@ export default function TruckTransactionDataTable({
             );
           })}
           <Table.Row>
-            {new Array(emkl && user.role !== 'user' ? 6 : 5).fill('').map((_, i) => (
-              <Table.Cell key={`c${i}`}></Table.Cell>
-            ))}
+            {new Array(emkl && user.role !== 'user' ? 6 : 5)
+              .fill('')
+              .map((_, i) => (
+                <Table.Cell key={`c${i}`}></Table.Cell>
+              ))}
 
             {data.length > 0 && (
               <>

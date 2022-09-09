@@ -49,6 +49,10 @@ export default function TransactionDataTable({
 
   const totalCost = data.reduce((acc, obj) => acc + obj.cost, 0);
 
+  if (data.length == 0) {
+    return <h1 className="text-3xl text-center">Tidak ada Transaksi</h1>;
+  }
+
   return (
     <>
       <Table hoverable={true}>
