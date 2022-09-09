@@ -110,6 +110,14 @@ const getGroupedTruckTransactions = async (date: TransactionSummaryQuery) => {
   const transactions = await transactionRepository.getAllTransactions(date);
   const trucks = await truckRepository.getTrucks();
 
+  for (const transaction of transactions) {
+    const truckName = trucks.find((t) => t.id === transaction.truckId)?.name;
+
+    transaction.truckName = truckName;
+  }
+
+  transactions.sort((a, b) => a.truckName?.localeCompare(b.truckName));
+
   const summary: TransactionSummary = {};
   for (const transaction of transactions) {
     const truckName = trucks.find((t) => t.id === transaction.truckId)?.name;
@@ -122,8 +130,12 @@ const getGroupedTruckTransactions = async (date: TransactionSummaryQuery) => {
         truckId: transaction.truckId,
         cost: 0,
         additionalCost: 0,
-        sellingPrice: transaction.sellingPrice,
-        margin: transaction.sellingPrice - transaction.cost,
+        sellingPrice: transaction.income
+          ? transaction.income
+          : transaction.sellingPrice,
+        margin: transaction.income
+          ? transaction.income - transaction.cost
+          : transaction.sellingPrice - transaction.cost,
       };
       if (transaction.transactionType == 'TRUCK_TRANSACTION') {
         summary[truckName].cost = transaction.cost;
@@ -142,17 +154,29 @@ const getGroupedTruckTransactions = async (date: TransactionSummaryQuery) => {
             ? summary[truckName].additionalCost + transaction.cost
             : summary[truckName].additionalCost,
         sellingPrice:
-          summary[truckName].sellingPrice +
-          (transaction.sellingPrice ? transaction.sellingPrice : 0),
+          (summary[truckName].sellingPrice
+            ? summary[truckName].sellingPrice
+            : 0) +
+          (transaction.income
+            ? transaction.income
+            : transaction.sellingPrice
+            ? transaction.sellingPrice
+            : 0),
         margin:
-          summary[truckName].margin +
-          (transaction.sellingPrice
+          (summary[truckName].margin ? summary[truckName].margin : 0) +
+          (transaction.income
+            ? transaction.income - transaction.cost
+            : transaction.sellingPrice
             ? transaction.sellingPrice - transaction.cost
             : 0 - transaction.cost),
       };
     }
   }
 
+  console.log(
+    '🚀 ~ file: transaction.service.ts ~ line 166 ~ getGroupedTruckTransactions ~ summary',
+    summary
+  );
   return summary;
 };
 
@@ -400,7 +424,7 @@ const printTransaction = async (
 
   const pdf = htmlToPdf.create(html, {
     format: 'A4',
-    phantomPath: '/usr/local/bin/phantomjs',
+    // phantomPath: '/usr/local/bin/phantomjs',
   });
 
   return pdf;
@@ -483,7 +507,7 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
 
   return htmlToPdf.create(html, {
     format: 'A4',
-    phantomPath: '/usr/local/bin/phantomjs',
+    // phantomPath: '/usr/local/bin/phantomjs',
   });
 };
 

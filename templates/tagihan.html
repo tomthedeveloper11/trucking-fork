@@ -126,23 +126,23 @@
         <tbody class="tableBody">
           <tr class="tableBodyRow">
             <td class="tableBodyCol"><div>{{this.index}}</div></td>
-            <td class="tableBodyCol"><div>{{formatDate this.date}}</div></td>
+            <td class="tableBodyCol" style="white-space: nowrap"><div>{{formatDate this.date}}</div></td>
             <td class="tableBodyCol"><div>{{this.containerNo}}</div></td>
             <td class="tableBodyCol"><div>{{this.invoiceNo}}</div></td>
             <td class="tableBodyCol"><div>{{this.destination}}</div></p>
-            <td class="tableBodyCol"><div>{{this.licenseNumber}}</div></td>
+            <td class="tableBodyCol" style="white-space: nowrap"><div>{{this.licenseNumber}}</div></td>
             {{#if ../../havePPH}}
               {{#if this.pph}}
-                <td class="tableHeadCol"><div>{{formatRupiah this.sellingPrice}}</div></td>
+                <td class="tableHeadCol" style="white-space: nowrap"><div>{{formatRupiah this.sellingPrice}}</div></td>
                 <td class="tableHeadCol"><div>{{this.pph}}%</div></td>
-                <td class="tableHeadCol" style="display: flex; flex-direction: column;"><div>{{formatRupiah this.income}}</div><p style="font-size: 6px;">{{this.details}}</p></td>
+                <td class="tableHeadCol" style="display: flex; flex-direction: column;"><div style="white-space: nowrap;">{{formatRupiah this.income}}</div><p style="font-size: 6px;">{{this.details}}</p></td>
               {{else}}
-                <td class="tableHeadCol"><div>{{formatRupiah this.sellingPrice}}</div></td>
+                <td class="tableHeadCol" style="white-space: nowrap"><div>{{formatRupiah this.sellingPrice}}</div></td>
                 <td class="tableHeadCol"><div>0%</div></td>
-                <td class="tableHeadCol" style="display: flex; flex-direction: column;"><div>{{formatRupiah this.sellingPrice}}</div><p style="font-size: 6px;">{{this.details}}</p></td>
+                <td class="tableHeadCol" style="display: flex; flex-direction: column;"><div style="white-space: nowrap;">{{formatRupiah this.sellingPrice}}</div><p style="font-size: 6px;">{{this.details}}</p></td>
               {{/if}}
             {{else}}
-            <td class="tableBodyCol"><div>{{formatRupiah this.sellingPrice}}</div></td>
+            <td class="tableBodyCol" style="white-space: nowrap"><div>{{formatRupiah this.sellingPrice}}</div></td>
             {{/if}}
           </tr>
         </tbody>
