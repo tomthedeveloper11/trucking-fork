@@ -47,7 +47,7 @@ export default async function handler(
             startDate: req.query.startDate,
             endDate: req.query.endDate,
           });
-        await conn.close();
+        // await conn.close();
         res.status(200).json({ data: miscTransactions });
         break;
 
@@ -60,7 +60,7 @@ export default async function handler(
           await transactionService.createAdditionalTruckTransaction(
             transactionPayload
           );
-        await conn.close();
+        // await conn.close();
 
         res.status(200).json({ data: transaction });
         break;

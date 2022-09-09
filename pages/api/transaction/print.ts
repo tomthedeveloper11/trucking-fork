@@ -41,9 +41,8 @@ export default async function handler(
         } catch (err) {
           res.status(500).json({ message: _.get(err, 'message') });
         }
-        await conn.close();
+        // await conn.close();
       } catch (err) {
-        console.log(err);
         res.status(500).json({ message: _.get(err, 'message') });
       }
       break;

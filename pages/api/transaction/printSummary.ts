@@ -20,16 +20,15 @@ export default async function handler(
       try {
         conn = await connectDb();
         const pdf = await transactionService.printSummary(req.query);
-        await conn.close();
+        // await conn.close();
         res.statusCode = 200;
         pdf.toBuffer((err, buffer) => {
           if (err) {
-              console.log(err, '=== Error in print summary');
+            console.log(err, '=== Error in print summary');
           }
           res.send(buffer);
         });
       } catch (err) {
-        console.log(err);
         res.status(500).json({ message: _.get(err, 'message') });
       }
       break;

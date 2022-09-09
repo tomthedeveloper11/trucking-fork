@@ -36,7 +36,7 @@ export default async function handler(
         conn = await connectDb();
         const truckTransactions =
           await transactionService.filterTruckTransactions(req.query);
-        await conn.close();
+        // await conn.close();
         res.status(200).json({ data: truckTransactions });
         break;
     }

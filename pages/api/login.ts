@@ -27,8 +27,8 @@ export default async function handler(
       conn = await connectDb();
       const userPayload = req.body as User;
       const access_token = await userService.login(userPayload);
-      await conn.close();
-    
+      // await conn.close();
+
       res.status(200).json({
         access_token,
         message: 'Login Success!',

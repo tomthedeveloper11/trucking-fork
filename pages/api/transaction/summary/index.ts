@@ -36,7 +36,7 @@ export default async function handler(
           startDate: req.query.startDate,
           endDate: req.query.endDate,
         });
-        await conn.close();
+        // await conn.close();
 
         if (user.role === 'user') {
           transactions.totalTripSellingPrice = 0;

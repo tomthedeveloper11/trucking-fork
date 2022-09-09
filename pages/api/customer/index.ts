@@ -29,7 +29,7 @@ export default async function handler(
       conn = await connectDb();
       const customerPayload = req.body as Customer;
       const customer = await customerService.createCustomer(customerPayload);
-      await conn.close();
+      // await conn.close();
 
       res.status(200).json({ data: customer });
       break;
@@ -37,7 +37,7 @@ export default async function handler(
     case 'GET':
       conn = await connectDb();
       const customers = await customerService.getCustomers();
-      await conn.close();
+      // await conn.close();
       res.status(200).json({ data: customers });
       break;
   }

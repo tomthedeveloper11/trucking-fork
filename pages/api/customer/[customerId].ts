@@ -21,7 +21,7 @@ export default async function handler(
       const customer = await customerService.getCustomerByCustomerId(
         customerId
       );
-      await conn.close();
+      // await conn.close();
       res.status(200).json({ data: customer });
       break;
   }

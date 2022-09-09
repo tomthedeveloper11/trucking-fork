@@ -44,7 +44,7 @@ export default async function handler(
           startDate: req.query.startDate,
           endDate: req.query.endDate,
         });
-        await conn.close();
+        // await conn.close();
         res.status(200).json({ data: transactions });
         break;
 
@@ -55,7 +55,7 @@ export default async function handler(
         const transaction = await transactionService.createTransaction(
           transactionPayload
         );
-        await conn.close();
+        // await conn.close();
 
         res.status(200).json({ data: transaction });
         break;

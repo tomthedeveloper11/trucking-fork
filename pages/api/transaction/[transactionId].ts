@@ -41,7 +41,7 @@ export default async function handler(
         const editTransaction = await transactionService.editTransaction(
           editTransactionPayload
         );
-        await conn.close();
+        // await conn.close();
 
         res.status(200).json({ data: editTransaction, message: 'helllow' });
         break;
@@ -52,7 +52,7 @@ export default async function handler(
         const transaction = await transactionService.deleteTransaction(
           transactionId
         );
-        await conn.close();
+        // await conn.close();
 
         res.status(200).json({ data: transaction });
         break;

@@ -44,7 +44,7 @@ export default async function handler(
         conn = await connectDb();
         const truckTransactions =
           await transactionService.getTruckTransactions();
-        await conn.close();
+        // await conn.close();
         res.status(200).json({ data: truckTransactions });
         break;
 
@@ -57,7 +57,7 @@ export default async function handler(
           await transactionService.createTruckTransaction(
             truckTransactionPayload
           );
-        await conn.close();
+        // await conn.close();
 
         res.status(200).json({ data: truckTransaction });
         break;

@@ -28,7 +28,7 @@ export default async function handler(
       conn = await connectDb();
       const truckPayload = req.body as Truck;
       const truck = await truckService.createTruck(truckPayload);
-      await conn.close();
+      // await conn.close();
 
       res.status(200).json({ data: truck });
       break;
@@ -36,7 +36,7 @@ export default async function handler(
     case 'GET':
       conn = await connectDb();
       const trucks = await truckService.getTrucks();
-      await conn.close();
+      // await conn.close();
       res.status(200).json({ data: trucks });
       break;
   }

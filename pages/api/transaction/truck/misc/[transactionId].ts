@@ -40,7 +40,7 @@ export default async function handler(
           await transactionService.editAdditionalTruckTransaction(
             editAdditionalTruckTransactionPayload
           );
-        await conn.close();
+        // await conn.close();
 
         res
           .status(200)

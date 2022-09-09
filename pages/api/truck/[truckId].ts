@@ -31,7 +31,7 @@ export default async function handler(
       conn = await connectDb();
       const transactions =
         await transactionService.getTruckTransactionsByTruckId(req.query);
-      await conn.close();
+      // await conn.close();
 
       if (user.role === 'user') {
         transactions.forEach((transaction) => {
