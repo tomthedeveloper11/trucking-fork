@@ -372,9 +372,9 @@ const printTransaction = async (
           insertTransactionToPage(18);
         } else {
           if (havePPH) {
-            insertTransactionToPage(14);
-          } else {
             insertTransactionToPage(15);
+          } else {
+            insertTransactionToPage(19);
           }
         }
       }
