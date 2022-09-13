@@ -103,27 +103,21 @@ export default function CustomerDetails({
   );
 
   async function filterByMonth() {
-    console.log('filter')
-    const truckTransactions =
-      await truckTransactionBloc.getTruckTransactionsByCustomerId(
-        user.access_token,
-        customerId,
-        startDate,
-        endDate
-      );
-    console.log(truckTransactions.length, 'how much?');
-    setTruckTransactionsState(truckTransactions);
-    // router.push(
-    //   {
-    //     pathname: router.asPath.split('?')[0],
-    //     query: {
-    //       startDate: startDate.toISOString(),
-    //       endDate: endDate.toISOString(),
-    //     },
-    //   },
-    //   undefined,
-    //   { shallow: true }
-    // );
+    router.push({
+      pathname: router.asPath.split('?')[0],
+      query: {
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+      },
+    });
+    // const truckTransactions =
+    //   await truckTransactionBloc.getTruckTransactionsByCustomerId(
+    //     user.access_token,
+    //     customerId,
+    //     startDate,
+    //     endDate
+    //   );
+    // setTruckTransactionsState(truckTransactions);
   }
   return (
     <>
