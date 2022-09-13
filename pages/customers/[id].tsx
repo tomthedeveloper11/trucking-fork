@@ -113,17 +113,17 @@ export default function CustomerDetails({
       );
     console.log(truckTransactions.length, 'how much?');
     setTruckTransactionsState(truckTransactions);
-    router.push(
-      {
-        pathname: router.asPath.split('?')[0],
-        query: {
-          startDate: startDate.toISOString(),
-          endDate: endDate.toISOString(),
-        },
-      },
-      undefined,
-      { shallow: true }
-    );
+    // router.push(
+    //   {
+    //     pathname: router.asPath.split('?')[0],
+    //     query: {
+    //       startDate: startDate.toISOString(),
+    //       endDate: endDate.toISOString(),
+    //     },
+    //   },
+    //   undefined,
+    //   { shallow: true }
+    // );
   }
   return (
     <>
