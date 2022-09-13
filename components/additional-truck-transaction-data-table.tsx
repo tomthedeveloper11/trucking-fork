@@ -85,6 +85,7 @@ export default function AdditionalTruckTransactionDataTable({
                     <DeleteVariousTransactionButton
                       key={`delete-button-${transaction.id}`}
                       transactionId={transaction.id}
+                      transaction={transaction}
                     />
                   </Table.Cell>
                 ) : (

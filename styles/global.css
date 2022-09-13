@@ -4,7 +4,7 @@
 
 @layer base {
   body {
-    @apply ml-[17vw] lg:ml-[155px] scrollbar;
+    @apply ml-[17vw] lg:ml-[155px] scrollbar bg-[#F4F6FA];
   }
 }
 

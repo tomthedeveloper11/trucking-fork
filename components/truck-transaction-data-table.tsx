@@ -314,6 +314,7 @@ export default function TruckTransactionDataTable({
                         key={`delete-button-${truckTransactions[index]?.id}`}
                         transactionId={truckTransaction.id}
                         disabled={truckTransactions[index]?.selected}
+                        transaction={truckTransaction}
                       />
                     </div>
                   </Table.Cell>
