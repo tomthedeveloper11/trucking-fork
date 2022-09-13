@@ -4,6 +4,7 @@ import { useState } from 'react';
 import TextInput from '../text-input';
 import { BASE_URL, Truck } from '../../types/common';
 import { useRouterRefresh } from '../../hooks/hooks';
+import { PlusCircleIcon } from '@heroicons/react/outline';
 
 export default function AddTruckButton() {
   const [newTruck, setNewTruck] = useState({
@@ -35,10 +36,11 @@ export default function AddTruckButton() {
   return (
     <>
       <button
-        className="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-10 rounded"
+        className="flex items-center gap-2 bg-green-400 hover:bg-green-500 text-white font-bold py-2.5 px-10 rounded"
         onClick={() => setModal(true)}
       >
-        Tambah Truk
+        <PlusCircleIcon className="h-5" />
+        <p className='align-middle'>Tambah Truk</p>
       </button>
       <Modal show={modal} onClose={() => setModal(false)}>
         <Modal.Header>Tambah Truk Baru</Modal.Header>

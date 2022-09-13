@@ -172,11 +172,6 @@ const getGroupedTruckTransactions = async (date: TransactionSummaryQuery) => {
       };
     }
   }
-
-  console.log(
-    '🚀 ~ file: transaction.service.ts ~ line 166 ~ getGroupedTruckTransactions ~ summary',
-    summary
-  );
   return summary;
 };
 
