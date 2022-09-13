@@ -305,20 +305,20 @@ export default function TruckTransactionDataTable({
                   <Table.Cell>
                     <div className="flex flex-row">
                       <EditTruckTransactionButton
-                        key={`edit-modal-key${truckTransactions[index].id}`}
+                        key={`edit-modal-key${truckTransactions[index]?.id}`}
                         existingTruckTransaction={truckTransactions[index]}
                         autoCompleteData={autoCompleteData}
                         disabled={truckTransactions[index]?.selected}
                       />
                       <DeleteVariousTransactionButton
-                        key={`delete-button-${truckTransactions[index].id}`}
+                        key={`delete-button-${truckTransactions[index]?.id}`}
                         transactionId={truckTransaction.id}
                         disabled={truckTransactions[index]?.selected}
                       />
                     </div>
                   </Table.Cell>
                 ) : (
-                  user.role === 'user' &&
+                  truckTransactions[index] && user.role === 'user' &&
                   moment().utcOffset(7, false).valueOf() <
                     new Date(
                       truckTransaction.editableByUserUntil
@@ -326,13 +326,13 @@ export default function TruckTransactionDataTable({
                     <Table.Cell>
                       <div className="flex flex-row">
                         <EditTruckTransactionButton
-                          key={`edit-modal-key${truckTransactions[index].id}`}
+                          key={`edit-modal-key${truckTransactions[index]?.id}`}
                           existingTruckTransaction={truckTransactions[index]}
                           autoCompleteData={autoCompleteData}
                           disabled={truckTransactions[index]?.selected}
                         />
                         <DeleteVariousTransactionButton
-                          key={`delete-button-${truckTransactions[index].id}`}
+                          key={`delete-button-${truckTransactions[index]?.id}`}
                           transactionId={truckTransaction.id}
                           disabled={truckTransactions[index]?.selected}
                         />
