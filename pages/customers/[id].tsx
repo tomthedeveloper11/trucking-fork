@@ -103,6 +103,16 @@ export default function CustomerDetails({
   );
 
   async function filterByMonth() {
+    
+    const truckTransactions =
+      await truckTransactionBloc.getTruckTransactionsByCustomerId(
+        user.access_token,
+        customerId,
+        startDate,
+        endDate
+      );
+
+    setTruckTransactionsState(truckTransactions);
     router.push(
       {
         pathname: router.asPath.split('?')[0],
@@ -114,15 +124,6 @@ export default function CustomerDetails({
       undefined,
       { shallow: true }
     );
-    const truckTransactions =
-      await truckTransactionBloc.getTruckTransactionsByCustomerId(
-        user.access_token,
-        customerId,
-        startDate,
-        endDate
-      );
-
-    setTruckTransactionsState(truckTransactions);
   }
   return (
     <>
