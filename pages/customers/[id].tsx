@@ -103,7 +103,7 @@ export default function CustomerDetails({
   );
 
   async function filterByMonth() {
-    
+    console.log('filter')
     const truckTransactions =
       await truckTransactionBloc.getTruckTransactionsByCustomerId(
         user.access_token,
@@ -111,7 +111,7 @@ export default function CustomerDetails({
         startDate,
         endDate
       );
-
+    console.log(truckTransactions.length, 'how much?');
     setTruckTransactionsState(truckTransactions);
     router.push(
       {
