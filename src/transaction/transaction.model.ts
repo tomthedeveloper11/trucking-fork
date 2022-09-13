@@ -49,10 +49,10 @@ const transactionSchema = new Schema<any>(
       type: Number,
     },
     pph: {
-      type: Number
+      type: Number,
     },
     income: {
-      type: Number
+      type: Number,
     },
     customer: {
       type: customerTransactionSchema,
