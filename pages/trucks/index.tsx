@@ -8,6 +8,7 @@ import * as jwt from 'jsonwebtoken';
 import { getCookie } from 'cookies-next';
 import authorizeUser from '../../helpers/auth';
 import { useState } from 'react';
+import { PencilAltIcon } from '@heroicons/react/outline';
 
 export default function Home({
   trucks,
@@ -42,7 +43,7 @@ export default function Home({
               </div>
               <input
                 type="text"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-400 focus:border-green-500 block w-full pl-10 p-2.5"
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-green-400 focus:border-green-500 block w-full pl-10 p-2.5"
                 placeholder="Nama Truk"
                 onChange={(event) => setQuery(event.target.value)}
                 autoFocus
@@ -68,21 +69,40 @@ export default function Home({
               }
             })
             .map((truck: Truck) => (
-              <Link
-                href={{
-                  pathname: `/trucks/${truck.id}`,
-                  query: {
-                    truckName: truck.name,
-                  },
-                }}
+              <div
+                className="flex bg-white rounded border border-gray-200 shadow-md"
                 key={truck.id}
               >
-                <a className="w-[100%] h-32 rounded-lg border border-gray-200 shadow-md hover:bg-gray-100">
-                  <h1 className="xl:text-5xl text-3xl text-center xl:mt-9 mt-11">
-                    {truck.name}
-                  </h1>
-                </a>
-              </Link>
+                <div className="hover:bg-gray-100 flex-grow cursor-pointer">
+                  <Link
+                    href={{
+                      pathname: `/trucks/${truck.id}`,
+                      query: {
+                        truckName: truck.name,
+                      },
+                    }}
+                  >
+                    <h1
+                      className={`${
+                        truck.name.length > 13 ? 'text-2xl' : 'text-3xl'
+                      } xl:text-5xl text-center my-8`}
+                    >
+                      {truck.name}
+                    </h1>
+                  </Link>
+                </div>
+
+                {user.role === 'admin' && (
+                  <div className="border-l-2 flex">
+                    <PencilAltIcon
+                      className="text-yellow-200 hover:text-yellow-300 cursor-pointer h-7 z-10 self-center"
+                      onClick={() => {
+                        console.log('edit');
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
             ))}
         </div>
       </div>

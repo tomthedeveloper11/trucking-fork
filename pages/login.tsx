@@ -54,7 +54,7 @@ export default function Login() {
         <div className="my-3">
           <label className="block text-md mb-2">Username</label>
           <input
-            className="px-4 w-full border-2 py-2 rounded-md text-sm outline-none"
+            className="px-4 w-full border-2 py-2 rounded text-sm outline-none"
             type="username"
             name="username"
             placeholder="Username"
@@ -65,7 +65,7 @@ export default function Login() {
         <div className="mt-5">
           <label className="block text-md mb-2">Password</label>
           <input
-            className="px-4 w-full border-2 py-2 rounded-md text-sm outline-none"
+            className="px-4 w-full border-2 py-2 rounded text-sm outline-none"
             type="password"
             name="password"
             placeholder="Password"
@@ -76,7 +76,7 @@ export default function Login() {
 
         <div className="">
           <button
-            className="mt-4 mb-3 w-full bg-green-500 hover:bg-green-400 text-white py-2 rounded-md transition duration-100"
+            className="mt-4 mb-3 w-full bg-green-500 hover:bg-green-400 text-white py-2 rounded transition duration-100"
             type="submit"
           >
             Log in

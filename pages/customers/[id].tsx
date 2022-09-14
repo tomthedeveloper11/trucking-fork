@@ -97,59 +97,226 @@ export default function CustomerDetails({
 
     setTruckTransactionsState(truckTransactions);
   }
+
+  const [query, setQuery] = useState('');
+
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResizeWindow = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handleResizeWindow);
+
+    return () => {
+      window.removeEventListener('resize', handleResizeWindow);
+    };
+  }, []);
+
   return (
     <>
       <Head>
         <title>Truck Details</title>
       </Head>
 
-      <div className="container p-8 mb-60 flex-col">
+      <div className="container p-5 mb-60 flex-col">
         <h1 className="text-center text-7xl mb-5">{customer.initial}</h1>
+        {width > 1200 ? (
+          <div className="bg-white p-5 rounded">
+            <div className="grid grid-cols-3 mt-5">
+              <form className="items-center">
+                <div className="relative w-[20vw]">
+                  <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                    <svg
+                      aria-hidden="true"
+                      className="w-5 h-5 text-gray-500"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                        clipRule="evenodd"
+                      ></path>
+                    </svg>
+                  </div>
+                  <input
+                    type="text"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-green-400 focus:border-green-500 block w-full pl-10 p-2.5"
+                    placeholder={'No Container / No Bon / Tujuan / EMKL'}
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                    autoFocus
+                  />
+                </div>
+              </form>
+              <div className="flex w-56 gap-5 mx-3">
+                <DatePicker
+                  className="w-32 text-center mx-1 rounded-sm focus:ring-green-400 focus:border-green-500"
+                  dateFormat="dd/MM/yyyy"
+                  selected={startDate}
+                  onChange={(date: Date) =>
+                    setStartDate(new Date(new Date(date).setHours(0, 0, 0)))
+                  }
+                />
+                <span className="text-3xl">-</span>
+                <DatePicker
+                  className="w-32 text-center mx-1 rounded-sm focus:ring-green-400 focus:border-green-500"
+                  dateFormat="dd/MM/yyyy"
+                  selected={endDate}
+                  onChange={(date: Date) =>
+                    setEndDate(new Date(new Date(date).setHours(23, 59, 59)))
+                  }
+                  minDate={startDate}
+                />
+                <button
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={filterByMonth}
+                >
+                  Filter
+                </button>
+              </div>
+              <div></div>
+            </div>
+            <TruckTransactionDataTable
+              headers={dataTableHeaders}
+              data={truckTransactionsState
+                .filter((truckTransaction) => {
+                  if (query === '') {
+                    return truckTransaction;
+                  } else if (
+                    truckTransaction.containerNo
+                      .toLowerCase()
+                      .includes(query.toLowerCase()) ||
+                    truckTransaction.invoiceNo
+                      .toLowerCase()
+                      .includes(query.toLowerCase()) ||
+                    truckTransaction.destination
+                      .toLowerCase()
+                      .includes(query.toLowerCase()) ||
+                    truckTransaction.customer
+                      .toLowerCase()
+                      .includes(query.toLowerCase())
+                  ) {
+                    return truckTransaction;
+                  }
+                })
+                .map((t, i) => formatTruckTransaction(t, i + 1))}
+              hiddenFields={[
+                'id',
+                'truckId',
+                'isPrintedBon',
+                'isPrintedInvoice',
+                'pph',
+                'sellingPrice',
+                'editableByUserUntil',
+                user?.role === 'user' ? 'income' : '',
+              ]}
+              autoCompleteData={autoCompleteData}
+              emkl={true}
+              endDate={endDate}
+            />
+          </div>
+        ) : (
+          <div className="bg-white p-5 rounded">
+            <div className="flex-col mt-5">
+              <div className="flex justify-center my-3">
+                <div className='flex gap-3'>
+                  <DatePicker
+                    className="w-32 text-center mx-1 rounded-sm focus:ring-green-400 focus:border-green-500"
+                    dateFormat="dd/MM/yyyy"
+                    selected={startDate}
+                    onChange={(date: Date) =>
+                      setStartDate(new Date(new Date(date).setHours(0, 0, 0)))
+                    }
+                  />
+                  <span className="text-3xl">-</span>
+                  <DatePicker
+                    className="w-32 text-center mx-1 rounded-sm focus:ring-green-400 focus:border-green-500"
+                    dateFormat="dd/MM/yyyy"
+                    selected={endDate}
+                    onChange={(date: Date) =>
+                      setEndDate(new Date(new Date(date).setHours(23, 59, 59)))
+                    }
+                    minDate={startDate}
+                  />
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={filterByMonth}
+                  >
+                    Filter
+                  </button>
+                </div>
+              </div>
+              <form className="flex justify-center items-center">
+                <div className="relative w-[44vw]">
+                  <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                    <svg
+                      aria-hidden="true"
+                      className="w-5 h-5 text-gray-500"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                        clipRule="evenodd"
+                      ></path>
+                    </svg>
+                  </div>
+                  <input
+                    type="text"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-green-400 focus:border-green-500 block w-full pl-10 p-2.5"
+                    placeholder={'No Container / No Bon / Tujuan / EMKL'}
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                    autoFocus
+                  />
+                </div>
+              </form>
 
-        <div className="flex w-56 gap-5 mx-3 my-5">
-          <DatePicker
-            dateFormat="dd/MM/yyyy"
-            selected={startDate}
-            onChange={(date: Date) =>
-              setStartDate(new Date(new Date(date).setHours(0, 0, 0)))
-            }
-          />
-          <span className="text-3xl">-</span>
-          <DatePicker
-            dateFormat="dd/MM/yyyy"
-            selected={endDate}
-            onChange={(date: Date) =>
-              setEndDate(new Date(new Date(date).setHours(23, 59, 59)))
-            }
-            minDate={startDate}
-          />
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={filterByMonth}
-          >
-            Filter
-          </button>
-        </div>
-
-        <TruckTransactionDataTable
-          headers={dataTableHeaders}
-          data={truckTransactionsState.map((t, i) =>
-            formatTruckTransaction(t, i + 1)
-          )}
-          hiddenFields={[
-            'id',
-            'truckId',
-            'isPrintedBon',
-            'isPrintedInvoice',
-            'pph',
-            'sellingPrice',
-            'editableByUserUntil',
-            user?.role === 'user' ? 'income' : '',
-          ]}
-          autoCompleteData={autoCompleteData}
-          emkl={true}
-          endDate={endDate}
-        />
+              <div></div>
+            </div>
+            <TruckTransactionDataTable
+              headers={dataTableHeaders}
+              data={truckTransactionsState
+                .filter((truckTransaction) => {
+                  if (query === '') {
+                    return truckTransaction;
+                  } else if (
+                    truckTransaction.containerNo
+                      .toLowerCase()
+                      .includes(query.toLowerCase()) ||
+                    truckTransaction.invoiceNo
+                      .toLowerCase()
+                      .includes(query.toLowerCase()) ||
+                    truckTransaction.destination
+                      .toLowerCase()
+                      .includes(query.toLowerCase()) ||
+                    truckTransaction.customer
+                      .toLowerCase()
+                      .includes(query.toLowerCase())
+                  ) {
+                    return truckTransaction;
+                  }
+                })
+                .map((t, i) => formatTruckTransaction(t, i + 1))}
+              hiddenFields={[
+                'id',
+                'truckId',
+                'isPrintedBon',
+                'isPrintedInvoice',
+                'pph',
+                'sellingPrice',
+                'editableByUserUntil',
+                user?.role === 'user' ? 'income' : '',
+              ]}
+              autoCompleteData={autoCompleteData}
+              emkl={true}
+              endDate={endDate}
+            />
+          </div>
+        )}
       </div>
     </>
   );

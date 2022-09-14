@@ -4,6 +4,7 @@ import { useState } from 'react';
 import TextInput from './text-input';
 import { BASE_URL, Customer } from '../types/common';
 import { useRouterRefresh } from '../hooks/hooks';
+import { PlusCircleIcon } from '@heroicons/react/outline';
 
 export default function AddCustomerButton() {
   const [newCustomer, setNewCustomer] = useState({
@@ -40,10 +41,11 @@ export default function AddCustomerButton() {
   return (
     <>
       <button
-        className="bg-green-400 hover:bg-green-500 text-white font-bold py-2 px-10 rounded"
+        className="flex items-center gap-2 bg-green-400 hover:bg-green-500 text-white font-bold py-2.5 px-10 rounded"
         onClick={() => setModal(true)}
       >
-        Tambah Customer
+        <PlusCircleIcon className="h-5" />
+        <p className="align-middle">Tambah Customer</p>
       </button>
       <Modal show={modal} onClose={() => setModal(false)}>
         <Modal.Header>Tambah Customer Baru</Modal.Header>

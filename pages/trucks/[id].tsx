@@ -41,9 +41,18 @@ export default function TruckDetails({
     miscTruckTransactions
   );
 
+  const [width, setWidth] = useState(window.innerWidth);
+
   useEffect(() => {
+    const handleResizeWindow = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handleResizeWindow);
+
     setTruckTransactionsState(truckTransactions);
     setMiscTruckTransactionsState(miscTruckTransactions);
+
+    return () => {
+      window.removeEventListener('resize', handleResizeWindow);
+    };
   }, [truckTransactions, miscTruckTransactions]);
 
   const truckDataTableHeaders = {
@@ -149,7 +158,7 @@ export default function TruckDetails({
         <title>Truck Details</title>
       </Head>
 
-      <div className="container p-8 mb-60 flex-col">
+      <div className="container p-5 mb-60 flex-col">
         <h1 className="text-center text-7xl mb-5">{truckName}</h1>
 
         <div>
@@ -182,90 +191,158 @@ export default function TruckDetails({
         </div>
 
         <div>
-          <div className="flex bg-white py-5 gap-5 px-5">
-            <form className="flex items-center">
-              <div className="relative w-[20vw]">
-                <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-                  <svg
-                    aria-hidden="true"
-                    className="w-5 h-5 text-gray-500"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                      clipRule="evenodd"
-                    ></path>
-                  </svg>
+          {width > 1200 ? (
+            <div className="flex bg-white p-5 gap-5 justify-between">
+              <form className="flex items-center">
+                <div className="relative w-[20vw]">
+                  <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                    <svg
+                      aria-hidden="true"
+                      className="w-5 h-5 text-gray-500"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                        clipRule="evenodd"
+                      ></path>
+                    </svg>
+                  </div>
+                  <input
+                    type="text"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-green-400 focus:border-green-500 block w-full pl-10 p-2.5"
+                    placeholder={
+                      table === 'trip'
+                        ? 'No Container / No Bon / Tujuan / EMKL'
+                        : 'Deskripsi'
+                    }
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                    autoFocus
+                  />
                 </div>
-                <input
-                  type="text"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-green-400 focus:border-green-500 block w-full pl-10 p-2.5"
-                  placeholder={
-                    table === 'trip'
-                      ? 'No Container / No Bon / Tujuan / EMKL'
-                      : 'Deskripsi'
+              </form>
+              <div className="flex">
+                <DatePicker
+                  className="w-32 text-center mx-1 rounded-sm focus:ring-green-400 focus:border-green-500"
+                  dateFormat="dd/MM/yyyy"
+                  selected={startDate}
+                  onChange={(date: Date) =>
+                    setStartDate(new Date(new Date(date).setHours(0, 0, 0)))
                   }
-                  value={query}
-                  onChange={(event) => setQuery(event.target.value)}
-                  autoFocus
                 />
+                <span className="text-3xl mx-2">-</span>
+                <DatePicker
+                  className="w-32 text-center mx-1 rounded-sm focus:ring-green-400 focus:border-green-500"
+                  dateFormat="dd/MM/yyyy"
+                  selected={endDate}
+                  onChange={(date: Date) =>
+                    setEndDate(new Date(new Date(date).setHours(23, 59, 59)))
+                  }
+                  minDate={startDate}
+                />
+                <button
+                  className="mx-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={filterByMonth}
+                >
+                  Filter
+                </button>
               </div>
-            </form>
-
-            <div className="flex gap-1 border rounded-full p-2 cursor-pointer">
-              <TrashIcon className="h-5 mt-0.5" />
-              <span className="whitespace-nowrap">Hapus</span>
+              {table === 'trip' && user?.role !== 'guest' && (
+                <div className="flex justify-end mr-5">
+                  <AddTruckTransactionButton
+                    truckId={truckId}
+                    autoCompleteData={autoCompleteData}
+                  />
+                </div>
+              )}{' '}
+              {table === 'misc' && user?.role !== 'guest' && (
+                <div className="flex justify-end mr-5">
+                  <AddAdditionalTruckTransactionButton truckId={truckId} />
+                </div>
+              )}
             </div>
-            <div className="flex gap-1 border rounded-full p-2 cursor-pointer">
-              <PlusCircleIcon className="h-5 mt-0.5" />
-              <span className="whitespace-nowrap">Tambah Transaksi</span>
-            </div>
-
-            <div className="flex xl:ml-72">
-              <DatePicker
-                className="w-28 text-center mx-1 rounded-sm"
-                dateFormat="dd/MM/yyyy"
-                selected={startDate}
-                onChange={(date: Date) =>
-                  setStartDate(new Date(new Date(date).setHours(0, 0, 0)))
-                }
-              />
-              <span className="text-3xl mx-2">-</span>
-              <DatePicker
-                className="w-28 text-center mx-1 rounded-sm"
-                dateFormat="dd/MM/yyyy"
-                selected={endDate}
-                onChange={(date: Date) =>
-                  setEndDate(new Date(new Date(date).setHours(23, 59, 59)))
-                }
-                minDate={startDate}
-              />
-              <button
-                className="mx-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                onClick={filterByMonth}
-              >
-                Filter
-              </button>
-            </div>
-          </div>
-          {table === 'trip' && user?.role !== 'guest' && (
-            <div className="flex justify-end mr-5">
-              <AddTruckTransactionButton
-                truckId={truckId}
-                autoCompleteData={autoCompleteData}
-              />
-            </div>
-          )}{' '}
-          {table === 'misc' && user?.role !== 'guest' && (
-            <div className="flex justify-end mr-5">
-              <AddAdditionalTruckTransactionButton truckId={truckId} />
-            </div>
+          ) : (
+            <>
+              <form className="flex items-center bg-white py-5">
+                <div className="relative w-[45vw] text-center justify-center mx-auto">
+                  <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                    <svg
+                      aria-hidden="true"
+                      className="w-5 h-5 text-gray-500"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                        clipRule="evenodd"
+                      ></path>
+                    </svg>
+                  </div>
+                  <input
+                    type="text"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-green-400 focus:border-green-500 block w-full pl-10 p-2.5"
+                    placeholder={
+                      table === 'trip'
+                        ? 'No Container / No Bon / Tujuan / EMKL'
+                        : 'Deskripsi'
+                    }
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                    autoFocus
+                  />
+                </div>
+              </form>
+              <div className="flex justify-between bg-white pb-5 gap-2 px-5">
+                <div className="flex">
+                  <DatePicker
+                    className="w-28 text-center rounded-sm focus:ring-green-400 focus:border-green-500"
+                    dateFormat="dd/MM/yyyy"
+                    selected={startDate}
+                    onChange={(date: Date) =>
+                      setStartDate(new Date(new Date(date).setHours(0, 0, 0)))
+                    }
+                  />
+                  <span className="text-3xl mx-1">-</span>
+                  <DatePicker
+                    className="w-28 text-center rounded-sm focus:ring-green-400 focus:border-green-500"
+                    dateFormat="dd/MM/yyyy"
+                    selected={endDate}
+                    onChange={(date: Date) =>
+                      setEndDate(new Date(new Date(date).setHours(23, 59, 59)))
+                    }
+                    minDate={startDate}
+                  />
+                  <button
+                    className="mx-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={filterByMonth}
+                  >
+                    Filter
+                  </button>
+                </div>
+                {table === 'trip' && user?.role !== 'guest' && (
+                  <div className="flex">
+                    <AddTruckTransactionButton
+                      truckId={truckId}
+                      autoCompleteData={autoCompleteData}
+                    />
+                  </div>
+                )}{' '}
+                {table === 'misc' && user?.role !== 'guest' && (
+                  <div className="flex">
+                    <AddAdditionalTruckTransactionButton truckId={truckId} />
+                  </div>
+                )}
+              </div>
+            </>
           )}
+
           {table === 'trip' ? (
-            <div className="px-5 pb-5 bg-white rounded-md">
+            <div className="px-5 pb-5 bg-white rounded">
               <TruckTransactionDataTable
                 headers={truckDataTableHeaders}
                 data={truckTransactionsState
@@ -305,7 +382,7 @@ export default function TruckDetails({
               />
             </div>
           ) : (
-            <div className="px-5 pb-5 bg-white rounded-md">
+            <div className="px-5 pb-5 bg-white rounded">
               <AdditionalTruckTransactionDataTable
                 headers={miscDataTableHeaders}
                 data={miscTruckTransactionsState

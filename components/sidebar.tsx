@@ -25,7 +25,7 @@ export default function SidebarComponent() {
     <div className="scrollbar fixed w-[17vw] max-w-[155px] overflow-y-scroll top-0 bottom-0 left-0 py-10 bg-gray-50 rounded scroll">
       <ul className="mb-5 border-b border-gray-200">
         <li>
-          <a className="flex items-center p-2 mt-5 text-base font-normal text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 group">
+          <a className="flex items-center p-2 mt-5 text-base font-normal text-gray-900 rounded transition duration-75 hover:bg-gray-100 group">
             <h6 className="font-bold">Current User: </h6>
             <span className="ml-3">{user.username}</span>
           </a>
