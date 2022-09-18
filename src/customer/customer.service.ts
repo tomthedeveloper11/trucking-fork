@@ -23,11 +23,19 @@ const getCustomerByInitial = async (customerInitial: string) => {
   return customer;
 };
 
+const editCustomer = async (customerPayload: Customer) => {
+  const editCustomer = await customerRepository.editCustomer(
+    customerPayload
+  );
+  return editCustomer;
+};
+
 const customerService = {
   createCustomer,
   getCustomers,
   getCustomerByCustomerId,
   getCustomerByInitial,
+  editCustomer
 };
 
 export default customerService;

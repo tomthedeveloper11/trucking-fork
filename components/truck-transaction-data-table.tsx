@@ -146,7 +146,7 @@ export default function TruckTransactionDataTable({
   );
 
   if (truckTransactions.length == 0) {
-    return <h1 className="text-3xl text-center">Tidak ada Transaksi</h1>;
+    return <h1 className="text-3xl text-center mt-10">Tidak ada Transaksi</h1>;
   }
 
   return (
@@ -314,6 +314,7 @@ export default function TruckTransactionDataTable({
                         key={`delete-button-${truckTransactions[index]?.id}`}
                         transactionId={truckTransaction.id}
                         disabled={truckTransactions[index]?.selected}
+                        transaction={truckTransaction}
                       />
                     </div>
                   </Table.Cell>

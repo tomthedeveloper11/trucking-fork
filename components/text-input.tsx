@@ -43,7 +43,7 @@ export default function TextInput({
         >
           {label}
         </label>
-        <div className="mt-1 relative rounded-md shadow-sm">
+        <div className="mt-1 relative rounded shadow-sm">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <span className="text-gray-500 sm:text-sm"> {prefix} </span>
           </div>
@@ -53,8 +53,8 @@ export default function TextInput({
             // id="price"
             className={
               type == 'currency'
-                ? 'block w-full pl-8 pr-2 py-1 sm:text-sm border border-gray-300 rounded-md'
-                : 'block w-full pl-4 pr-2 py-1 sm:text-sm border border-gray-300 rounded-md'
+                ? 'block w-full pl-8 pr-2 py-1 sm:text-sm border border-gray-300 rounded'
+                : 'block w-full pl-4 pr-2 py-1 sm:text-sm border border-gray-300 rounded'
             }
             placeholder={placeholder}
             onChange={handleChange}
@@ -69,7 +69,7 @@ export default function TextInput({
             {/* <select
               id="currency"
               name="currency"
-              className="focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded-md"
+              className="focus:ring-indigo-500 focus:border-indigo-500 h-full py-0 pl-2 pr-7 border-transparent bg-transparent text-gray-500 sm:text-sm rounded"
             >
               <option>USD</option>
               <option>CAD</option>

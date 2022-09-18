@@ -1,6 +1,6 @@
 import { Modal, ListGroup } from 'flowbite-react';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TextInput from '../text-input';
 import {
   BASE_URL,
@@ -15,6 +15,7 @@ import { useToastContext } from '../../lib/toast-context';
 import authorizeUser from '../../helpers/auth';
 import { formatRupiah } from '../../helpers/hbsHelpers';
 import moment from 'moment';
+import { PlusCircleIcon } from '@heroicons/react/outline';
 
 interface AddTruckTransactionButtonProps {
   truckId: string;
@@ -42,7 +43,11 @@ export default function AddTruckTransactionButton({
     truckId,
     isPrintedBon: false,
     isPrintedInvoice: false,
-    editableByUserUntil: moment().endOf("month").add(3, 'days').utcOffset(7, false).toDate()
+    editableByUserUntil: moment()
+      .endOf('month')
+      .add(3, 'days')
+      .utcOffset(7, false)
+      .toDate(),
   };
   const refreshData = useRouterRefresh();
   const [truckTransaction, setTruckTransaction] =
@@ -114,14 +119,44 @@ export default function AddTruckTransactionButton({
       });
   }
 
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResizeWindow = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handleResizeWindow);
+
+    return () => {
+      window.removeEventListener('resize', handleResizeWindow);
+    };
+  }, []);
+
   return (
     <>
-      <button
-        className="z-10 fixed bottom-5 bg-green-400 hover:bg-green-500 text-white p-2 lg:p-5 transition-all rounded-full"
-        onClick={() => setModal(true)}
-      >
-        <PlusIcon className="h-10 " />
-      </button>
+      {width > 1200 ? (
+        <button
+          className="flex gap-1 border rounded-full py-2 px-10 shadow-sm transition-all"
+          onClick={() => setModal(true)}
+        >
+          <PlusCircleIcon className="h-5 mt-0.5" />
+          <span className="whitespace-nowrap">Tambah Transaksi</span>
+        </button>
+      ) : width < 742 ? (
+        <button
+          className="flex gap-1 border rounded-full py-2 px-3 shadow-sm transition-all"
+          onClick={() => setModal(true)}
+        >
+          <PlusCircleIcon className="h-5 mt-0.5" />
+        </button>
+      ) : (
+        <button
+          className="flex gap-1 border rounded-full py-2 px-3 shadow-sm transition-all"
+          onClick={() => setModal(true)}
+        >
+          <PlusCircleIcon className="h-5 mt-0.5" />
+          <span className="whitespace-nowrap">Tambah Transaksi</span>
+        </button>
+      )}
+
       <Modal show={modal} onClose={() => setModal(false)} size="5xl">
         <Modal.Header>Transaksi Trip</Modal.Header>
         <Modal.Body>
@@ -264,7 +299,7 @@ export default function AddTruckTransactionButton({
               {user?.role === 'admin' && (
                 <>
                   <div className="form-group row-span-1 col-span-2">
-                  <TextInput
+                    <TextInput
                       label="Harga"
                       name="sellingPrice"
                       type="currency"
@@ -285,9 +320,16 @@ export default function AddTruckTransactionButton({
                   </div>
 
                   <div className="form-group row-span-1 col-span-1">
-                    <p className='block text-sm font-medium text-gray-700'>Pembayaran</p>
-                    <p className='mt-1.5 whitespace-nowrap'>{formatRupiah(truckTransaction.sellingPrice - (truckTransaction.sellingPrice * (truckTransaction.pph / 100)))}</p>
-                    
+                    <p className="block text-sm font-medium text-gray-700">
+                      Pembayaran
+                    </p>
+                    <p className="mt-1.5 whitespace-nowrap">
+                      {formatRupiah(
+                        truckTransaction.sellingPrice -
+                          truckTransaction.sellingPrice *
+                            (truckTransaction.pph / 100)
+                      )}
+                    </p>
                   </div>
                 </>
               )}

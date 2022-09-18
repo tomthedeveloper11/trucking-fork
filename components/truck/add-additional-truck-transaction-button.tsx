@@ -1,6 +1,6 @@
 import { Modal } from 'flowbite-react';
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TextInput from '../text-input';
 import {
   TransactionType,
@@ -13,6 +13,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { PlusIcon } from '@heroicons/react/solid';
 import { useToastContext } from '../../lib/toast-context';
 import moment from 'moment';
+import { PlusCircleIcon } from '@heroicons/react/outline';
 
 interface AddAdditionalTruckTransactionButtonProps {
   truckId: string;
@@ -27,7 +28,11 @@ export default function AddAdditionalTruckTransactionButton({
     cost: 0,
     transactionType: TransactionType.TRUCK_ADDITIONAL_TRANSACTION,
     truckId,
-    editableByUserUntil: moment().endOf("month").add(3, 'days').utcOffset(7, false).toDate()
+    editableByUserUntil: moment()
+      .endOf('month')
+      .add(3, 'days')
+      .utcOffset(7, false)
+      .toDate(),
   };
   const refreshData = useRouterRefresh();
   const [transaction, setTransaction] = useState(baseTransaction);
@@ -59,14 +64,43 @@ export default function AddAdditionalTruckTransactionButton({
       });
   }
 
+  const [width, setWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResizeWindow = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handleResizeWindow);
+
+    return () => {
+      window.removeEventListener('resize', handleResizeWindow);
+    };
+  }, []);
+
   return (
     <>
-      <button
-        className="z-10 fixed bottom-5 bg-green-400 hover:bg-green-500 text-white p-2 lg:p-5 transition-all rounded-full"
-        onClick={() => setModal(true)}
-      >
-        <PlusIcon className="h-10" />
-      </button>
+      {width > 1200 ? (
+        <button
+          className="flex gap-1 border rounded-full py-2 px-10 shadow-sm transition-all"
+          onClick={() => setModal(true)}
+        >
+          <PlusCircleIcon className="h-5 mt-0.5" />
+          <span className="whitespace-nowrap">Tambah Transaksi</span>
+        </button>
+      ) : width < 742 ? (
+        <button
+          className="flex gap-1 border rounded-full py-2 px-3 shadow-sm transition-all"
+          onClick={() => setModal(true)}
+        >
+          <PlusCircleIcon className="h-5 mt-0.5" />
+        </button>
+      ) : (
+        <button
+          className="flex gap-1 border rounded-full py-2 px-3 shadow-sm transition-all"
+          onClick={() => setModal(true)}
+        >
+          <PlusCircleIcon className="h-5 mt-0.5" />
+          <span className="whitespace-nowrap">Tambah Transaksi</span>
+        </button>
+      )}
       <Modal show={modal} onClose={() => setModal(false)} size="3xl">
         <Modal.Header>Transaksi Lainnya</Modal.Header>
         <Modal.Body>

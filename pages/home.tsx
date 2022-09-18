@@ -38,10 +38,17 @@ export default function Home({
   const user = authorizeUser();
 
   const router = useRouter();
+  const [width, setWidth] = useState(window.innerWidth);
   useEffect(() => {
     if (!user) {
       router.push('/login');
     }
+    const handleResizeWindow = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handleResizeWindow);
+
+    return () => {
+      window.removeEventListener('resize', handleResizeWindow);
+    };
   });
 
   const [truckSummariesState, setTruckSummariesState] =
@@ -95,57 +102,158 @@ export default function Home({
       endDate,
     });
   }
+  const [query, setQuery] = useState('');
 
   return (
     <>
       <Head>
         <title>{'Home'}</title>
       </Head>
-      <div className="container m-auto">
+      <div className="w-full m-auto">
         <h2 className="text-7xl text-center m-auto">Rekap</h2>
 
-        <div className="flex justify-between m-3">
-          <div className="flex gap-5">
-            <DatePicker
-              dateFormat="dd/MM/yyyy"
-              selected={startDate}
-              onChange={(date: Date) =>
-                setStartDate(new Date(new Date(date).setHours(0, 0, 0)))
-              }
-            />
-            <span className="text-3xl">-</span>
-            <DatePicker
-              dateFormat="dd/MM/yyyy"
-              selected={endDate}
-              onChange={(date: Date) =>
-                setEndDate(new Date(new Date(date).setHours(23, 59, 59)))
-              }
-              minDate={startDate}
-            />
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-              onClick={filterByMonth}
-            >
-              Filter
-            </button>
-          </div>
-          <div>
-            {user?.role !== 'user' && (
+        {width > 1200 ? (
+          <div className="grid grid-cols-3 justify-between m-5">
+            <form className="flex items-center">
+              <div className="relative w-[20vw]">
+                <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                  <svg
+                    aria-hidden="true"
+                    className="w-5 h-5 text-gray-500"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                      clipRule="evenodd"
+                    ></path>
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-green-400 focus:border-green-500 block w-full pl-10 p-2.5"
+                  placeholder={'Nama Truk'}
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  autoFocus
+                />
+              </div>
+            </form>
+            <div className="flex gap-5">
+              <DatePicker
+                className="w-32 text-center mx-1 rounded-sm focus:ring-green-400 focus:border-green-500"
+                dateFormat="dd/MM/yyyy"
+                selected={startDate}
+                onChange={(date: Date) =>
+                  setStartDate(new Date(new Date(date).setHours(0, 0, 0)))
+                }
+              />
+              <span className="text-3xl">-</span>
+              <DatePicker
+                className="w-32 text-center mx-1 rounded-sm focus:ring-green-400 focus:border-green-500"
+                dateFormat="dd/MM/yyyy"
+                selected={endDate}
+                onChange={(date: Date) =>
+                  setEndDate(new Date(new Date(date).setHours(23, 59, 59)))
+                }
+                minDate={startDate}
+              />
               <button
-                className="flex gap-2 whitespace-nowrap bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded ml-5"
-                onClick={printSummary}
+                className="mx-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                onClick={filterByMonth}
               >
-                <PrinterIcon className="h-5 mt-[2px]" />
-                Print Laporan
+                Filter
               </button>
-            )}
+            </div>
+            <div>
+              {user?.role !== 'user' && (
+                <button
+                  className="flex gap-2 whitespace-nowrap bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded ml-5"
+                  onClick={printSummary}
+                >
+                  <PrinterIcon className="h-5 mt-[2px]" />
+                  Print Laporan
+                </button>
+              )}
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className='m-3'>
+            <form className="flex items-center bg-white py-5">
+              <div className="relative w-[45vw] text-center justify-center mx-auto">
+                <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                  <svg
+                    aria-hidden="true"
+                    className="w-5 h-5 text-gray-500"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                      clipRule="evenodd"
+                    ></path>
+                  </svg>
+                </div>
+                <input
+                  type="text"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-green-400 focus:border-green-500 block w-full pl-10 p-2.5"
+                  placeholder={'Nama Truk'}
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  autoFocus
+                />
+              </div>
+            </form>
+            <div className="flex justify-between bg-white pb-5 gap-2 px-5">
+              <div className="flex">
+                <DatePicker
+                  className="w-32 text-center mx-1 rounded-sm focus:ring-green-400 focus:border-green-500"
+                  dateFormat="dd/MM/yyyy"
+                  selected={startDate}
+                  onChange={(date: Date) =>
+                    setStartDate(new Date(new Date(date).setHours(0, 0, 0)))
+                  }
+                />
+                <span className="text-3xl">-</span>
+                <DatePicker
+                  className="w-32 text-center mx-1 rounded-sm focus:ring-green-400 focus:border-green-500"
+                  dateFormat="dd/MM/yyyy"
+                  selected={endDate}
+                  onChange={(date: Date) =>
+                    setEndDate(new Date(new Date(date).setHours(23, 59, 59)))
+                  }
+                  minDate={startDate}
+                />
+                <button
+                  className="mx-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={filterByMonth}
+                >
+                  Filter
+                </button>
+              </div>
+              <div>
+                {user?.role !== 'user' && (
+                  <button
+                    className="flex gap-2 whitespace-nowrap bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-3 rounded ml-5"
+                    onClick={printSummary}
+                  >
+                    <PrinterIcon className="h-5 mt-[2px]" />
+                    Print Laporan
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
 
         <div
           className={`${
-            user?.role === 'user' ? 'grid-cols-2' : 'grid-cols-4'
-          } grid gap-7 text-center mt-6 border border-gray-200 rounded p-5 m-3 bg-zinc-100 shadow-md`}
+            user?.role === 'user' || width < 1200 ? 'grid-cols-2' : 'grid-cols-4'
+          } grid gap-7 text-center mt-6 border border-gray-200 rounded p-5 m-3 bg-white shadow-md`}
         >
           {user?.role !== 'user' && (
             <div className="bg-white shadow-md rounded">
@@ -193,42 +301,50 @@ export default function Home({
         </div>
         <hr className="m-5" />
         <div className="grid grid-cols-3">
-          {entries.map((entry, i: number) => {
-            return (
-              <Link
-                href={`/trucks/${entry[1].truckId}?truckName=${entry[0]}`}
-                key={i}
-              >
-                <div className="gap-40 px-6 py-3 m-5 rounded-lg border border-gray-200 shadow-md hover:bg-gray-100 cursor-pointer">
-                  <div className="relative">
-                    <h3 className="text-5xl whitespace-nowrap text-center justify-center align-middle">
-                      {entry[0]}
-                    </h3>
-                  </div>
+          {entries
+            .filter((entry) => {
+              if (query === '') {
+                return entry;
+              } else if (entry[0].toLowerCase().includes(query.toLowerCase())) {
+                return entry;
+              }
+            })
+            .map((entry, i: number) => {
+              return (
+                <Link
+                  href={`/trucks/${entry[1].truckId}?truckName=${entry[0]}`}
+                  key={i}
+                >
+                  <div className="bg-white gap-40 px-6 py-3 m-5 rounded border border-gray-200 shadow-md hover:bg-gray-100 cursor-pointer">
+                    <div className="relative">
+                      <h3 className="text-5xl whitespace-nowrap text-center justify-center align-middle">
+                        {entry[0]}
+                      </h3>
+                    </div>
 
-                  <div>
-                    {user?.role !== 'user' && (
-                      <h3 className="my-2 text-green-400 text-center font-medium">
-                        Pembayaran: {formatRupiah(entry[1].sellingPrice)}
+                    <div>
+                      {user?.role !== 'user' && (
+                        <h3 className="my-2 text-green-400 text-center font-medium">
+                          Pembayaran: {formatRupiah(entry[1].sellingPrice)}
+                        </h3>
+                      )}
+                      <h3 className="my-2 text-red-400 text-center font-medium">
+                        Borongan: {formatRupiah(entry[1].cost)}
                       </h3>
-                    )}
-                    <h3 className="my-2 text-red-400 text-center font-medium">
-                      Borongan: {formatRupiah(entry[1].cost)}
-                    </h3>
-                    <h3 className="my-2 text-red-400 text-center font-medium">
-                      Biaya: {formatRupiah(entry[1].additionalCost)}
-                    </h3>
-                    <hr />
-                    {user?.role !== 'user' && (
-                      <h3 className="my-2 text-center font-medium">
-                        Margin: {formatRupiah(entry[1].margin)}
+                      <h3 className="my-2 text-red-400 text-center font-medium">
+                        Biaya: {formatRupiah(entry[1].additionalCost)}
                       </h3>
-                    )}
+                      <hr />
+                      {user?.role !== 'user' && (
+                        <h3 className="my-2 text-center font-medium">
+                          Margin: {formatRupiah(entry[1].margin)}
+                        </h3>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </Link>
-            );
-          })}
+                </Link>
+              );
+            })}
         </div>
       </div>
     </>

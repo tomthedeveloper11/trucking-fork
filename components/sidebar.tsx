@@ -17,15 +17,17 @@ export default function SidebarComponent() {
   const router = useRouter();
 
   function logOut() {
-    deleteCookie('access_token');
     router.push('/login');
+    setTimeout(() => {
+      deleteCookie('access_token');
+    }, 500);
   }
 
   return (
     <div className="scrollbar fixed w-[17vw] max-w-[155px] overflow-y-scroll top-0 bottom-0 left-0 py-10 bg-gray-50 rounded scroll">
       <ul className="mb-5 border-b border-gray-200">
         <li>
-          <a className="flex items-center p-2 mt-5 text-base font-normal text-gray-900 rounded-lg transition duration-75 hover:bg-gray-100 group">
+          <a className="flex items-center p-2 mt-5 text-base font-normal text-gray-900 rounded transition duration-75 hover:bg-gray-100 group">
             <h6 className="font-bold">Current User: </h6>
             <span className="ml-3">{user.username}</span>
           </a>
@@ -131,32 +133,34 @@ export default function SidebarComponent() {
             </span>
           </li>
         </Link>
-        {user.role === 'admin' && <Link href="/register">
-          <li
-            className={
-              router.pathname == '/register'
-                ? 'sidebarActiveLink'
-                : 'sidebarLink'
-            }
-          >
-            <UserAddIcon
+        {user.role === 'admin' && (
+          <Link href="/register">
+            <li
               className={
                 router.pathname == '/register'
-                  ? 'sidebarActiveIcon'
-                  : 'sidebarIcon'
-              }
-            />
-            <span
-              className={
-                router.pathname == '/register'
-                  ? 'sidebarActiveText'
-                  : 'sidebarText'
+                  ? 'sidebarActiveLink'
+                  : 'sidebarLink'
               }
             >
-              Tambah User Baru
-            </span>
-          </li>
-        </Link>}
+              <UserAddIcon
+                className={
+                  router.pathname == '/register'
+                    ? 'sidebarActiveIcon'
+                    : 'sidebarIcon'
+                }
+              />
+              <span
+                className={
+                  router.pathname == '/register'
+                    ? 'sidebarActiveText'
+                    : 'sidebarText'
+                }
+              >
+                Tambah User Baru
+              </span>
+            </li>
+          </Link>
+        )}
         <li
           className="sidebarLink flex cursor-pointer"
           onClick={() => logOut()}

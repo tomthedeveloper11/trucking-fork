@@ -18,8 +18,11 @@ import 'react-datepicker/dist/react-datepicker.css';
 import * as jwt from 'jsonwebtoken';
 import { getCookie } from 'cookies-next';
 import authorizeUser from '../../helpers/auth';
+import { useRouterRefresh } from '../../hooks/hooks';
+import { PlusCircleIcon, TrashIcon } from '@heroicons/react/outline';
 import moment from 'moment';
 import { useRouter } from 'next/router';
+
 
 const defaultStartDate = moment().startOf('month').toDate();
 const defaultEndDate = moment().endOf('day').toDate();
@@ -54,9 +57,18 @@ export default function TruckDetails({
     miscTruckTransactions
   );
 
+  const [width, setWidth] = useState(window.innerWidth);
+
   useEffect(() => {
+    const handleResizeWindow = () => setWidth(window.innerWidth);
+    window.addEventListener('resize', handleResizeWindow);
+
     setTruckTransactionsState(truckTransactions);
     setMiscTruckTransactionsState(miscTruckTransactions);
+
+    return () => {
+      window.removeEventListener('resize', handleResizeWindow);
+    };
   }, [truckTransactions, miscTruckTransactions]);
 
   const truckDataTableHeaders = {
@@ -160,101 +172,265 @@ export default function TruckDetails({
     // setTruckTransactionsState(truckTransactions);
     // setMiscTruckTransactionsState(miscTruckTransactions);
   }
+
+  const [query, setQuery] = useState('');
+
   return (
     <>
       <Head>
         <title>Truck Details</title>
       </Head>
 
-      <div className="container p-8 mb-60 flex-col">
+      <div className="w-full p-5 mb-60">
         <h1 className="text-center text-7xl mb-5">{truckName}</h1>
-        <div className="flex w-56 gap-5 mx-3 my-5">
-          <DatePicker
-            dateFormat="dd/MM/yyyy"
-            selected={startDate}
-            onChange={(date: Date) =>
-              setStartDate(new Date(new Date(date).setHours(0, 0, 0)))
-            }
-          />
-          <span className="text-3xl">-</span>
-          <DatePicker
-            dateFormat="dd/MM/yyyy"
-            selected={endDate}
-            onChange={(date: Date) =>
-              setEndDate(new Date(new Date(date).setHours(23, 59, 59)))
-            }
-            minDate={startDate}
-          />
+
+        <div>
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={filterByMonth}
-          >
-            Filter
-          </button>
-        </div>
-        <div className="grid grid-cols-2">
-          <button
-            className={`mr-3 hover:bg-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ${
+            className={`hover:bg-blue-500 font-semibold hover:text-white py-1 px-3 border border-blue-500 hover:border-transparent rounded-t-lg ${
               table === 'trip'
-                ? 'bg-blue-500 text-white'
+                ? 'bg-blue-500 text-white z-10 pt-3 px-5'
                 : 'bg-transparent text-blue-700'
             }`}
-            onClick={() => setTable('trip')}
+            onClick={() => {
+              setTable('trip');
+              setQuery('');
+            }}
           >
             Transaksi Trip
           </button>
           <button
-            className={`mr-3 hover:bg-blue-500 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded ${
+            className={` hover:bg-blue-500 font-semibold hover:text-white py-1 px-3 border border-blue-500 hover:border-transparent rounded-t-lg ${
               table === 'misc'
-                ? 'bg-blue-500 text-white'
+                ? 'bg-blue-500 text-white pt-3 px-5'
                 : 'bg-transparent text-blue-700'
             }`}
-            onClick={() => setTable('misc')}
+            onClick={() => {
+              setTable('misc');
+              setQuery('');
+            }}
           >
             Transaksi Lainnya
           </button>
         </div>
-        {table === 'trip' && user?.role !== 'guest' && (
-          <div className="flex justify-end mr-5 mb-3">
-            <AddTruckTransactionButton
-              truckId={truckId}
-              autoCompleteData={autoCompleteData}
-            />
-          </div>
-        )}{' '}
-        {table === 'misc' && user?.role !== 'guest' && (
-          <div className="flex justify-end mr-5 mb-3">
-            <AddAdditionalTruckTransactionButton truckId={truckId} />
-          </div>
-        )}
-        {table === 'trip' ? (
-          <TruckTransactionDataTable
-            headers={truckDataTableHeaders}
-            data={truckTransactionsState.map((t, i) =>
-              formatTruckTransaction(t, i + 1)
-            )}
-            hiddenFields={[
-              'id',
-              'isPrinted',
-              'truckId',
-              'isPrintedBon',
-              'isPrintedInvoice',
-              'pph',
-              'sellingPrice',
-              'editableByUserUntil',
-              user?.role === 'user' ? 'income' : '',
-            ]}
-            autoCompleteData={autoCompleteData}
-          />
-        ) : (
-          <AdditionalTruckTransactionDataTable
-            headers={miscDataTableHeaders}
-            data={miscTruckTransactionsState.map((t, i) =>
-              formatMiscTransaction(t, i + 1)
-            )}
-            hiddenFields={['id', 'isPrinted', 'truckId', 'editableByUserUntil']}
-          />
-        )}
+
+        <div>
+          {width > 1200 ? (
+            <div className="flex bg-white p-5 gap-5 justify-between">
+              <form className="flex items-center">
+                <div className="relative w-[20vw]">
+                  <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                    <svg
+                      aria-hidden="true"
+                      className="w-5 h-5 text-gray-500"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                        clipRule="evenodd"
+                      ></path>
+                    </svg>
+                  </div>
+                  <input
+                    type="text"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-green-400 focus:border-green-500 block w-full pl-10 p-2.5"
+                    placeholder={
+                      table === 'trip'
+                        ? 'No Container / No Bon / Tujuan / EMKL'
+                        : 'Deskripsi'
+                    }
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                    autoFocus
+                  />
+                </div>
+              </form>
+              <div className="flex">
+                <DatePicker
+                  className="w-32 text-center mx-1 rounded-sm focus:ring-green-400 focus:border-green-500"
+                  dateFormat="dd/MM/yyyy"
+                  selected={startDate}
+                  onChange={(date: Date) =>
+                    setStartDate(new Date(new Date(date).setHours(0, 0, 0)))
+                  }
+                />
+                <span className="text-3xl mx-2">-</span>
+                <DatePicker
+                  className="w-32 text-center mx-1 rounded-sm focus:ring-green-400 focus:border-green-500"
+                  dateFormat="dd/MM/yyyy"
+                  selected={endDate}
+                  onChange={(date: Date) =>
+                    setEndDate(new Date(new Date(date).setHours(23, 59, 59)))
+                  }
+                  minDate={startDate}
+                />
+                <button
+                  className="mx-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  onClick={filterByMonth}
+                >
+                  Filter
+                </button>
+              </div>
+              {table === 'trip' && user?.role !== 'guest' && (
+                <div className="flex justify-end mr-5">
+                  <AddTruckTransactionButton
+                    truckId={truckId}
+                    autoCompleteData={autoCompleteData}
+                  />
+                </div>
+              )}{' '}
+              {table === 'misc' && user?.role !== 'guest' && (
+                <div className="flex justify-end mr-5">
+                  <AddAdditionalTruckTransactionButton truckId={truckId} />
+                </div>
+              )}
+            </div>
+          ) : (
+            <>
+              <form className="flex items-center bg-white py-5">
+                <div className="relative w-[45vw] text-center justify-center mx-auto">
+                  <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
+                    <svg
+                      aria-hidden="true"
+                      className="w-5 h-5 text-gray-500"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                        clipRule="evenodd"
+                      ></path>
+                    </svg>
+                  </div>
+                  <input
+                    type="text"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-green-400 focus:border-green-500 block w-full pl-10 p-2.5"
+                    placeholder={
+                      table === 'trip'
+                        ? 'No Container / No Bon / Tujuan / EMKL'
+                        : 'Deskripsi'
+                    }
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                    autoFocus
+                  />
+                </div>
+              </form>
+              <div className="flex justify-between bg-white pb-5 gap-2 px-5">
+                <div className="flex">
+                  <DatePicker
+                    className="w-28 text-center rounded-sm focus:ring-green-400 focus:border-green-500"
+                    dateFormat="dd/MM/yyyy"
+                    selected={startDate}
+                    onChange={(date: Date) =>
+                      setStartDate(new Date(new Date(date).setHours(0, 0, 0)))
+                    }
+                  />
+                  <span className="text-3xl mx-1">-</span>
+                  <DatePicker
+                    className="w-28 text-center rounded-sm focus:ring-green-400 focus:border-green-500"
+                    dateFormat="dd/MM/yyyy"
+                    selected={endDate}
+                    onChange={(date: Date) =>
+                      setEndDate(new Date(new Date(date).setHours(23, 59, 59)))
+                    }
+                    minDate={startDate}
+                  />
+                  <button
+                    className="mx-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={filterByMonth}
+                  >
+                    Filter
+                  </button>
+                </div>
+                {table === 'trip' && user?.role !== 'guest' && (
+                  <div className="flex">
+                    <AddTruckTransactionButton
+                      truckId={truckId}
+                      autoCompleteData={autoCompleteData}
+                    />
+                  </div>
+                )}{' '}
+                {table === 'misc' && user?.role !== 'guest' && (
+                  <div className="flex">
+                    <AddAdditionalTruckTransactionButton truckId={truckId} />
+                  </div>
+                )}
+              </div>
+            </>
+          )}
+
+          {table === 'trip' ? (
+            <div className="px-5 pb-5 bg-white rounded">
+              <TruckTransactionDataTable
+                headers={truckDataTableHeaders}
+                data={truckTransactionsState
+                  .filter((truckTransaction) => {
+                    if (query === '') {
+                      return truckTransaction;
+                    } else if (
+                      truckTransaction.containerNo
+                        .toLowerCase()
+                        .includes(query.toLowerCase()) ||
+                      truckTransaction.invoiceNo
+                        .toLowerCase()
+                        .includes(query.toLowerCase()) ||
+                      truckTransaction.destination
+                        .toLowerCase()
+                        .includes(query.toLowerCase()) ||
+                      truckTransaction.customer
+                        .toLowerCase()
+                        .includes(query.toLowerCase())
+                    ) {
+                      return truckTransaction;
+                    }
+                  })
+                  .map((t, i) => formatTruckTransaction(t, i + 1))}
+                hiddenFields={[
+                  'id',
+                  'isPrinted',
+                  'truckId',
+                  'isPrintedBon',
+                  'isPrintedInvoice',
+                  'pph',
+                  'sellingPrice',
+                  'editableByUserUntil',
+                  user?.role === 'user' ? 'income' : '',
+                ]}
+                autoCompleteData={autoCompleteData}
+              />
+            </div>
+          ) : (
+            <div className="px-5 pb-5 bg-white rounded">
+              <AdditionalTruckTransactionDataTable
+                headers={miscDataTableHeaders}
+                data={miscTruckTransactionsState
+                  .filter((miscTruckTransaction) => {
+                    if (query === '') {
+                      return miscTruckTransaction;
+                    } else if (
+                      miscTruckTransaction.details
+                        .toLowerCase()
+                        .includes(query.toLowerCase())
+                    ) {
+                      return miscTruckTransaction;
+                    }
+                  })
+                  .map((t, i) => formatMiscTransaction(t, i + 1))}
+                hiddenFields={[
+                  'id',
+                  'isPrinted',
+                  'truckId',
+                  'editableByUserUntil',
+                ]}
+              />
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

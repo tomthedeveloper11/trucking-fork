@@ -2,17 +2,19 @@ import axios from 'axios';
 import { useRouterRefresh } from '../hooks/hooks';
 import { TrashIcon } from '@heroicons/react/solid';
 import { useToastContext } from '../lib/toast-context';
-import { BASE_URL } from '../types/common';
-import Swal from 'sweetalert2'
+import { BASE_URL, TruckTransaction } from '../types/common';
+import Swal from 'sweetalert2';
 
 interface DeleteTruckTransactionButtonProps {
   transactionId: string;
   disabled?: boolean;
+  transaction: TruckTransaction;
 }
 
 export default function DeleteVariousTransactionButton({
   transactionId,
   disabled = false,
+  transaction,
 }: DeleteTruckTransactionButtonProps) {
   const refreshData = useRouterRefresh();
   const addToast = useToastContext();
@@ -30,6 +32,19 @@ export default function DeleteVariousTransactionButton({
       });
   }
 
+  let htmlString = '';
+
+  if (transaction?.containerNo) {
+    htmlString = `No. Container: <b>${transaction.containerNo}</b> <br>
+    No. Bon: <b>${transaction.invoiceNo}</b> <br>
+    Tujuan: <b>${transaction.destination}</b> <br>
+    EMKL: <b>${transaction.customer}</b> <br>
+    Tanggal: <b>${transaction.date}</b>`;
+  } else {
+    htmlString = `Deskripsi: <b>${transaction?.details}</b> <br>
+    Tanggal: <b>${transaction?.date}</b>`
+  }
+
   return (
     <TrashIcon
       className={`${
@@ -39,12 +54,12 @@ export default function DeleteVariousTransactionButton({
         if (!disabled) {
           Swal.fire({
             title: 'Yakin akan menghapus transaksi ini?',
-            text: "Transaksi ini tidak akan bisa dikembalikan setelah dihapus",
+            html: htmlString,
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#d33',
             cancelButtonColor: 'gray',
-            confirmButtonText: 'Ya, tolong dihapus!'
+            confirmButtonText: 'Ya, tolong dihapus!',
           }).then((result) => {
             if (result.isConfirmed) {
               deleteTruckTransaction();
@@ -52,10 +67,9 @@ export default function DeleteVariousTransactionButton({
                 'Terhapus!',
                 'Transaksi ini telah berhasil dihapus',
                 'success'
-              )
+              );
             }
-          })
-          
+          });
         }
       }}
     />

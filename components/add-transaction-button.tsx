@@ -9,6 +9,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { PlusIcon } from '@heroicons/react/solid';
 import { useToastContext } from '../lib/toast-context';
 import moment from 'moment';
+import { PlusCircleIcon } from '@heroicons/react/outline';
 
 export default function AddTransactionButton() {
   const addToast = useToastContext();
@@ -16,7 +17,11 @@ export default function AddTransactionButton() {
     details: '',
     cost: 0,
     transactionType: TransactionType.ADDITIONAL_TRANSACTION,
-    editableByUserUntil: moment().endOf("month").add(3, 'days').utcOffset(7, false).toDate()
+    editableByUserUntil: moment()
+      .endOf('month')
+      .add(3, 'days')
+      .utcOffset(7, false)
+      .toDate(),
   };
   const refreshData = useRouterRefresh();
   const [transaction, setTransaction] = useState(baseTransaction);
@@ -51,10 +56,11 @@ export default function AddTransactionButton() {
   return (
     <>
       <button
-        className="z-10 fixed bottom-5 bg-green-400 hover:bg-green-500 text-white p-5 rounded-full"
+        className="flex gap-1 border rounded-full py-2 px-10 shadow-sm transition-all"
         onClick={() => setModal(true)}
       >
-        <PlusIcon className="h-10" />
+        <PlusCircleIcon className="h-5 mt-0.5" />
+        <span className="whitespace-nowrap">Tambah Transaksi</span>
       </button>
       <Modal show={modal} onClose={() => setModal(false)} size="3xl">
         <Modal.Header>Tambah Transaksi Lainnya</Modal.Header>

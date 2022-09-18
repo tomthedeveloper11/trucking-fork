@@ -53,7 +53,7 @@ export default function AdditionalTruckTransactionDataTable({
   const totalCost = data.reduce((acc, obj) => acc + obj.cost, 0);
 
   if (data.length == 0) {
-    return <h1 className="text-3xl text-center">Tidak ada Transaksi</h1>;
+    return <h1 className="text-3xl text-center mt-10">Tidak ada Transaksi</h1>;
   }
 
   return (
@@ -85,6 +85,7 @@ export default function AdditionalTruckTransactionDataTable({
                     <DeleteVariousTransactionButton
                       key={`delete-button-${transaction.id}`}
                       transactionId={transaction.id}
+                      transaction={transaction}
                     />
                   </Table.Cell>
                 ) : (

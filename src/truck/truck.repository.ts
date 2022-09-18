@@ -15,9 +15,21 @@ const getTrucks = async () => {
   return trucks.map((truck) => convertDocumentToObject<Truck>(truck));
 };
 
+const editTruck = async (
+  editTruckPayload
+) => {
+  const document = await TruckModel.findOneAndUpdate(
+    { _id: editTruckPayload.id },
+    editTruckPayload
+  );
+  const truck = convertDocumentToObject<Truck>(document);
+  return truck;
+};
+
 const truckRepository = {
   createTruck,
   getTrucks,
+  editTruck
 };
 
 export default truckRepository;

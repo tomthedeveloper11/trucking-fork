@@ -11,9 +11,17 @@ const getTrucks = async () => {
   return trucks;
 };
 
+const editTruck = async (truckPayload: Truck) => {
+  const editTruck = await truckRepository.editTruck(
+    truckPayload
+  );
+  return editTruck;
+};
+
 const truckService = {
   createTruck,
   getTrucks,
+  editTruck
 };
 
 export default truckService;
