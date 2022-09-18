@@ -13,7 +13,7 @@ import authorizeUser from '../helpers/auth';
 import { redirectToLogin } from '../types/common';
 import Link from 'next/link';
 import moment from 'moment';
-
+// moment.tz.setDefault('Atlantic/Reykjavik');
 const defaultStartDate = moment().startOf('month').utcOffset(7, false).toDate();
 const defaultEndDate = moment().endOf('day').utcOffset(7, false).toDate();
 
@@ -54,6 +54,9 @@ export default function Home({
   const [endDate, setEndDate] = useState(defaultEndDate);
 
   async function filterByMonth() {
+    console.log(startDate, 'startDate - filterByMonth');
+    console.log(endDate, 'endDate - filterByMonth');
+
     const truckSummaries =
       await truckTransactionBloc.getGroupedTruckTransactions({
         access_token: user.access_token,
@@ -348,6 +351,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   } catch (e) {
     return redirectToLogin;
   }
+  console.log(defaultStartDate, 'startDate - onload');
+  console.log(defaultEndDate, 'endDate - onload');
 
   const truckSummaries = await truckTransactionBloc.getGroupedTruckTransactions(
     {
