@@ -16,20 +16,6 @@ import moment from 'moment';
 
 const defaultStartDate = moment().startOf('month').utcOffset(7, false).toDate();
 const defaultEndDate = moment().endOf('day').utcOffset(7, false).toDate();
-function getStartDateEndDate(urlQuery: any) {
-  const startDateQuery: string = urlQuery.startDate;
-  const endDateQuery: string = urlQuery.endDate;
-
-  const startDate = startDateQuery
-    ? new Date(startDateQuery)
-    : defaultStartDate;
-  const endDate = endDateQuery ? new Date(endDateQuery) : defaultEndDate;
-
-  return {
-    startDate,
-    endDate,
-  };
-}
 
 export default function Home({
   truckSummaries,
@@ -64,36 +50,24 @@ export default function Home({
   const entries = Object.entries(truckSummariesState);
   entries.sort();
 
-  const [startDate, setStartDate] = useState(
-    getStartDateEndDate(router.query).startDate
-  );
-  const [endDate, setEndDate] = useState(
-    getStartDateEndDate(router.query).endDate
-  );
+  const [startDate, setStartDate] = useState(defaultStartDate);
+  const [endDate, setEndDate] = useState(defaultEndDate);
 
   async function filterByMonth() {
-    router.push({
-      pathname: router.asPath.split('?')[0],
-      query: {
-        startDate: startDate.toISOString(),
-        endDate: endDate.toISOString(),
-      },
+    const truckSummaries =
+      await truckTransactionBloc.getGroupedTruckTransactions({
+        access_token: user.access_token,
+        startDate,
+        endDate,
+      });
+    const summaries = await truckTransactionBloc.getTotalSummary({
+      access_token: user.access_token,
+      startDate,
+      endDate,
     });
 
-    // const truckSummaries =
-    //   await truckTransactionBloc.getGroupedTruckTransactions({
-    //     access_token: user.access_token,
-    //     startDate,
-    //     endDate,
-    //   });
-    // const summaries = await truckTransactionBloc.getTotalSummary({
-    //   access_token: user.access_token,
-    //   startDate,
-    //   endDate,
-    // });
-
-    // setTruckSummariesState(truckSummaries);
-    // setSummariesState(summaries);
+    setTruckSummariesState(truckSummaries);
+    setSummariesState(summaries);
   }
 
   async function printSummary() {
@@ -147,7 +121,9 @@ export default function Home({
                 dateFormat="dd/MM/yyyy"
                 selected={startDate}
                 onChange={(date: Date) =>
-                  setStartDate(new Date(new Date(date).setHours(0, 0, 0)))
+                  setStartDate(
+                    moment(date).startOf('day').utcOffset(7, false).toDate()
+                  )
                 }
               />
               <span className="text-3xl">-</span>
@@ -156,7 +132,9 @@ export default function Home({
                 dateFormat="dd/MM/yyyy"
                 selected={endDate}
                 onChange={(date: Date) =>
-                  setEndDate(new Date(new Date(date).setHours(23, 59, 59)))
+                  setEndDate(
+                    moment(date).endOf('day').utcOffset(7, false).toDate()
+                  )
                 }
                 minDate={startDate}
               />
@@ -180,7 +158,7 @@ export default function Home({
             </div>
           </div>
         ) : (
-          <div className='m-3'>
+          <div className="m-3">
             <form className="flex items-center bg-white py-5">
               <div className="relative w-[45vw] text-center justify-center mx-auto">
                 <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
@@ -252,7 +230,9 @@ export default function Home({
 
         <div
           className={`${
-            user?.role === 'user' || width < 1200 ? 'grid-cols-2' : 'grid-cols-4'
+            user?.role === 'user' || width < 1200
+              ? 'grid-cols-2'
+              : 'grid-cols-4'
           } grid gap-7 text-center mt-6 border border-gray-200 rounded p-5 m-3 bg-white shadow-md`}
         >
           {user?.role !== 'user' && (
@@ -364,19 +344,18 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   } catch (e) {
     return redirectToLogin;
   }
-  const { startDate, endDate } = getStartDateEndDate(context.query);
 
   const truckSummaries = await truckTransactionBloc.getGroupedTruckTransactions(
     {
       access_token,
-      startDate: startDate,
-      endDate: endDate,
+      startDate: defaultStartDate,
+      endDate: defaultEndDate,
     }
   );
   const summaries = await truckTransactionBloc.getTotalSummary({
     access_token,
-    startDate: startDate,
-    endDate: endDate,
+    startDate: defaultStartDate,
+    endDate: defaultEndDate,
   });
 
   return {
