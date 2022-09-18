@@ -193,7 +193,9 @@ export default function Home({
                   dateFormat="dd/MM/yyyy"
                   selected={startDate}
                   onChange={(date: Date) =>
-                    setStartDate(new Date(new Date(date).setHours(0, 0, 0)))
+                    setStartDate(
+                      moment(date).startOf('day').utcOffset(7, false).toDate()
+                    )
                   }
                 />
                 <span className="text-3xl">-</span>
@@ -202,7 +204,9 @@ export default function Home({
                   dateFormat="dd/MM/yyyy"
                   selected={endDate}
                   onChange={(date: Date) =>
-                    setEndDate(new Date(new Date(date).setHours(23, 59, 59)))
+                    setEndDate(
+                      moment(date).endOf('day').utcOffset(7, false).toDate()
+                    )
                   }
                   minDate={startDate}
                 />
