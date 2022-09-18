@@ -82,11 +82,11 @@ export default function Home({
       <Head>
         <title>{'Home'}</title>
       </Head>
-      <div className="container m-auto">
+      <div className="w-full m-auto">
         <h2 className="text-7xl text-center m-auto">Rekap</h2>
 
         {width > 1200 ? (
-          <div className="flex justify-between m-5">
+          <div className="grid grid-cols-3 justify-between m-5">
             <form className="flex items-center">
               <div className="relative w-[20vw]">
                 <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">

@@ -68,7 +68,7 @@ export default function TransactionPage({
         <title>Truck Details</title>
       </Head>
 
-      <div className="container p-8 mb-60 flex-col">
+      <div className="w-full p-8 mb-60 flex-col">
         <h1 className="text-center text-7xl mb-5">Pengeluaran Lain</h1>
         <div className="flex bg-white p-5 gap-5 justify-between">
           <form className="flex items-center">

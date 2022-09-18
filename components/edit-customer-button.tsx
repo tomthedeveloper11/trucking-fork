@@ -1,34 +1,32 @@
 import { Modal } from 'flowbite-react';
 import axios from 'axios';
 import { useState } from 'react';
-import TextInput from '../text-input';
-import { BASE_URL, Truck } from '../../types/common';
-import { useRouterRefresh } from '../../hooks/hooks';
+import TextInput from './text-input';
+import { BASE_URL, Truck } from '../types/common';
+import { useRouterRefresh } from '../hooks/hooks';
 import { PencilAltIcon, PlusCircleIcon } from '@heroicons/react/outline';
 
-export default function EditTruckButton({ existingTruck }) {
-  const [truck, setTruck] = useState(existingTruck);
-  console.log("🚀 ~ file: edit-truck-button.tsx ~ line 11 ~ EditTruckButton ~ truck", truck)
-
+export default function EditCustomerButton({ existingCustomer }) {
+  const [customer, setCustomer] = useState(existingCustomer);
   const [modal, setModal] = useState(false);
   const refreshData = useRouterRefresh();
 
   function handleChange(event: React.ChangeEvent<HTMLInputElement>) {
     const { name, value } = event.target;
 
-    setTruck((prevState) => ({
+    setCustomer((prevState) => ({
       ...prevState,
       [name]: value,
     }));
   }
 
-  async function editTruck() {
+  async function editCustomer() {
     await axios({
       method: 'PUT',
-      url: `${BASE_URL}/api/truck/${truck.id}`,
-      data: truck,
+      url: `${BASE_URL}/api/customer/${customer.id}`,
+      data: customer,
     });
-    setTruck({ name: '', licenseNumber: '' });
+    setCustomer({ initial: '', name: '', address: '' });
     refreshData();
   }
 
@@ -47,17 +45,25 @@ export default function EditTruckButton({ existingTruck }) {
             <div className="grid grid-rows-2 grid-cols-3 grid-flow-row gap-4">
               <div className="form-group row-span-1 col-span-3">
                 <TextInput
-                  label="Nama"
-                  name="name"
-                  value={truck.name}
+                  label="Initial"
+                  name="initial"
+                  value={customer.initial}
                   onChange={handleChange}
                 />
               </div>
               <div className="form-group row-span-1 col-span-3">
                 <TextInput
-                  label="NoPol"
-                  name="licenseNumber"
-                  value={truck.licenseNumber}
+                  label="Nama"
+                  name="name"
+                  value={customer.name}
+                  onChange={handleChange}
+                />
+              </div>
+              <div className="form-group row-span-1 col-span-3">
+                <TextInput
+                  label="Alamat"
+                  name="address"
+                  value={customer.address}
                   onChange={handleChange}
                 />
               </div>
@@ -68,11 +74,11 @@ export default function EditTruckButton({ existingTruck }) {
           <button
             className="bg-[#F5D558] hover:bg-[#E3C652] text-white font-bold py-2 px-10 rounded w-full"
             onClick={() => {
-              editTruck();
+              editCustomer();
               setModal(false);
             }}
           >
-            Edit Truk
+            Edit Customer
           </button>
         </Modal.Footer>
       </Modal>

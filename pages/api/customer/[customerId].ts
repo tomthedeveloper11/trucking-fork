@@ -24,5 +24,13 @@ export default async function handler(
       // await conn.close();
       res.status(200).json({ data: customer });
       break;
+
+    case 'PUT':
+      await connectDb();
+      const editCustomerPayload = req.body;
+      const editCustomer = await customerService.editCustomer(editCustomerPayload);
+
+      res.status(200).json({ data: editCustomer });
+      break;
   }
 }

@@ -9,6 +9,7 @@ import authorizeUser from '../../helpers/auth';
 import { redirectToLogin } from '../../types/common';
 import { useEffect, useState } from 'react';
 import { PencilAltIcon } from '@heroicons/react/outline';
+import EditCustomerButton from '../../components/edit-customer-button';
 
 export default function Print({
   customers,
@@ -32,7 +33,7 @@ export default function Print({
       <Head>
         <title>{'Print'}</title>
       </Head>
-      <div className="container p-8">
+      <div className="w-full p-8">
         <div className="flex justify-between mb-6">
           <form className="flex items-center">
             <div className="relative w-[20vw]">
@@ -107,12 +108,10 @@ export default function Print({
 
                 {user.role === 'admin' && (
                   <div className="border-l-2 flex">
-                    <PencilAltIcon
-                      className="text-yellow-200 hover:text-yellow-300 cursor-pointer h-7 z-10 self-center"
-                      onClick={() => {
-                        console.log('edit');
-                      }}
-                    />
+                     <EditCustomerButton
+                        key={`edit-modal-key${customer.id}`}
+                        existingCustomer={customer}
+                      />
                   </div>
                 )}
               </div>

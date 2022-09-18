@@ -41,8 +41,8 @@ export default function DeleteVariousTransactionButton({
     EMKL: <b>${transaction.customer}</b> <br>
     Tanggal: <b>${transaction.date}</b>`;
   } else {
-    htmlString = `Deskripsi: <b>${transaction.details}</b> <br>
-    Tanggal: <b>${transaction.date}</b>`
+    htmlString = `Deskripsi: <b>${transaction?.details}</b> <br>
+    Tanggal: <b>${transaction?.date}</b>`
   }
 
   return (

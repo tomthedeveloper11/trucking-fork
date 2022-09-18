@@ -23,7 +23,7 @@ export default function Home({
       <Head>
         <title>{'Home'}</title>
       </Head>
-      <div className="container p-8 mt-10">
+      <div className="w-full p-8 mt-10">
         <div className="flex justify-between mb-6">
           <form className="flex items-center">
             <div className="relative w-[20vw]">

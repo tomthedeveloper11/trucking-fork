@@ -33,11 +33,21 @@ const getCustomerByCustomerId = async (customerId: string) => {
   return null;
 };
 
+const editCustomer = async (editCustomerPayload) => {
+  const document = await CustomerModel.findOneAndUpdate(
+    { _id: editCustomerPayload.id },
+    editCustomerPayload
+  );
+  const customer = convertDocumentToObject<Customer>(document);
+  return customer;
+};
+
 const customerRepository = {
   createCustomer,
   getCustomers,
   getCustomerByInitial,
   getCustomerByCustomerId,
+  editCustomer,
 };
 
 export default customerRepository;

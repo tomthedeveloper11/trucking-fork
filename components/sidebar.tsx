@@ -17,8 +17,10 @@ export default function SidebarComponent() {
   const router = useRouter();
 
   function logOut() {
-    deleteCookie('access_token');
     router.push('/login');
+    setTimeout(() => {
+      deleteCookie('access_token');
+    }, 500);
   }
 
   return (
@@ -131,32 +133,34 @@ export default function SidebarComponent() {
             </span>
           </li>
         </Link>
-        {user.role === 'admin' && <Link href="/register">
-          <li
-            className={
-              router.pathname == '/register'
-                ? 'sidebarActiveLink'
-                : 'sidebarLink'
-            }
-          >
-            <UserAddIcon
+        {user.role === 'admin' && (
+          <Link href="/register">
+            <li
               className={
                 router.pathname == '/register'
-                  ? 'sidebarActiveIcon'
-                  : 'sidebarIcon'
-              }
-            />
-            <span
-              className={
-                router.pathname == '/register'
-                  ? 'sidebarActiveText'
-                  : 'sidebarText'
+                  ? 'sidebarActiveLink'
+                  : 'sidebarLink'
               }
             >
-              Tambah User Baru
-            </span>
-          </li>
-        </Link>}
+              <UserAddIcon
+                className={
+                  router.pathname == '/register'
+                    ? 'sidebarActiveIcon'
+                    : 'sidebarIcon'
+                }
+              />
+              <span
+                className={
+                  router.pathname == '/register'
+                    ? 'sidebarActiveText'
+                    : 'sidebarText'
+                }
+              >
+                Tambah User Baru
+              </span>
+            </li>
+          </Link>
+        )}
         <li
           className="sidebarLink flex cursor-pointer"
           onClick={() => logOut()}
