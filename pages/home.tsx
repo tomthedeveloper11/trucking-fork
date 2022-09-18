@@ -14,8 +14,8 @@ import { redirectToLogin } from '../types/common';
 import Link from 'next/link';
 import moment from 'moment';
 
-const defaultStartDate = moment().startOf('month').toDate();
-const defaultEndDate = moment().endOf('day').toDate();
+const defaultStartDate = moment().startOf('month').utcOffset(7, false).toDate();
+const defaultEndDate = moment().endOf('day').utcOffset(7, false).toDate();
 function getStartDateEndDate(urlQuery: any) {
   const startDateQuery: string = urlQuery.startDate;
   const endDateQuery: string = urlQuery.endDate;
