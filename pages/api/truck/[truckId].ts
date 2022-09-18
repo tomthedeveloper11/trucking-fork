@@ -1,8 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import transactionService from '../../../src/transaction/transaction.service';
+import truckService from '../../../src/truck/truck.service';
 import connectDb from '../../../src/mongodb/connection';
 import * as jwt from 'jsonwebtoken';
 import { JwtPayload } from 'jsonwebtoken';
+import transactionService from '../../../src/transaction/transaction.service';
 
 interface TruckDetailProps extends NextApiRequest {
   headers: {
@@ -19,7 +20,6 @@ export default async function handler(
   req: TruckDetailProps,
   res: NextApiResponse
 ) {
-  let conn;
   switch (req.method) {
     case 'GET':
       const { authorization } = req.headers;
@@ -28,10 +28,9 @@ export default async function handler(
         process.env.SECRET_KEY
       ) as JwtPayload;
 
-      conn = await connectDb();
+      await connectDb();
       const transactions =
         await transactionService.getTruckTransactionsByTruckId(req.query);
-      // await conn.close();
 
       if (user.role === 'user') {
         transactions.forEach((transaction) => {
@@ -40,6 +39,14 @@ export default async function handler(
       }
 
       res.status(200).json({ data: transactions });
+      break;
+
+    case 'PUT':
+      await connectDb();
+      const editTruckPayload = req.body;
+      const editTruck = await truckService.editTruck(editTruckPayload);
+
+      res.status(200).json({ data: editTruck });
       break;
   }
 }

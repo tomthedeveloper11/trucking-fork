@@ -9,6 +9,7 @@ import { getCookie } from 'cookies-next';
 import authorizeUser from '../../helpers/auth';
 import { useState } from 'react';
 import { PencilAltIcon } from '@heroicons/react/outline';
+import EditTruckButton from '../../components/truck/edit-truck-button';
 
 export default function Home({
   trucks,
@@ -68,42 +69,42 @@ export default function Home({
                 return trucks;
               }
             })
-            .map((truck: Truck) => (
-              <div
-                className="flex bg-white rounded border border-gray-200 shadow-md"
-                key={truck.id}
-              >
-                <div className="hover:bg-gray-100 flex-grow cursor-pointer">
-                  <Link
-                    href={{
-                      pathname: `/trucks/${truck.id}`,
-                      query: {
-                        truckName: truck.name,
-                      },
-                    }}
-                  >
-                    <h1
-                      className={`${
-                        truck.name.length > 13 ? 'text-2xl' : 'text-3xl'
-                      } xl:text-5xl text-center my-8`}
-                    >
-                      {truck.name}
-                    </h1>
-                  </Link>
-                </div>
-
-                {user.role === 'admin' && (
-                  <div className="border-l-2 flex">
-                    <PencilAltIcon
-                      className="text-yellow-200 hover:text-yellow-300 cursor-pointer h-7 z-10 self-center"
-                      onClick={() => {
-                        console.log('edit');
+            .map((truck: Truck) => {
+              return (
+                <div
+                  className="flex bg-white rounded border border-gray-200 shadow-md"
+                  key={truck.id}
+                >
+                  <div className="hover:bg-gray-100 flex-grow cursor-pointer">
+                    <Link
+                      href={{
+                        pathname: `/trucks/${truck.id}`,
+                        query: {
+                          truckName: truck.name,
+                        },
                       }}
-                    />
+                    >
+                      <h1
+                        className={`${
+                          truck.name.length > 13 ? 'text-2xl' : 'text-3xl'
+                        } xl:text-5xl text-center my-8`}
+                      >
+                        {truck.name}
+                      </h1>
+                    </Link>
                   </div>
-                )}
-              </div>
-            ))}
+
+                  {user.role === 'admin' && (
+                    <div className="border-l-2 flex">
+                      <EditTruckButton
+                        key={`edit-modal-key${truck.id}`}
+                        existingTruck={truck}
+                      />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
         </div>
       </div>
     </>
