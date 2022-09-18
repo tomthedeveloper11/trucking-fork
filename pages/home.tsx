@@ -13,9 +13,8 @@ import authorizeUser from '../helpers/auth';
 import { redirectToLogin } from '../types/common';
 import Link from 'next/link';
 import moment from 'moment';
-// moment.tz.setDefault('Atlantic/Reykjavik');
-const defaultStartDate = moment().startOf('month').utcOffset(7, false).toDate();
-const defaultEndDate = moment().endOf('day').utcOffset(7, false).toDate();
+const defaultStartDate = moment().utcOffset(7, false).startOf('month').toDate();
+const defaultEndDate = moment().utcOffset(7, false).endOf('day').toDate();
 
 export default function Home({
   truckSummaries,
@@ -125,7 +124,7 @@ export default function Home({
                 selected={startDate}
                 onChange={(date: Date) =>
                   setStartDate(
-                    moment(date).startOf('day').utcOffset(7, false).toDate()
+                    moment(date).utcOffset(7, false).startOf('day').toDate()
                   )
                 }
               />
@@ -136,7 +135,7 @@ export default function Home({
                 selected={endDate}
                 onChange={(date: Date) =>
                   setEndDate(
-                    moment(date).endOf('day').utcOffset(7, false).toDate()
+                    moment(date).utcOffset(7, false).endOf('day').toDate()
                   )
                 }
                 minDate={startDate}
@@ -197,7 +196,7 @@ export default function Home({
                   selected={startDate}
                   onChange={(date: Date) =>
                     setStartDate(
-                      moment(date).startOf('day').utcOffset(7, false).toDate()
+                      moment(date).utcOffset(7, false).startOf('day').toDate()
                     )
                   }
                 />
@@ -208,7 +207,7 @@ export default function Home({
                   selected={endDate}
                   onChange={(date: Date) =>
                     setEndDate(
-                      moment(date).endOf('day').utcOffset(7, false).toDate()
+                      moment(date).utcOffset(7, false).endOf('day').toDate()
                     )
                   }
                   minDate={startDate}
