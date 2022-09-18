@@ -143,7 +143,7 @@ export default function CustomerDetails({
         <h1 className="text-center text-7xl mb-5">{customer.initial}</h1>
         {width > 1200 ? (
           <div className="bg-white p-5 rounded">
-            <div className="grid grid-cols-3 mt-5">
+            <div className="grid grid-cols-3 my-5">
               <form className="items-center">
                 <div className="relative w-[20vw]">
                   <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
@@ -240,7 +240,7 @@ export default function CustomerDetails({
           </div>
         ) : (
           <div className="bg-white p-5 rounded">
-            <div className="flex-col mt-5">
+            <div className="flex-col my-5">
               <div className="flex justify-center my-3">
                 <div className='flex gap-3'>
                   <DatePicker

@@ -5,6 +5,7 @@ import {
   DataTableTruckTransaction,
   TransactionType,
   UITruckTransaction,
+  User,
 } from '../types/common';
 import React, { useEffect, useState } from 'react';
 import { PrinterIcon } from '@heroicons/react/solid';
@@ -28,6 +29,7 @@ interface DataTableProperties {
 
 function buildTransactionRow(
   obj: DataTableTruckTransaction,
+  user: User,
   hiddenFields?: string[],
   emkl?: boolean
 ) {
@@ -50,7 +52,9 @@ function buildTransactionRow(
         }
         return (
           <Table.Cell
-            className={`px-0 text-center ${emkl ? 'cursor-pointer' : ''}`}
+            className={`px-0 text-center ${
+              emkl && user.role !== 'user' ? 'cursor-pointer' : ''
+            }`}
             key={`td-${obj.id}-${i}`}
           >
             {rowValue}
@@ -152,7 +156,7 @@ export default function TruckTransactionDataTable({
   return (
     <>
       {emkl && user.role !== 'user' && (
-        <div className="flex justify-between my-3">
+        <div className="flex justify-between">
           <div className="flex gap-3">
             <input
               className="mt-5 ml-6 rounded checked:bg-green-400 checked:border-green-400 focus:ring-green-500 cursor-pointer"
@@ -257,7 +261,7 @@ export default function TruckTransactionDataTable({
                   'bg-green-100 hover:bg-green-200'
                 } hover:bg-gray-100`}
                 onClick={
-                  emkl
+                  emkl && user.role !== 'user'
                     ? () => {
                         truckTransactions[index].selected =
                           !truckTransactions[index].selected;
@@ -300,7 +304,12 @@ export default function TruckTransactionDataTable({
                     </div>
                   </Table.Cell>
                 )}
-                {buildTransactionRow(truckTransaction, hiddenFields, emkl)}
+                {buildTransactionRow(
+                  truckTransaction,
+                  user,
+                  hiddenFields,
+                  emkl
+                )}
                 {truckTransactions[index] && user.role === 'admin' ? (
                   <Table.Cell>
                     <div className="flex flex-row">
@@ -314,12 +323,13 @@ export default function TruckTransactionDataTable({
                         key={`delete-button-${truckTransactions[index]?.id}`}
                         transactionId={truckTransaction.id}
                         disabled={truckTransactions[index]?.selected}
-                        transaction={truckTransaction}
+                        transaction={truckTransactions[index]}
                       />
                     </div>
                   </Table.Cell>
                 ) : (
-                  truckTransactions[index] && user.role === 'user' &&
+                  truckTransactions[index] &&
+                  user.role === 'user' &&
                   moment().utcOffset(7, false).valueOf() <
                     new Date(
                       truckTransaction.editableByUserUntil
@@ -336,6 +346,7 @@ export default function TruckTransactionDataTable({
                           key={`delete-button-${truckTransactions[index]?.id}`}
                           transactionId={truckTransaction.id}
                           disabled={truckTransactions[index]?.selected}
+                          transaction={truckTransactions[index]}
                         />
                       </div>
                     </Table.Cell>
