@@ -97,24 +97,24 @@
         {{#each summary}}
         <tr class="tableBodyRow">
           <td class="tableBodyCol">{{@key}}</td>
-          <td class="tableBodyCol">{{formatRupiah this.additionalCost}}</td>
-          <td class="tableBodyCol">{{formatRupiah this.cost}}</td>
-          <td class="tableBodyCol">{{formatRupiah this.sellingPrice}}</td>
-          <td class="tableBodyCol">{{formatRupiah this.margin}}</td>
+          <td class="tableBodyCol" style="white-space: nowrap">{{formatRupiah this.additionalCost}}</td>
+          <td class="tableBodyCol" style="white-space: nowrap">{{formatRupiah this.cost}}</td>
+          <td class="tableBodyCol" style="white-space: nowrap">{{formatRupiah this.sellingPrice}}</td>
+          <td class="tableBodyCol" style="white-space: nowrap">{{formatRupiah this.margin}}</td>
         </tr>
         {{/each}}
         <tr class="tableBodyRow">
           <td class="tableBodyCol" style="font-weight: bold">TOTAL</td>
-          <td class="tableBodyCol" style="font-weight: bold">
+          <td class="tableBodyCol" style="font-weight: bold; white-space: nowrap">
             {{formatRupiah totalAdditionalCost}}
           </td>
-          <td class="tableBodyCol" style="font-weight: bold">
+          <td class="tableBodyCol" style="font-weight: bold; white-space: nowrap">
             {{formatRupiah totalTruckCost}}
           </td>
-          <td class="tableBodyCol" style="font-weight: bold">
+          <td class="tableBodyCol" style="font-weight: bold; white-space: nowrap">
             {{formatRupiah totalSellingPrice}}
           </td>
-          <td class="tableBodyCol" style="font-weight: bold">
+          <td class="tableBodyCol" style="font-weight: bold; white-space: nowrap">
             {{formatRupiah totalTruckMargin}}
           </td>
         </tr>
@@ -133,12 +133,12 @@
         {{#each this}}
         <tr class="tableBodyRow">
           <td class="tableBodyCol">{{this.details}}</td>
-          <td class="tableBodyCol">{{formatRupiah this.cost}}</td>
+          <td class="tableBodyCol; white-space: nowrap">{{formatRupiah this.cost}}</td>
         </tr>
         {{/each}} {{#if @last}}
         <tr class="tableBodyRow">
           <td class="tableBodyCol" style="font-weight: bold">TOTAL</td>
-          <td class="tableBodyCol" style="font-weight: bold">
+          <td class="tableBodyCol" style="font-weight: bold; white-space: nowrap">
             {{formatRupiah ../miscTransactionsTotal}}
           </td>
         </tr>
@@ -158,16 +158,16 @@
       </thead>
       <tbody class="tableBody">
         <tr class="tableBodyRow">
-          <td class="tableBodyCol" style="font-weight: bold">
+          <td class="tableBodyCol" style="font-weight: bold; white-space: nowrap">
             {{formatRupiah totalCost}}
           </td>
-          <td class="tableBodyCol" style="font-weight: bold">
+          <td class="tableBodyCol" style="font-weight: bold; white-space: nowrap">
             {{formatRupiah totalTruckCost}}
           </td>
-          <td class="tableBodyCol" style="font-weight: bold">
+          <td class="tableBodyCol" style="font-weight: bold; white-space: nowrap">
             {{formatRupiah totalSellingPrice}}
           </td>
-          <td class="tableBodyCol" style="font-weight: bold">
+          <td class="tableBodyCol" style="font-weight: bold; white-space: nowrap">
             {{formatRupiah totalMargin}}
           </td>
         </tr>

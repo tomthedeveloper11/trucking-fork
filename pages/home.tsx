@@ -12,10 +12,24 @@ import { PrinterIcon } from '@heroicons/react/solid';
 import authorizeUser from '../helpers/auth';
 import { redirectToLogin } from '../types/common';
 import Link from 'next/link';
+import moment from 'moment';
 
-const date = new Date();
-const defaultStartDate = new Date(date.getFullYear(), date.getMonth(), 1);
-const defaultEndDate = new Date(new Date().setHours(23, 59, 59));
+const defaultStartDate = moment().startOf('month').toDate();
+const defaultEndDate = moment().endOf('day').toDate();
+function getStartDateEndDate(urlQuery: any) {
+  const startDateQuery: string = urlQuery.startDate;
+  const endDateQuery: string = urlQuery.endDate;
+
+  const startDate = startDateQuery
+    ? new Date(startDateQuery)
+    : defaultStartDate;
+  const endDate = endDateQuery ? new Date(endDateQuery) : defaultEndDate;
+
+  return {
+    startDate,
+    endDate,
+  };
+}
 
 export default function Home({
   truckSummaries,
@@ -35,31 +49,44 @@ export default function Home({
 
   const [summariesState, setSummariesState] = useState(summaries);
 
+  useEffect(() => {
+    setTruckSummariesState(truckSummaries);
+    setSummariesState(summaries);
+  }, [truckSummaries, summaries]);
+
   const entries = Object.entries(truckSummariesState);
   entries.sort();
 
   const [startDate, setStartDate] = useState(
-    new Date(date.getFullYear(), date.getMonth(), 1)
+    getStartDateEndDate(router.query).startDate
   );
   const [endDate, setEndDate] = useState(
-    new Date(new Date().setHours(23, 59, 59))
+    getStartDateEndDate(router.query).endDate
   );
 
   async function filterByMonth() {
-    const truckSummaries =
-      await truckTransactionBloc.getGroupedTruckTransactions({
-        access_token: user.access_token,
-        startDate,
-        endDate,
-      });
-    const summaries = await truckTransactionBloc.getTotalSummary({
-      access_token: user.access_token,
-      startDate,
-      endDate,
+    router.push({
+      pathname: router.asPath.split('?')[0],
+      query: {
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+      },
     });
 
-    setTruckSummariesState(truckSummaries);
-    setSummariesState(summaries);
+    // const truckSummaries =
+    //   await truckTransactionBloc.getGroupedTruckTransactions({
+    //     access_token: user.access_token,
+    //     startDate,
+    //     endDate,
+    //   });
+    // const summaries = await truckTransactionBloc.getTotalSummary({
+    //   access_token: user.access_token,
+    //   startDate,
+    //   endDate,
+    // });
+
+    // setTruckSummariesState(truckSummaries);
+    // setSummariesState(summaries);
   }
 
   async function printSummary() {
@@ -221,18 +248,19 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   } catch (e) {
     return redirectToLogin;
   }
+  const { startDate, endDate } = getStartDateEndDate(context.query);
 
   const truckSummaries = await truckTransactionBloc.getGroupedTruckTransactions(
     {
       access_token,
-      startDate: defaultStartDate,
-      endDate: defaultEndDate,
+      startDate: startDate,
+      endDate: endDate,
     }
   );
   const summaries = await truckTransactionBloc.getTotalSummary({
     access_token,
-    startDate: defaultStartDate,
-    endDate: defaultEndDate,
+    startDate: startDate,
+    endDate: endDate,
   });
 
   return {
