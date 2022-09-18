@@ -16,10 +16,25 @@ import 'react-datepicker/dist/react-datepicker.css';
 import * as jwt from 'jsonwebtoken';
 import { getCookie } from 'cookies-next';
 import authorizeUser from '../../helpers/auth';
+import { useRouter } from 'next/router';
+import moment from 'moment';
 
-const date = new Date();
-const defaultStartDate = new Date(date.getFullYear(), date.getMonth(), 1);
-const defaultEndDate = new Date(new Date().setHours(23, 59, 59));
+const defaultStartDate = moment().startOf('month').toDate();
+const defaultEndDate = moment().endOf('day').toDate();
+function getStartDateEndDate(urlQuery: any) {
+  const startDateQuery: string = urlQuery.startDate;
+  const endDateQuery: string = urlQuery.endDate;
+
+  const startDate = startDateQuery
+    ? new Date(startDateQuery)
+    : defaultStartDate;
+  const endDate = endDateQuery ? new Date(endDateQuery) : defaultEndDate;
+
+  return {
+    startDate,
+    endDate,
+  };
+}
 
 export default function CustomerDetails({
   truckTransactions,
@@ -28,6 +43,7 @@ export default function CustomerDetails({
   customerId,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const user = authorizeUser();
+  const router = useRouter();
 
   const dataTableHeaders = {
     Tanggal: 'w-1/12',
@@ -80,22 +96,28 @@ export default function CustomerDetails({
   }, [truckTransactions]);
 
   const [startDate, setStartDate] = useState(
-    new Date(date.getFullYear(), date.getMonth(), 1)
+    getStartDateEndDate(router.query).startDate
   );
   const [endDate, setEndDate] = useState(
-    new Date(new Date().setHours(23, 59, 59))
+    getStartDateEndDate(router.query).endDate
   );
 
   async function filterByMonth() {
-    const truckTransactions =
-      await truckTransactionBloc.getTruckTransactionsByCustomerId(
-        user.access_token,
-        customerId,
-        startDate,
-        endDate
-      );
-
-    setTruckTransactionsState(truckTransactions);
+    router.push({
+      pathname: router.asPath.split('?')[0],
+      query: {
+        startDate: startDate.toISOString(),
+        endDate: endDate.toISOString(),
+      },
+    });
+    // const truckTransactions =
+    //   await truckTransactionBloc.getTruckTransactionsByCustomerId(
+    //     user.access_token,
+    //     customerId,
+    //     startDate,
+    //     endDate
+    //   );
+    // setTruckTransactionsState(truckTransactions);
   }
 
   const [query, setQuery] = useState('');
@@ -337,6 +359,7 @@ export const getServerSideProps = async (context: any) => {
   }
 
   const customerId: string = context.params.id;
+  const { startDate, endDate } = getStartDateEndDate(context.query);
 
   const customer: Customer = await customerBloc.getCustomerByCustomerId(
     customerId
@@ -345,8 +368,8 @@ export const getServerSideProps = async (context: any) => {
     await truckTransactionBloc.getTruckTransactionsByCustomerId(
       access_token,
       customerId,
-      defaultStartDate,
-      defaultEndDate
+      startDate,
+      endDate
     );
   const autoCompleteData =
     await truckTransactionBloc.getTruckTransactionAutoComplete();
