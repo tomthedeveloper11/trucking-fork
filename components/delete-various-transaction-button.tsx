@@ -16,6 +16,7 @@ export default function DeleteVariousTransactionButton({
   disabled = false,
   transaction,
 }: DeleteTruckTransactionButtonProps) {
+  console.log("🚀 ~ file: delete-various-transaction-button.tsx ~ line 19 ~ transaction", transaction)
   const refreshData = useRouterRefresh();
   const addToast = useToastContext();
 
