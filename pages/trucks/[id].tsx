@@ -22,6 +22,7 @@ import { useRouterRefresh } from '../../hooks/hooks';
 import { PlusCircleIcon, TrashIcon } from '@heroicons/react/outline';
 import moment from 'moment';
 import { useRouter } from 'next/router';
+import { useToastContext } from '../../lib/toast-context';
 
 
 const defaultStartDate = moment().startOf('month').toDate();
@@ -50,6 +51,7 @@ export default function TruckDetails({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const user = authorizeUser();
   const router = useRouter();
+  const addToast = useToastContext();
 
   const [truckTransactionsState, setTruckTransactionsState] =
     useState(truckTransactions);
@@ -171,6 +173,7 @@ export default function TruckDetails({
     //   );
     // setTruckTransactionsState(truckTransactions);
     // setMiscTruckTransactionsState(miscTruckTransactions);
+    addToast('Filter Success!');
   }
 
   const [query, setQuery] = useState('');
@@ -267,7 +270,7 @@ export default function TruckDetails({
                   minDate={startDate}
                 />
                 <button
-                  className="mx-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  className="mx-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded z-10"
                   onClick={filterByMonth}
                 >
                   Filter
@@ -341,7 +344,7 @@ export default function TruckDetails({
                     minDate={startDate}
                   />
                   <button
-                    className="mx-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    className="mx-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded z-10"
                     onClick={filterByMonth}
                   >
                     Filter

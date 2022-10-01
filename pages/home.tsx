@@ -15,12 +15,14 @@ import Link from 'next/link';
 import moment from 'moment';
 const defaultStartDate = moment().utcOffset(7, false).startOf('month').toDate();
 const defaultEndDate = moment().utcOffset(7, false).endOf('day').toDate();
+import { useToastContext } from '../lib/toast-context';
 
 export default function Home({
   truckSummaries,
   summaries,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const user = authorizeUser();
+  const addToast = useToastContext();
 
   const router = useRouter();
   const [width, setWidth] = useState(window.innerWidth);
@@ -67,6 +69,7 @@ export default function Home({
 
     setTruckSummariesState(truckSummaries);
     setSummariesState(summaries);
+    addToast('Filter Success!');
   }
 
   async function printSummary() {
@@ -138,13 +141,13 @@ export default function Home({
                 minDate={startDate}
               />
               <button
-                className="mx-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                className="mx-2 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded z-10"
                 onClick={filterByMonth}
               >
                 Filter
               </button>
             </div>
-            <div>
+            <div className="flex justify-end">
               {user?.role !== 'user' && (
                 <button
                   className="flex gap-2 whitespace-nowrap bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded ml-5"
@@ -157,8 +160,8 @@ export default function Home({
             </div>
           </div>
         ) : (
-          <div className="m-3">
-            <form className="flex items-center bg-white py-5">
+          <div className="m-3 bg-white py-5">
+            <form className="flex items-center">
               <div className="relative w-[45vw] text-center justify-center mx-auto">
                 <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
                   <svg
@@ -185,7 +188,7 @@ export default function Home({
                 />
               </div>
             </form>
-            <div className="flex justify-between bg-white pb-5 gap-2 px-5">
+            <div className="flex justify-center bg-white py-5 gap-2 px-5">
               <div className="flex">
                 <DatePicker
                   className="w-32 text-center mx-1 rounded-sm focus:ring-green-400 focus:border-green-500"
@@ -216,17 +219,17 @@ export default function Home({
                   Filter
                 </button>
               </div>
-              <div>
-                {user?.role !== 'user' && (
-                  <button
-                    className="flex gap-2 whitespace-nowrap bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-3 rounded ml-5"
-                    onClick={printSummary}
-                  >
-                    <PrinterIcon className="h-5 mt-[2px]" />
-                    Print Laporan
-                  </button>
-                )}
-              </div>
+            </div>
+            <div className='flex justify-center'>
+              {user?.role !== 'user' && (
+                <button
+                  className="flex gap-2 whitespace-nowrap bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-3 rounded ml-5"
+                  onClick={printSummary}
+                >
+                  <PrinterIcon className="h-5 mt-[2px]" />
+                  Print Laporan
+                </button>
+              )}
             </div>
           </div>
         )}
