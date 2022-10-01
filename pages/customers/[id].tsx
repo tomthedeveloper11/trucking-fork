@@ -18,6 +18,7 @@ import { getCookie } from 'cookies-next';
 import authorizeUser from '../../helpers/auth';
 import { useRouter } from 'next/router';
 import moment from 'moment';
+import { useToastContext } from '../../lib/toast-context';
 
 const defaultStartDate = moment().startOf('month').toDate();
 const defaultEndDate = moment().endOf('day').toDate();
@@ -44,6 +45,7 @@ export default function CustomerDetails({
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const user = authorizeUser();
   const router = useRouter();
+  const addToast = useToastContext();
 
   const dataTableHeaders = {
     Tanggal: 'w-1/12',
@@ -118,6 +120,8 @@ export default function CustomerDetails({
     //     endDate
     //   );
     // setTruckTransactionsState(truckTransactions);
+
+    addToast('Filter Success!');
   }
 
   const [query, setQuery] = useState('');
@@ -141,7 +145,7 @@ export default function CustomerDetails({
 
       <div className="w-full p-5 mb-60 flex-col">
         <h1 className="text-center text-7xl mb-5">{customer.initial}</h1>
-        {width > 1200 ? (
+        {width >= 1200 ? (
           <div className="bg-white p-5 rounded">
             <div className="grid grid-cols-3 my-5">
               <form className="items-center">
@@ -191,7 +195,7 @@ export default function CustomerDetails({
                   minDate={startDate}
                 />
                 <button
-                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded z-10"
                   onClick={filterByMonth}
                 >
                   Filter
@@ -262,7 +266,7 @@ export default function CustomerDetails({
                     minDate={startDate}
                   />
                   <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded z-10"
                     onClick={filterByMonth}
                   >
                     Filter

@@ -10,6 +10,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import * as jwt from 'jsonwebtoken';
 import { getCookie } from 'cookies-next';
 import authorizeUser from '../helpers/auth';
+import { useToastContext } from '../lib/toast-context';
 
 const date = new Date();
 const defaultStartDate = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -19,6 +20,7 @@ export default function TransactionPage({
   transactions,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const user = authorizeUser();
+  const addToast = useToastContext();
 
   const transactionDataTableHeaders = {
     No: '',
@@ -59,6 +61,7 @@ export default function TransactionPage({
     });
 
     setTransactionsState(transactions);
+    addToast('Filter Success!');
   }
   const [query, setQuery] = useState('');
 
