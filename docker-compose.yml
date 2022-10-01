@@ -22,7 +22,7 @@ services:
       - ./config/letsencrypt:/config
     environment:
       - EMAIL=filberttt@hotmail.com
-      - URL=trucking-bahari.fildabert.com
+      - URL=trucking.fildabert.com
       - VALIDATION=http
       - PUID=1000
       - PGID=1000
