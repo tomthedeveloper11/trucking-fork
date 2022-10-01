@@ -395,9 +395,15 @@ const printTransaction = async (
     havePPH,
   };
 
-  if (type == 'tagihanSuwiwi') {
-    content.main.noRek = '20.120.01530-6';
-    content.main.atasNama = 'SUWIWI';
+  if (type == 'tagihanKasim') {
+    content.main.noRek = '1951016581';
+    content.main.atasNama = 'KASIM RATNA';
+  } else if(type == 'tagihanMery') {
+    content.main.noRek = '2421210537';
+    content.main.atasNama = 'MERY';
+  } else {
+    content.main.noRek = '8195314663';
+    content.main.atasNama = 'Ali Martono';
   }
 
   let file;

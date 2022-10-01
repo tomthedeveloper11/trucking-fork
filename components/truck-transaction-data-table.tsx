@@ -194,7 +194,7 @@ export default function TruckTransactionDataTable({
               value={invoiceNum}
               onChange={handleChange}
             />
-            <div className="dropdown">
+           <div className="dropdown">
               <button
                 className={`dropbtn flex my-1 border border-gray-300 rounded shadow-sm px-2 text-gray-600 hover:bg-white`}
               >
@@ -204,9 +204,21 @@ export default function TruckTransactionDataTable({
               <div className="dropdown-content">
                 <a
                   className="cursor-pointer"
-                  onClick={() => print('tagihanSuwiwi')}
+                  onClick={() => print('tagihanYang')}
                 >
-                  Suwiwi
+                  Yang
+                </a>
+                <a
+                  className="cursor-pointer"
+                  onClick={() => print('tagihanMery')}
+                >
+                  Mery
+                </a>
+                <a
+                  className="cursor-pointer"
+                  onClick={() => print('tagihanKasim')}
+                >
+                  Kasim Ratna
                 </a>
               </div>
             </div>
