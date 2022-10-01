@@ -364,7 +364,7 @@ const printTransaction = async (
         // first page
       } else {
         if (type == 'bon') {
-          insertTransactionToPage(11);
+          insertTransactionToPage(10);
         } else {
           if (havePPH) {
             insertTransactionToPage(10);
