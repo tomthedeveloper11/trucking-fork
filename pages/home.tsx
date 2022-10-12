@@ -349,7 +349,7 @@ export default function Home({
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  moment.tz.setDefault('Atlantic/Reykjavik');
+  // moment.tz.setDefault('Atlantic/Reykjavik');
   const access_token = getCookie('access_token', {
     req: context.req,
     res: context.res,
