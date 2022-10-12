@@ -12,7 +12,8 @@ import { PrinterIcon } from '@heroicons/react/solid';
 import authorizeUser from '../helpers/auth';
 import { redirectToLogin } from '../types/common';
 import Link from 'next/link';
-import moment from 'moment';
+import moment from 'moment-timezone';
+moment.tz.setDefault('Atlantic/Reykjavik');
 const defaultStartDate = moment().utcOffset(7, false).startOf('month').toDate();
 const defaultEndDate = moment().utcOffset(7, false).endOf('day').toDate();
 import { useToastContext } from '../lib/toast-context';
@@ -50,7 +51,16 @@ export default function Home({
 
   const entries = Object.entries(truckSummariesState);
   entries.sort();
-
+  console.log(
+    defaultStartDate,
+    defaultStartDate.toString(),
+    'defaultStartDate client'
+  );
+  console.log(
+    defaultEndDate,
+    defaultEndDate.toString(),
+    'defaultEndDate client'
+  );
   const [startDate, setStartDate] = useState(defaultStartDate);
   const [endDate, setEndDate] = useState(defaultEndDate);
 
@@ -220,7 +230,7 @@ export default function Home({
                 </button>
               </div>
             </div>
-            <div className='flex justify-center'>
+            <div className="flex justify-center">
               {user?.role !== 'user' && (
                 <button
                   className="flex gap-2 whitespace-nowrap bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-3 rounded ml-5"
@@ -338,6 +348,7 @@ export default function Home({
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  moment.tz.setDefault('Atlantic/Reykjavik');
   const access_token = getCookie('access_token', {
     req: context.req,
     res: context.res,
@@ -350,7 +361,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   } catch (e) {
     return redirectToLogin;
   }
-
+  console.log(
+    defaultStartDate,
+    defaultStartDate.toString(),
+    'defaultStartDate server'
+  );
+  console.log(
+    defaultEndDate,
+    defaultEndDate.toString(),
+    'defaultEndDate server'
+  );
   const truckSummaries = await truckTransactionBloc.getGroupedTruckTransactions(
     {
       access_token,
