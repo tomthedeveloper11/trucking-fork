@@ -12,7 +12,7 @@ import { PrinterIcon } from '@heroicons/react/solid';
 import authorizeUser from '../helpers/auth';
 import { redirectToLogin } from '../types/common';
 import Link from 'next/link';
-import moment from 'moment-timezone';
+import moment from 'moment';
 // import moment from 'moment-timezone';
 // moment.tz.setDefault('Atlantic/Reykjavik');
 const defaultStartDate = moment().utcOffset(7, false).startOf('month').toDate();
