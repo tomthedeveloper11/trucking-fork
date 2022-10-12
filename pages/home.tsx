@@ -52,16 +52,16 @@ export default function Home({
 
   const entries = Object.entries(truckSummariesState);
   entries.sort();
-  console.log(
-    defaultStartDate,
-    defaultStartDate.toString(),
-    'defaultStartDate client'
-  );
-  console.log(
-    defaultEndDate,
-    defaultEndDate.toString(),
-    'defaultEndDate client'
-  );
+  // console.log(
+  //   defaultStartDate,
+  //   defaultStartDate.toString(),
+  //   'defaultStartDate client'
+  // );
+  // console.log(
+  //   defaultEndDate,
+  //   defaultEndDate.toString(),
+  //   'defaultEndDate client'
+  // );
   const [startDate, setStartDate] = useState(defaultStartDate);
   const [endDate, setEndDate] = useState(defaultEndDate);
 
@@ -362,16 +362,16 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   } catch (e) {
     return redirectToLogin;
   }
-  console.log(
-    defaultStartDate,
-    defaultStartDate.toString(),
-    'defaultStartDate server'
-  );
-  console.log(
-    defaultEndDate,
-    defaultEndDate.toString(),
-    'defaultEndDate server'
-  );
+  // console.log(
+  //   defaultStartDate,
+  //   defaultStartDate.toString(),
+  //   'defaultStartDate server'
+  // );
+  // console.log(
+  //   defaultEndDate,
+  //   defaultEndDate.toString(),
+  //   'defaultEndDate server'
+  // );
   const truckSummaries = await truckTransactionBloc.getGroupedTruckTransactions(
     {
       access_token,
