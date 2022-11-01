@@ -10,7 +10,11 @@ import * as jwt from 'jsonwebtoken';
 import { useRouter } from 'next/router';
 import { PrinterIcon } from '@heroicons/react/solid';
 import authorizeUser from '../helpers/auth';
-import { DataTableTruckTransaction, redirectToLogin, TruckTransaction } from '../types/common';
+import {
+  DataTableTruckTransaction,
+  redirectToLogin,
+  TruckTransaction,
+} from '../types/common';
 import Link from 'next/link';
 import moment from 'moment';
 // import moment from 'moment-timezone';
@@ -84,12 +88,12 @@ export default function Home({
   const [query, setQuery] = useState('');
   const [showTable, setShowTable] = useState(false);
 
-  const truckTransactions = []
+  const truckTransactions = [];
   entries.forEach((truckArr) => {
     truckArr[1].truckTransactionList.forEach((transaction) => {
-      truckTransactions.push(transaction)
-    })
-  })
+      truckTransactions.push(transaction);
+    });
+  });
 
   const formatTruckTransaction = (
     truckTransaction: TruckTransaction,
@@ -133,6 +137,10 @@ export default function Home({
     'Info Tambahan': 'w-1/10',
   };
 
+  if (user.role == 'user') {
+    delete dataTableHeaders.Pembayaran;
+  }
+
   return (
     <>
       <Head>
@@ -162,8 +170,8 @@ export default function Home({
                 </div>
                 <input
                   type="text"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-green-400 focus:border-green-500 block w-full pl-10 p-2.5"
-                  placeholder={'Nama Truk'}
+                  className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-green-400 focus:border-green-500 block w-[360px] pl-10 p-2.5"
+                  placeholder={'Truk/No.Container/No.Bon/Tujuan/EMKL/Bon'}
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
                   autoFocus
@@ -215,7 +223,7 @@ export default function Home({
         ) : (
           <div className="m-3 bg-white py-5">
             <form className="flex items-center">
-              <div className="relative w-[45vw] text-center justify-center mx-auto">
+              <div className="relative w-[55vw] text-center justify-center mx-auto">
                 <div className="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
                   <svg
                     aria-hidden="true"
@@ -234,7 +242,7 @@ export default function Home({
                 <input
                   type="text"
                   className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-sm focus:ring-green-400 focus:border-green-500 block w-full pl-10 p-2.5"
-                  placeholder={'Nama Truk'}
+                  placeholder={'Truk/No.Container/No.Bon/Tujuan/EMKL/Bon'}
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
                   autoFocus
@@ -295,7 +303,12 @@ export default function Home({
           } grid gap-7 text-center mt-6 border border-gray-200 rounded p-5 m-3 bg-white shadow-md`}
         >
           {user?.role !== 'user' && (
-            <button className="bg-white shadow-md rounded" onClick={() => {setShowTable(!showTable)}}>
+            <button
+              className="bg-white shadow-md rounded"
+              onClick={() => {
+                setShowTable(!showTable);
+              }}
+            >
               <div className="bg-green-100">
                 <div className="bg-green-400 h-1 w-full"></div>
                 <h3 className="text-2xl py-3">Total Pembayaran</h3>
@@ -306,7 +319,12 @@ export default function Home({
             </button>
           )}
 
-          <div className="bg-white shadow-md rounded">
+          <button
+            className="bg-white shadow-md rounded"
+            onClick={() => {
+              setShowTable(!showTable);
+            }}
+          >
             <div className="bg-red-100">
               <div className="bg-red-400 h-1 w-full"></div>
               <h3 className="text-2xl py-3">Total Pengeluaran Mobil</h3>
@@ -314,9 +332,14 @@ export default function Home({
             <h4 className="text-2xl font-bold  py-6">
               {formatRupiah(summariesState.totalTripCost)}
             </h4>
-          </div>
+          </button>
 
-          <div className="bg-white shadow-md rounded">
+          <button
+            className="bg-white shadow-md rounded"
+            onClick={() => {
+              setShowTable(!showTable);
+            }}
+          >
             <div className="bg-orange-100">
               <div className="bg-orange-400 h-1 w-full"></div>
               <h3 className="text-2xl py-3">Total Pengeluaran Lain</h3>
@@ -324,10 +347,15 @@ export default function Home({
             <h4 className="text-2xl font-bold py-6">
               {formatRupiah(summariesState.totalAdditionalCost)}
             </h4>
-          </div>
+          </button>
 
           {user?.role !== 'user' && (
-            <div className="bg-white shadow-md rounded">
+            <button
+              className="bg-white shadow-md rounded"
+              onClick={() => {
+                setShowTable(!showTable);
+              }}
+            >
               <div className="bg-blue-100">
                 <div className="bg-blue-400 h-1 w-full"></div>
                 <h3 className="text-2xl py-3">Total Margin</h3>
@@ -335,25 +363,54 @@ export default function Home({
               <h4 className="text-2xl font-bold py-6">
                 {formatRupiah(summariesState.totalMargin)}
               </h4>
-            </div>
+            </button>
           )}
         </div>
         <hr className="m-5" />
-        {showTable &&  <HomeTransactionDataTable
-              headers={dataTableHeaders}
-              data={truckTransactions.map((t, i) => formatTruckTransaction(t, i + 1))}
-              hiddenFields={[
-                'id',
-                'truckId',
-                'isPrintedBon',
-                'isPrintedInvoice',
-                'pph',
-                'sellingPrice',
-                'editableByUserUntil',
-                user?.role === 'user' ? 'income' : '',
-              ]}
-            />}
-            
+        {showTable && (
+          <HomeTransactionDataTable
+            headers={dataTableHeaders}
+            data={truckTransactions
+              .filter((truckTransaction) => {
+                if (query === '') {
+                  return truckTransaction;
+                } else if (
+                  truckTransaction.containerNo
+                    .toLowerCase()
+                    .includes(query.toLowerCase()) ||
+                  truckTransaction.invoiceNo
+                    .toLowerCase()
+                    .includes(query.toLowerCase()) ||
+                  truckTransaction.destination
+                    .toLowerCase()
+                    .includes(query.toLowerCase()) ||
+                  truckTransaction.customer.initial
+                    .toLowerCase()
+                    .includes(query.toLowerCase()) ||
+                  truckTransaction.truckName
+                    .toLowerCase()
+                    .includes(query.toLowerCase()) ||
+                  truckTransaction.bon
+                    .toLowerCase()
+                    .includes(query.toLowerCase())
+                ) {
+                  return truckTransaction;
+                }
+              })
+              .map((t, i) => formatTruckTransaction(t, i + 1))}
+            hiddenFields={[
+              'id',
+              'truckId',
+              'isPrintedBon',
+              'isPrintedInvoice',
+              'pph',
+              'sellingPrice',
+              'editableByUserUntil',
+              user?.role === 'user' ? 'income' : '',
+            ]}
+          />
+        )}
+
         <div className="grid grid-cols-3">
           {entries
             .filter((entry) => {

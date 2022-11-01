@@ -168,7 +168,7 @@ export default function CustomerDetails({
                   <input
                     type="text"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-green-400 focus:border-green-500 block w-full pl-10 p-2.5"
-                    placeholder={'No Container / No Bon / Tujuan / EMKL'}
+                  placeholder={'No.Container/No.Bon/Tujuan/Bon'}
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
                     autoFocus
@@ -219,7 +219,7 @@ export default function CustomerDetails({
                     truckTransaction.destination
                       .toLowerCase()
                       .includes(query.toLowerCase()) ||
-                    truckTransaction.customer
+                    truckTransaction.bon
                       .toLowerCase()
                       .includes(query.toLowerCase())
                   ) {
@@ -293,7 +293,7 @@ export default function CustomerDetails({
                   <input
                     type="text"
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-green-400 focus:border-green-500 block w-full pl-10 p-2.5"
-                    placeholder={'No Container / No Bon / Tujuan / EMKL'}
+                    placeholder={'Truk/No.Container/No.Bon/Tujuan/Bon'}
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
                     autoFocus
@@ -319,7 +319,7 @@ export default function CustomerDetails({
                     truckTransaction.destination
                       .toLowerCase()
                       .includes(query.toLowerCase()) ||
-                    truckTransaction.customer
+                    truckTransaction.bon
                       .toLowerCase()
                       .includes(query.toLowerCase())
                   ) {
@@ -361,7 +361,6 @@ export const getServerSideProps = async (context: any) => {
   } catch (e) {
     return redirectToLogin;
   }
-
   const customerId: string = context.params.id;
   const { startDate, endDate } = getStartDateEndDate(context.query);
 

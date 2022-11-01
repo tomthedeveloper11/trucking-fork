@@ -30,10 +30,8 @@ export default async function handler(
         ) as JwtPayload;
 
         conn = await connectDb();
-
         const transactions =
           await transactionService.getTruckTransactionsByCustomerId({
-            access_token: authorization,
             customerId: req.query.customerId,
             startDate: req.query.startDate,
             endDate: req.query.endDate,

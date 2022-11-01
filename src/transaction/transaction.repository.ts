@@ -85,6 +85,7 @@ const getTruckTransactionsByCustomerId = async (
     transactionType: TransactionType.TRUCK_TRANSACTION,
   }).sort({ date: -1 });
   const truckTransactions = documents.map((doc) => mapTruckTransaction(doc));
+  
   return truckTransactions;
 };
 

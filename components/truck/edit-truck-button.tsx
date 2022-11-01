@@ -8,7 +8,6 @@ import { PencilAltIcon, PlusCircleIcon } from '@heroicons/react/outline';
 
 export default function EditTruckButton({ existingTruck }) {
   const [truck, setTruck] = useState(existingTruck);
-  console.log("🚀 ~ file: edit-truck-button.tsx ~ line 11 ~ EditTruckButton ~ truck", truck)
 
   const [modal, setModal] = useState(false);
   const refreshData = useRouterRefresh();

@@ -1,4 +1,9 @@
-import { CustomerIdQuery, TruckIdQuery, DateQuery, TruckTransaction } from './../../types/common';
+import {
+  CustomerIdQuery,
+  TruckIdQuery,
+  DateQuery,
+  TruckTransaction,
+} from './../../types/common';
 import {
   TruckTransaction,
   TruckTransactionPayload,
@@ -136,11 +141,11 @@ const getGroupedTruckTransactions = async (date: TransactionSummaryQuery) => {
         margin: transaction.income
           ? transaction.income - transaction.cost
           : transaction.sellingPrice - transaction.cost,
-        truckTransactionList: []
+        truckTransactionList: [],
       };
       if (transaction.transactionType == 'TRUCK_TRANSACTION') {
         summary[truckName].cost = transaction.cost;
-        summary[truckName].truckTransactionList.push(transaction)
+        summary[truckName].truckTransactionList.push(transaction);
       } else {
         summary[truckName].additionalCost = transaction.cost;
       }
@@ -171,11 +176,13 @@ const getGroupedTruckTransactions = async (date: TransactionSummaryQuery) => {
             : transaction.sellingPrice
             ? transaction.sellingPrice - transaction.cost
             : 0 - transaction.cost),
-        truckTransactionList: transaction.transactionType == 'TRUCK_TRANSACTION' ? [...summary[truckName].truckTransactionList, transaction] : summary[truckName].truckTransactionList
-      }
+        truckTransactionList:
+          transaction.transactionType == 'TRUCK_TRANSACTION'
+            ? [...summary[truckName].truckTransactionList, transaction]
+            : summary[truckName].truckTransactionList,
+      };
     }
   }
-  console.log(summary)
   return summary;
 };
 
@@ -206,13 +213,16 @@ const getTotalSummary = async (date: TransactionSummaryQuery) => {
 
     summary.totalTripSellingPrice += transaction.income
       ? transaction.income
-      : (transaction.sellingPrice ? transaction.sellingPrice : 0);
+      : transaction.sellingPrice
+      ? transaction.sellingPrice
+      : 0;
 
     summary.totalMargin += transaction.income
       ? transaction.income - transaction.cost
-      : (transaction.sellingPrice ? transaction.sellingPrice - transaction.cost : 0 - transaction.cost);
+      : transaction.sellingPrice
+      ? transaction.sellingPrice - transaction.cost
+      : 0 - transaction.cost;
   }
-  console.log(summary)
   return summary;
 };
 
@@ -221,12 +231,21 @@ const getTruckTransactionsByCustomerId = async ({
   startDate,
   endDate,
 }: CustomerIdQuery) => {
+  const trucks = await truckRepository.getTrucks();
+
   const transactions =
     await transactionRepository.getTruckTransactionsByCustomerId(
       customerId,
       startDate,
       endDate
     );
+
+  for (const transaction of transactions) {
+    const truckName = trucks.find((t) => t.id === transaction.truckId)?.name;
+
+    transaction.truckName = truckName;
+  }
+
   return transactions;
 };
 
@@ -402,7 +421,7 @@ const printTransaction = async (
   if (type == 'tagihanKasim') {
     content.main.noRek = '1951016581';
     content.main.atasNama = 'KASIM RATNA';
-  } else if(type == 'tagihanMery') {
+  } else if (type == 'tagihanMery') {
     content.main.noRek = '2421210537';
     content.main.atasNama = 'MERY';
   } else {
