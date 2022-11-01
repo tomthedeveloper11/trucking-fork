@@ -109,7 +109,7 @@ export default function HomeTransactionDataTable({
             );
           })}
           <tr>
-            {new Array(user.role !== 'user' ? 6 : 5).fill('').map((_, i) => (
+            {new Array(6).fill('').map((_, i) => (
               <td key={`c${i}`}></td>
             ))}
 

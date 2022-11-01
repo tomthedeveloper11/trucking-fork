@@ -238,10 +238,10 @@ export default function TruckDetails({
                   </div>
                   <input
                     type="text"
-                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-green-400 focus:border-green-500 block w-full pl-10 p-2.5"
+                    className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-green-400 focus:border-green-500 block w-[320px] pl-10 p-2.5"
                     placeholder={
                       table === 'trip'
-                        ? 'No Container / No Bon / Tujuan / EMKL'
+                        ? 'No.Container/No.Bon/Tujuan/EMKL/Bon'
                         : 'Deskripsi'
                     }
                     value={query}
@@ -314,7 +314,7 @@ export default function TruckDetails({
                     className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded focus:ring-green-400 focus:border-green-500 block w-full pl-10 p-2.5"
                     placeholder={
                       table === 'trip'
-                        ? 'No Container / No Bon / Tujuan / EMKL'
+                        ? 'No.Container/No.Bon/Tujuan/EMKL/Bon'
                         : 'Deskripsi'
                     }
                     value={query}
@@ -386,6 +386,9 @@ export default function TruckDetails({
                         .toLowerCase()
                         .includes(query.toLowerCase()) ||
                       truckTransaction.customer
+                        .toLowerCase()
+                        .includes(query.toLowerCase()) ||
+                      truckTransaction.bon
                         .toLowerCase()
                         .includes(query.toLowerCase())
                     ) {
