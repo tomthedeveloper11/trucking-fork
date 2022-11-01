@@ -114,6 +114,7 @@ export interface TransactionSummary {
     additionalCost: number;
     sellingPrice: number;
     margin: number;
+    truckTransactionList: TruckTransaction[]; 
   };
 }
 

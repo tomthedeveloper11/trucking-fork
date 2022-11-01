@@ -10,7 +10,7 @@ import * as jwt from 'jsonwebtoken';
 import { useRouter } from 'next/router';
 import { PrinterIcon } from '@heroicons/react/solid';
 import authorizeUser from '../helpers/auth';
-import { redirectToLogin } from '../types/common';
+import { DataTableTruckTransaction, redirectToLogin, TruckTransaction } from '../types/common';
 import Link from 'next/link';
 import moment from 'moment';
 // import moment from 'moment-timezone';
@@ -18,6 +18,7 @@ import moment from 'moment';
 const defaultStartDate = moment().utcOffset(7, false).startOf('month').toDate();
 const defaultEndDate = moment().utcOffset(7, false).endOf('day').toDate();
 import { useToastContext } from '../lib/toast-context';
+import HomeTransactionDataTable from '../components/home-transactions';
 
 export default function Home({
   truckSummaries,
@@ -52,16 +53,7 @@ export default function Home({
 
   const entries = Object.entries(truckSummariesState);
   entries.sort();
-  // console.log(
-  //   defaultStartDate,
-  //   defaultStartDate.toString(),
-  //   'defaultStartDate client'
-  // );
-  // console.log(
-  //   defaultEndDate,
-  //   defaultEndDate.toString(),
-  //   'defaultEndDate client'
-  // );
+
   const [startDate, setStartDate] = useState(defaultStartDate);
   const [endDate, setEndDate] = useState(defaultEndDate);
 
@@ -90,6 +82,56 @@ export default function Home({
     });
   }
   const [query, setQuery] = useState('');
+  const [showTable, setShowTable] = useState(false);
+
+  const truckTransactions = []
+  entries.forEach((truckArr) => {
+    truckArr[1].truckTransactionList.forEach((transaction) => {
+      truckTransactions.push(transaction)
+    })
+  })
+
+  const formatTruckTransaction = (
+    truckTransaction: TruckTransaction,
+    index: number
+  ): DataTableTruckTransaction => {
+    return {
+      no: index,
+      truckName: truckTransaction.truckName,
+      id: truckTransaction.id,
+      date: new Date(truckTransaction.date).toLocaleDateString('id-ID'),
+      containerNo: truckTransaction.containerNo,
+      invoiceNo: truckTransaction.invoiceNo,
+      destination: truckTransaction.destination,
+      cost: truckTransaction.cost,
+      sellingPrice: truckTransaction.sellingPrice,
+      income: truckTransaction.income
+        ? truckTransaction.income
+        : truckTransaction.sellingPrice,
+      pph: truckTransaction.pph,
+      customer: truckTransaction.customer,
+      bon: truckTransaction.bon,
+      details: truckTransaction.details,
+      truckId: truckTransaction.truckId,
+      isPrintedBon: truckTransaction.isPrintedBon,
+      isPrintedInvoice: truckTransaction.isPrintedInvoice,
+      editableByUserUntil: truckTransaction.editableByUserUntil,
+    };
+  };
+
+  const dataTableHeaders = {
+    No: 'w-1/10',
+    Truk: 'w-1/10',
+    Tanggal: 'w-1/10',
+    'No. Container': 'w-2/10',
+    'No. Bon': 'w-1/10',
+    Tujuan: 'w-2/10',
+    Borongan: 'w-1/10',
+    Pembayaran: 'w-1/10',
+    EMKL: 'w-1/10',
+    Bon: 'w-2/10',
+    'Info Tambahan': 'w-1/10',
+  };
 
   return (
     <>
@@ -253,7 +295,7 @@ export default function Home({
           } grid gap-7 text-center mt-6 border border-gray-200 rounded p-5 m-3 bg-white shadow-md`}
         >
           {user?.role !== 'user' && (
-            <div className="bg-white shadow-md rounded">
+            <button className="bg-white shadow-md rounded" onClick={() => {setShowTable(!showTable)}}>
               <div className="bg-green-100">
                 <div className="bg-green-400 h-1 w-full"></div>
                 <h3 className="text-2xl py-3">Total Pembayaran</h3>
@@ -261,7 +303,7 @@ export default function Home({
               <h4 className="text-2xl font-bold  py-6">
                 {formatRupiah(summariesState.totalTripSellingPrice)}
               </h4>
-            </div>
+            </button>
           )}
 
           <div className="bg-white shadow-md rounded">
@@ -297,6 +339,21 @@ export default function Home({
           )}
         </div>
         <hr className="m-5" />
+        {showTable &&  <HomeTransactionDataTable
+              headers={dataTableHeaders}
+              data={truckTransactions.map((t, i) => formatTruckTransaction(t, i + 1))}
+              hiddenFields={[
+                'id',
+                'truckId',
+                'isPrintedBon',
+                'isPrintedInvoice',
+                'pph',
+                'sellingPrice',
+                'editableByUserUntil',
+                user?.role === 'user' ? 'income' : '',
+              ]}
+            />}
+            
         <div className="grid grid-cols-3">
           {entries
             .filter((entry) => {
@@ -362,16 +419,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   } catch (e) {
     return redirectToLogin;
   }
-  // console.log(
-  //   defaultStartDate,
-  //   defaultStartDate.toString(),
-  //   'defaultStartDate server'
-  // );
-  // console.log(
-  //   defaultEndDate,
-  //   defaultEndDate.toString(),
-  //   'defaultEndDate server'
-  // );
+
   const truckSummaries = await truckTransactionBloc.getGroupedTruckTransactions(
     {
       access_token,
