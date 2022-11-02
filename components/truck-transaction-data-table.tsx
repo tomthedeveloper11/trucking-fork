@@ -204,21 +204,9 @@ export default function TruckTransactionDataTable({
               <div className="dropdown-content">
                 <a
                   className="cursor-pointer"
-                  onClick={() => print('tagihanYang')}
+                  onClick={() => print('tagihanSuwiwi')}
                 >
-                  Yang
-                </a>
-                <a
-                  className="cursor-pointer"
-                  onClick={() => print('tagihanMery')}
-                >
-                  Mery
-                </a>
-                <a
-                  className="cursor-pointer"
-                  onClick={() => print('tagihanKasim')}
-                >
-                  Kasim Ratna
+                  Suwiwi
                 </a>
               </div>
             </div>
