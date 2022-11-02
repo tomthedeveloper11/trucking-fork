@@ -3,6 +3,7 @@ import { JwtPayload } from 'jsonwebtoken';
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 export const BASE_URL = 'https://trucking.fildabert.com';
 <<<<<<< HEAD
 // export const BASE_URL = 'http://localhost:3000';
@@ -18,6 +19,10 @@ export const BASE_URL = 'https://trucking.fildabert.com';
 // export const BASE_URL = 'http://localhost:3000';
 
 >>>>>>> 4a4d070 (hotfix trucking)
+=======
+export const BASE_URL = 'https://trucking-bahari.fildabert.com';
+//export const BASE_URL = 'http://localhost:3000';
+>>>>>>> 64743f9 (fixes for trucking bahari)
 
 export const redirectToLogin = {
   redirect: {
