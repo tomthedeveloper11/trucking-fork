@@ -1,12 +1,17 @@
 import { CookieValueTypes } from 'cookies-next';
 import { JwtPayload } from 'jsonwebtoken';
 
+<<<<<<< HEAD
 export const BASE_URL = 'https://trucking.fildabert.com';
 <<<<<<< HEAD
 // export const BASE_URL = 'http://localhost:3000';
 =======
 //export const BASE_URL = 'http://localhost:3000';
 >>>>>>> 5cacf8b (Update common.ts)
+=======
+export const BASE_URL = 'https://trucking-bahari.fildabert.com';
+//export const BASE_URL = 'http://localhost:3000';
+>>>>>>> a4adff4 (edited for trucking bahari)
 
 export const redirectToLogin = {
   redirect: {
