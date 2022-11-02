@@ -462,7 +462,7 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
   });
 
   const totalSellingPrice = Object.values(summary).reduce(
-    (acc, obj) => acc + obj.sellingPrice,
+    (acc, obj) => acc + (obj.income ? obj.income : obj.sellingPrice),
     0
   );
   const totalTruckCost = Object.values(summary).reduce(
