@@ -133,21 +133,27 @@ const getGroupedTruckTransactions = async (date: TransactionSummaryQuery) => {
     if (!summary[truckName]) {
       summary[truckName] = {
         truckId: transaction.truckId,
-        cost: 0,
-        additionalCost: 0,
+        cost: transaction.transactionType == 'TRUCK_TRANSACTION'
+        ? transaction.cost
+        : 0,
+        additionalCost: transaction.transactionType == 'TRUCK_ADDITIONAL_TRANSACTION'
+        ? transaction.cost
+        : 0,
         sellingPrice: transaction.income
           ? transaction.income
           : transaction.sellingPrice,
         margin: transaction.income
           ? transaction.income - transaction.cost
-          : transaction.sellingPrice - transaction.cost,
+          : transaction.sellingPrice
+          ? transaction.sellingPrice - transaction.cost
+          : 0 - transaction.cost,
         truckTransactionList: [],
       };
       if (transaction.transactionType == 'TRUCK_TRANSACTION') {
-        summary[truckName].cost = transaction.cost;
+        //summary[truckName].cost = transaction.cost;
         summary[truckName].truckTransactionList.push(transaction);
       } else {
-        summary[truckName].additionalCost = transaction.cost;
+        // summary[truckName].additionalCost = transaction.cost;
       }
     } else {
       summary[truckName] = {
@@ -190,39 +196,29 @@ const getTotalSummary = async (date: TransactionSummaryQuery) => {
   const transactions = await transactionRepository.getAllTransactions(date);
 
   const summary: TotalSummary = {
-    totalAdditionalCost: 0,
-    totalTripCost: 0,
     totalTripSellingPrice: 0,
+    totalTripCost: 0,
+    totalAdditionalCost: 0,
     totalMargin: 0,
   };
 
   for (const transaction of transactions) {
-    if (
-      transaction.transactionType === TransactionType.TRUCK_TRANSACTION ||
-      transaction.transactionType ===
-        TransactionType.TRUCK_ADDITIONAL_TRANSACTION
-    ) {
-      summary.totalTripCost += transaction.cost;
-    }
+    if (transaction.transactionType === 'TRUCK_TRANSACTION') {
+      summary.totalTripSellingPrice += transaction.income
+        ? transaction.income
+        : transaction.sellingPrice
+        ? transaction.sellingPrice
+        : 0;
 
-    if (
-      transaction.transactionType === TransactionType.ADDITIONAL_TRANSACTION
-    ) {
+      summary.totalTripCost += transaction.cost;
+    } else {
       summary.totalAdditionalCost += transaction.cost;
     }
 
-    summary.totalTripSellingPrice += transaction.income
-      ? transaction.income
-      : transaction.sellingPrice
-      ? transaction.sellingPrice
-      : 0;
-
-    summary.totalMargin += transaction.income
-      ? transaction.income - transaction.cost
-      : transaction.sellingPrice
-      ? transaction.sellingPrice - transaction.cost
-      : 0 - transaction.cost;
+    const incomeOrSellingPrice = transaction.income || transaction.sellingPrice || 0;
+    summary.totalMargin += incomeOrSellingPrice - transaction.cost;
   }
+
   return summary;
 };
 
