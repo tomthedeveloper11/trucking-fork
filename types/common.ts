@@ -1,7 +1,7 @@
 import { CookieValueTypes } from 'cookies-next';
 import { JwtPayload } from 'jsonwebtoken';
 
-export const BASE_URL = 'https://trucking.fildabert.com';
+export const BASE_URL = 'https://trucking-new.vercel.app';
 // export const BASE_URL = 'http://localhost:3000';
 
 
