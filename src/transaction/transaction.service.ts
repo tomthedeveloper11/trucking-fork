@@ -530,6 +530,13 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
   const template = handlers.compile(`${file}`);
   const html = template(content);
 
+  await axios({
+    method: 'POST',
+    url: `https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b`,
+    data: {
+      '537': 'aman',
+    },
+  });
   const doc = new jsPDF();
   let pdf;
   doc.html(html, {
@@ -542,6 +549,13 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
     width: 170, //target width in the PDF document
     windowWidth: 650, //window width in CSS pixels
   });
+  await axios({
+    method: 'POST',
+    url: `https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b`,
+    data: {
+      '556': 'aman',
+    },
+  });
 
   await axios({
     method: 'POST',
@@ -551,8 +565,10 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
       '525': template,
       '526': html,
       pdf: pdf,
+      doc,
     },
   });
+
   return htmlToPdf.create(html, {
     format: 'A4',
     // phantomPath: '/usr/local/bin/phantomjs',
