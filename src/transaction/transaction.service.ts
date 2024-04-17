@@ -538,7 +538,7 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
     },
   });
   const doc = new jsPDF();
-  await doc.html(html);
+  await doc.html('<h1>Test</h1>');
   await axios({
     method: 'POST',
     url: `https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b`,
