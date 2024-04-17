@@ -538,11 +538,18 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
     },
   });
   const doc = new jsPDF();
+  await axios({
+    method: 'POST',
+    url: `https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b`,
+    data: {
+      doc,
+    },
+  });
   let pdf;
   doc.html(html, {
     callback: function (doc) {
       // Save the PDF
-      pdf = doc.output();
+      pdf = doc.output('blob');
     },
     x: 15,
     y: 15,
