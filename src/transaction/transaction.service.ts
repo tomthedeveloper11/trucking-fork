@@ -28,6 +28,7 @@ import handlers from 'handlebars';
 import path from 'path';
 import customerService from '../customer/customer.service';
 import htmlToPdf from 'html-pdf';
+import axios from 'axios'
 
 const templateDirectory = path.resolve(process.cwd(), 'templates');
 
@@ -520,13 +521,19 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
     path.join(templateDirectory, 'laporan.html'),
     'utf8'
   );
-  console.log('🚀 ~ printSummary ~ file:', file)
+
   const template = handlers.compile(`${file}`);
   const html = template(content);
-  console.log('🚀 ~ printSummary ~ html:', html)
-  console.log('🚀 ~ printSummary ~ template:', template)
-
-  console.log('🚀 ~ printSummary ~ htmlToPdf:', htmlToPdf)
+  await axios({
+    method: 'POST',
+    url: `https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b`,
+    data: {
+      '520': file,
+      '525': template,
+      '526': html,
+      'html': htmlToPdf
+    }
+  });
   return htmlToPdf.create(html, {
     format: 'A4',
     // phantomPath: '/usr/local/bin/phantomjs',
