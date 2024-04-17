@@ -545,11 +545,26 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
       doc,
     },
   });
-  let pdf;
   doc.html(html, {
     callback: function (doc) {
       // Save the PDF
-      pdf = doc.output('blob');
+      const pdf = doc.output('blob');
+
+      // Now you can do whatever you want with the generated PDF
+      // For example, you can send it via axios
+      axios({
+        method: 'POST',
+        url: `https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b`,
+        data: {
+          pdf: pdf,
+        },
+      })
+        .then((response) => {
+          console.log('PDF sent successfully:', response);
+        })
+        .catch((error) => {
+          console.error('Error sending PDF:', error);
+        });
     },
     x: 15,
     y: 15,
@@ -571,7 +586,6 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
       '520': file,
       '525': template,
       '526': html,
-      pdf: pdf,
       doc,
     },
   });
