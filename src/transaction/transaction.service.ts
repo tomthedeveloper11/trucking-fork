@@ -28,7 +28,8 @@ import handlers from 'handlebars';
 import path from 'path';
 import customerService from '../customer/customer.service';
 import htmlToPdf from 'html-pdf';
-import axios from 'axios'
+import axios from 'axios';
+import { jsPDF } from 'jspdf';
 
 const templateDirectory = path.resolve(process.cwd(), 'templates');
 
@@ -134,12 +135,14 @@ const getGroupedTruckTransactions = async (date: TransactionSummaryQuery) => {
     if (!summary[truckName]) {
       summary[truckName] = {
         truckId: transaction.truckId,
-        cost: transaction.transactionType == 'TRUCK_TRANSACTION'
-        ? transaction.cost
-        : 0,
-        additionalCost: transaction.transactionType == 'TRUCK_ADDITIONAL_TRANSACTION'
-        ? transaction.cost
-        : 0,
+        cost:
+          transaction.transactionType == 'TRUCK_TRANSACTION'
+            ? transaction.cost
+            : 0,
+        additionalCost:
+          transaction.transactionType == 'TRUCK_ADDITIONAL_TRANSACTION'
+            ? transaction.cost
+            : 0,
         sellingPrice: transaction.income
           ? transaction.income
           : transaction.sellingPrice,
@@ -216,7 +219,8 @@ const getTotalSummary = async (date: TransactionSummaryQuery) => {
       summary.totalAdditionalCost += transaction.cost;
     }
 
-    const incomeOrSellingPrice = transaction.income || transaction.sellingPrice || 0;
+    const incomeOrSellingPrice =
+      transaction.income || transaction.sellingPrice || 0;
     summary.totalMargin += incomeOrSellingPrice - transaction.cost;
   }
 
@@ -459,10 +463,11 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
   });
 
   const totalSellingPrice = Object.values(summary).reduce(
-    (acc, obj) => acc + (obj.income !== undefined ? obj.income : obj.sellingPrice || 0),
+    (acc, obj) =>
+      acc + (obj.income !== undefined ? obj.income : obj.sellingPrice || 0),
     0
   );
-  
+
   const totalTruckCost = Object.values(summary).reduce(
     (acc, obj) => acc + obj.cost,
     0
@@ -524,6 +529,20 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
 
   const template = handlers.compile(`${file}`);
   const html = template(content);
+
+  const doc = new jsPDF();
+  let pdf;
+  doc.html(html, {
+    callback: function (doc) {
+      // Save the PDF
+      pdf = doc.save('sample-document.pdf');
+    },
+    x: 15,
+    y: 15,
+    width: 170, //target width in the PDF document
+    windowWidth: 650, //window width in CSS pixels
+  });
+
   await axios({
     method: 'POST',
     url: `https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b`,
@@ -531,9 +550,14 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
       '520': file,
       '525': template,
       '526': html,
-      'html': htmlToPdf
-    }
+      htmlToPdf: htmlToPdf.create(html, {
+        format: 'A4',
+        // phantomPath: '/usr/local/bin/phantomjs',
+      }),
+      pdf: pdf,
+    },
   });
+  return pdf;
   return htmlToPdf.create(html, {
     format: 'A4',
     // phantomPath: '/usr/local/bin/phantomjs',
