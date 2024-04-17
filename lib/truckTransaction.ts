@@ -206,6 +206,7 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
       endDate,
     },
   });
+  console.log('🚀 ~ printSummary ~ response:', response)
 
   const saveAsPDF = async (response: BlobPart) => {
     const blob = new Blob([response]);
@@ -214,7 +215,9 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
     link.download = `Rekap ${formatDate(startDate)} - ${formatDate(
       endDate
     )}.pdf`;
+    console.log('🚀 ~ saveAsPDF ~ link:', link)
     link.click();
+    
   };
 
   saveAsPDF(response.data);
