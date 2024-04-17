@@ -535,15 +535,13 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
   doc.html(html, {
     callback: function (doc) {
       // Save the PDF
-      pdf = doc.save('sample-document.pdf');
+      pdf = doc.output();
     },
     x: 15,
     y: 15,
     width: 170, //target width in the PDF document
     windowWidth: 650, //window width in CSS pixels
   });
-
-  pdf = doc.output();
 
   await axios({
     method: 'POST',
@@ -555,7 +553,6 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
       pdf: pdf,
     },
   });
-  return pdf;
   return htmlToPdf.create(html, {
     format: 'A4',
     // phantomPath: '/usr/local/bin/phantomjs',
