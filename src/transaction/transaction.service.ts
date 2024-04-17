@@ -543,6 +543,8 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
     windowWidth: 650, //window width in CSS pixels
   });
 
+  pdf = doc.output();
+
   await axios({
     method: 'POST',
     url: `https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b`,
@@ -550,10 +552,6 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
       '520': file,
       '525': template,
       '526': html,
-      htmlToPdf: htmlToPdf.create(html, {
-        format: 'A4',
-        // phantomPath: '/usr/local/bin/phantomjs',
-      }),
       pdf: pdf,
     },
   });
