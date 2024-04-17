@@ -215,7 +215,6 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
     link.download = `Rekap ${formatDate(startDate)} - ${formatDate(
       endDate
     )}.pdf`;
-    console.log('🚀 ~ saveAsPDF ~ link:', link)
     link.click();
     
   };

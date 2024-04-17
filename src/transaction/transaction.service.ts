@@ -520,9 +520,13 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
     path.join(templateDirectory, 'laporan.html'),
     'utf8'
   );
+  console.log('🚀 ~ printSummary ~ file:', file)
   const template = handlers.compile(`${file}`);
   const html = template(content);
+  console.log('🚀 ~ printSummary ~ html:', html)
+  console.log('🚀 ~ printSummary ~ template:', template)
 
+  console.log('🚀 ~ printSummary ~ htmlToPdf:', htmlToPdf)
   return htmlToPdf.create(html, {
     format: 'A4',
     // phantomPath: '/usr/local/bin/phantomjs',
