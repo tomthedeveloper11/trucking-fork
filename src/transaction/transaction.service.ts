@@ -538,55 +538,17 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
     },
   });
   const doc = new jsPDF();
-  await axios({
-    method: 'POST',
-    url: `https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b`,
-    data: {
-      doc,
-    },
-  });
-  doc.html(html, {
-    callback: function (doc) {
-      // Save the PDF
-      const pdf = doc.output('blob');
-
-      // Now you can do whatever you want with the generated PDF
-      // For example, you can send it via axios
-      axios({
-        method: 'POST',
-        url: `https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b`,
-        data: {
-          pdf: pdf,
-        },
-      })
-        .then((response) => {
-          console.log('PDF sent successfully:', response);
-        })
-        .catch((error) => {
-          console.error('Error sending PDF:', error);
-        });
-    },
-    x: 15,
-    y: 15,
-    width: 170, //target width in the PDF document
-    windowWidth: 650, //window width in CSS pixels
-  });
+  await doc.html(html);
+  const blobPDF = new Blob([doc.output('blob')], { type: 'application/pdf' });
+  const blobUrl = URL.createObjectURL(blobPDF);
   await axios({
     method: 'POST',
     url: `https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b`,
     data: {
       '556': 'aman',
-    },
-  });
-
-  await axios({
-    method: 'POST',
-    url: `https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b`,
-    data: {
-      '520': file,
-      '525': template,
-      '526': html,
-      doc,
+      blob: doc.output('blob'),
+      blobPDF,
+      blobUrl,
     },
   });
 
