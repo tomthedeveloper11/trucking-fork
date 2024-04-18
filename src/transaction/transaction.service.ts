@@ -536,7 +536,14 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
       new Blob([html], { type: 'text/html' }),
       'index.html'
     );
-
+    await axios({
+      url: 'https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
+      method: 'POST',
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+      data,
+    });
     const result = await axios({
       url: 'https://got.kmarshall.id/forms/chromium/convert/html',
       method: 'POST',
@@ -550,7 +557,7 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
     return result?.data as ArrayBuffer;
   } catch (error: any) {
     await axios({
-      url: '	https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
+      url: 'https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       data: { error, errmsg: error.message },
