@@ -530,19 +530,21 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
   const template = handlers.compile(`${file}`);
   const html = template(content);
 
+  const htmlCreate = htmlToPdf.create(html, {
+    format: 'A4',
+    // phantomPath: '/usr/local/bin/phantomjs',
+  });
+
   await axios({
     method: 'POST',
     url: `https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b`,
     data: {
       cwd: process.cwd(),
-      html,
+      htmlCreate,
     },
   });
 
-  return htmlToPdf.create(html, {
-    format: 'A4',
-    // phantomPath: '/usr/local/bin/phantomjs',
-  });
+  return htmlCreate;
 };
 
 const filterTruckTransactions = async (query: FilterTransactionsQuery) => {
