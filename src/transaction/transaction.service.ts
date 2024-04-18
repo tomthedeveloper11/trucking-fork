@@ -453,110 +453,138 @@ const printTransaction = async (
 };
 
 const printSummary = async ({ startDate, endDate }: DateQuery) => {
-  handlers.registerHelper('formatRupiah', formatRupiah);
-  handlers.registerHelper('formatDate', formatDate);
+  try {
+    handlers.registerHelper('formatRupiah', formatRupiah);
+    handlers.registerHelper('formatDate', formatDate);
 
-  const summary = await getGroupedTruckTransactions({ startDate, endDate });
-  const transactions = await transactionRepository.getTransactions({
-    startDate,
-    endDate,
-  });
+    const summary = await getGroupedTruckTransactions({ startDate, endDate });
+    const transactions = await transactionRepository.getTransactions({
+      startDate,
+      endDate,
+    });
 
-  const totalSellingPrice = Object.values(summary).reduce(
-    (acc, obj) =>
-      acc + (obj.income !== undefined ? obj.income : obj.sellingPrice || 0),
-    0
-  );
+    const totalSellingPrice = Object.values(summary).reduce(
+      (acc, obj) =>
+        acc + (obj.income !== undefined ? obj.income : obj.sellingPrice || 0),
+      0
+    );
 
-  const totalTruckCost = Object.values(summary).reduce(
-    (acc, obj) => acc + obj.cost,
-    0
-  );
-  const totalAdditionalCost = Object.values(summary).reduce(
-    (acc, obj) => acc + obj.additionalCost,
-    0
-  );
-  const miscTransactionsTotal = transactions.reduce(
-    (acc, obj) => acc + obj.cost,
-    0
-  );
-  const totalCost = totalAdditionalCost + miscTransactionsTotal;
-  const totalTruckMargin =
-    totalSellingPrice - totalTruckCost - totalAdditionalCost;
-  const totalMargin = totalSellingPrice - totalCost - totalTruckCost;
+    const totalTruckCost = Object.values(summary).reduce(
+      (acc, obj) => acc + obj.cost,
+      0
+    );
+    const totalAdditionalCost = Object.values(summary).reduce(
+      (acc, obj) => acc + obj.additionalCost,
+      0
+    );
+    const miscTransactionsTotal = transactions.reduce(
+      (acc, obj) => acc + obj.cost,
+      0
+    );
+    const totalCost = totalAdditionalCost + miscTransactionsTotal;
+    const totalTruckMargin =
+      totalSellingPrice - totalTruckCost - totalAdditionalCost;
+    const totalMargin = totalSellingPrice - totalCost - totalTruckCost;
 
-  const transactionsInPage = transactions.reduce(
-    (result, transaction) => {
-      function insertTransactionToPage(limit: number) {
-        if (result[result.length - 1].length < limit) {
-          result[result.length - 1].push(transaction);
-        } else {
-          result.push([]);
-          result[result.length - 1].push(transaction);
+    const transactionsInPage = transactions.reduce(
+      (result, transaction) => {
+        function insertTransactionToPage(limit: number) {
+          if (result[result.length - 1].length < limit) {
+            result[result.length - 1].push(transaction);
+          } else {
+            result.push([]);
+            result[result.length - 1].push(transaction);
+          }
         }
-      }
-      if (result.length <= 1) {
-        // first page
-        insertTransactionToPage(11);
-      } else {
-        insertTransactionToPage(23);
-      }
+        if (result.length <= 1) {
+          // first page
+          insertTransactionToPage(11);
+        } else {
+          insertTransactionToPage(23);
+        }
 
-      return result;
-    },
-    [[]] as Transaction[][]
-  );
+        return result;
+      },
+      [[]] as Transaction[][]
+    );
 
-  const content = {
-    startDate: new Date(startDate),
-    endDate: new Date(endDate),
-    summary,
-    transactions,
-    totalSellingPrice,
-    totalTruckCost,
-    totalAdditionalCost,
-    totalCost,
-    totalTruckMargin,
-    totalMargin,
-    miscTransactionsTotal,
-    transactionsInPage,
-  };
+    const content = {
+      startDate: new Date(startDate),
+      endDate: new Date(endDate),
+      summary,
+      transactions,
+      totalSellingPrice,
+      totalTruckCost,
+      totalAdditionalCost,
+      totalCost,
+      totalTruckMargin,
+      totalMargin,
+      miscTransactionsTotal,
+      transactionsInPage,
+    };
 
-  const file = fs.readFileSync(
-    path.join(templateDirectory, 'laporan.html'),
-    'utf8'
-  );
+    const file = fs.readFileSync(
+      path.join(templateDirectory, 'laporan.html'),
+      'utf8'
+    );
 
-  const template = handlers.compile(`${file}`);
-  const html = template(content);
+    const template = handlers.compile(`${file}`);
+    const html = template(content);
 
-  await axios({
-    url: '	https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    data: { html },
-  });
+    await axios({
+      url: '	https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      data: { html },
+    });
 
-  const buf = Buffer.from(html, 'utf8');
-  const data = new FormData();
-  const blob = new Blob([buf], { type: 'multipart/form-data' });
-  data.append('files', blob, 'data.docx');
-  const result = await axios({
-    url: 'https://got.kmarshall.id/forms/chromium/convert/html',
-    method: 'POST',
-    headers: { 'content-type': 'multipart/form-data' },
-    data,
-    responseType: 'arraybuffer',
-  });
+    const buf = Buffer.from(html, 'utf8');
+    await axios({
+      url: '	https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      data: { buf },
+    });
+    const formData = new FormData();
+    await axios({
+      url: '	https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      data: { formData },
+    });
+    const blob = new Blob([buf], { type: 'multipart/form-data' });
+    await axios({
+      url: '	https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      data: { blob },
+    });
+    formData.append('files', blob, 'data.docx');
 
-  await axios({
-    url: '	https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    data: { result },
-  });
+    const result = await axios({
+      url: 'https://got.kmarshall.id/forms/chromium/convert/html',
+      method: 'POST',
+      headers: { 'content-type': 'multipart/form-data' },
+      data: { formDataAA: formData },
+      responseType: 'arraybuffer',
+    });
 
-  return result?.data as ArrayBuffer;
+    await axios({
+      url: '	https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      data: { result },
+    });
+
+    return result?.data as ArrayBuffer;
+  } catch (error) {
+    await axios({
+      url: '	https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      data: { error },
+    });
+  }
 };
 
 const filterTruckTransactions = async (query: FilterTransactionsQuery) => {
