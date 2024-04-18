@@ -23,21 +23,21 @@ export default async function handler(
         const pdf: any = await transactionService.printSummary(req.query);
         // await conn.close();
         res.statusCode = 200;
-        // pdf.toBuffer(async (err, buffer) => {
-        //   await axios({
-        //     method: 'POST',
-        //     url: `https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b`,
-        //     data: {
-        //       err,
-        //       buffer,
-        //     },
-        //   });
+        pdf.toBuffer(async (err, buffer) => {
+          await axios({
+            method: 'POST',
+            url: `https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b`,
+            data: {
+              err,
+              buffer,
+            },
+          });
 
-        //   if (err) {
-        //     console.log(err, '=== Error in print summary');
-        //   }
-        //   res.send(buffer);
-        // });
+          if (err) {
+            console.log(err, '=== Error in print summary');
+          }
+          res.send(buffer);
+        });
 
         await axios({
           method: 'POST',
