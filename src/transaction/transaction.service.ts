@@ -540,30 +540,7 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
     },
   });
 
-  // Create browser instance
-  const browser = await puppeteer.launch();
-
-  // Create a new page
-  const page = await browser.newPage();
-
-  // Set HTML as page content
-  await page.setContent(html, { waitUntil: 'domcontentloaded' });
-
-  // Save PDF File
-  const pdf = await page.pdf({ path: './result_from_html.pdf', format: 'a4' });
-
-  // Close browser instance
-  await browser.close();
-
-  await axios({
-    method: 'POST',
-    url: `https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b`,
-    data: {
-      pdf,
-    },
-  });
-
-  return pdf;
+  return html;
 };
 
 const filterTruckTransactions = async (query: FilterTransactionsQuery) => {
