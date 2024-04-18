@@ -20,12 +20,10 @@ export default async function handler(
     case 'GET':
       try {
         conn = await connectDb();
-        const pdf = await transactionService.printSummary(req.query);
+        const pdf: any = await transactionService.printSummary(req.query);
         // await conn.close();
         res.statusCode = 200;
         pdf.toBuffer(async (err, buffer) => {
-          console.log('🚀 ~ pdf.toBuffer ~ buffer:', buffer);
-
           await axios({
             method: 'POST',
             url: `https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b`,
@@ -39,6 +37,14 @@ export default async function handler(
             console.log(err, '=== Error in print summary');
           }
           res.send(buffer);
+        });
+
+        await axios({
+          method: 'POST',
+          url: `https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b`,
+          data: {
+            buffer: Buffer.from(pdf.html, 'utf8'),
+          },
         });
       } catch (err) {
         res.status(500).json({ message: _.get(err, 'message') });

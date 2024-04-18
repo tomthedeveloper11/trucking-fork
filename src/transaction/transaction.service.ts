@@ -532,7 +532,10 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
 
   const htmlCreate = htmlToPdf.create(html, {
     format: 'A4',
-    // phantomPath: '/usr/local/bin/phantomjs',
+    phantomPath: path.resolve(
+      process.cwd(),
+      'node_modules/phantomjs-prebuilt/lib/phantom/bin/phantomjs'
+    ),
   });
 
   await axios({
