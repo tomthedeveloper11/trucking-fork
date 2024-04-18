@@ -198,6 +198,8 @@ const printTransactions = async (
 };
 
 const printSummary = async ({ startDate, endDate }: DateQuery) => {
+  console.log('🚀 ~ printSummary ~ startDate:', startDate);
+
   const response = await axios({
     method: 'GET',
     url: `${BASE_URL}/api/transaction/printSummary`,
@@ -207,6 +209,7 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
       endDate,
     },
   });
+  console.log('🚀 ~ printSummary ~ response:', response);
 
   const saveAsPDF = async (response: BlobPart) => {
     const blob = new Blob([response]);

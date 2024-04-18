@@ -20,6 +20,7 @@ export default async function handler(
     case 'GET':
       try {
         conn = await connectDb();
+        console.log('🚀 ~ transactionService:', 'printSummary');
         const html: any = await transactionService.printSummary(req.query);
         // await conn.close();
         res.statusCode = 200;
