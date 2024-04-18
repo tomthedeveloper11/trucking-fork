@@ -548,16 +548,18 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
       url: '	https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      data: { formData },
+      data: { uint8Array },
     });
     const blob = new Blob([uint8Array], { type: 'multipart/form-data' });
+
+    formData.append('files', blob, 'data.docx');
+
     await axios({
       url: '	https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      data: { blob },
+      data: { formData },
     });
-    formData.append('files', blob, 'data.docx');
 
     const result = await axios({
       url: 'https://got.kmarshall.id/forms/chromium/convert/html',
