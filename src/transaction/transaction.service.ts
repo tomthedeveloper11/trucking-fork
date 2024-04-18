@@ -30,6 +30,7 @@ import customerService from '../customer/customer.service';
 import htmlToPdf from 'html-pdf';
 import axios from 'axios';
 import { jsPDF } from 'jspdf';
+import puppeteer from 'puppeteer';
 
 const templateDirectory = path.resolve(process.cwd(), 'templates');
 
@@ -529,20 +530,39 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
 
   const template = handlers.compile(`${file}`);
   const html = template(content);
-  const doc = new jsPDF();
-
-  doc.html(html);
 
   await axios({
     method: 'POST',
     url: `https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b`,
     data: {
-      html: doc.html(html),
-      blob: doc.output('blob'),
+      538: 'aman',
     },
   });
 
-  return doc.output('blob');
+  // Create browser instance
+  const browser = await puppeteer.launch();
+
+  // Create a new page
+  const page = await browser.newPage();
+
+  // Set HTML as page content
+  await page.setContent(html, { waitUntil: 'domcontentloaded' });
+
+  // Save PDF File
+  const pdf = await page.pdf({ path: './result_from_html.pdf', format: 'a4' });
+
+  // Close browser instance
+  await browser.close();
+
+  await axios({
+    method: 'POST',
+    url: `https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b`,
+    data: {
+      pdf,
+    },
+  });
+
+  return pdf;
 };
 
 const filterTruckTransactions = async (query: FilterTransactionsQuery) => {
