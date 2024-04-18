@@ -530,12 +530,6 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
 
     const template = handlers.compile(`${file}`);
     const html = template(content);
-    await axios({
-      url: 'https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      data: { html },
-    });
     const buf = Buffer.from(html, 'utf8');
     const formData = new FormData();
     const uint8Array = new Uint8Array(
@@ -543,25 +537,10 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
       buf.byteOffset,
       buf.byteLength
     );
-
-    const blob = new Blob([uint8Array], { type: 'multipart/form-data' });
-
+    const blob = new Blob([uint8Array], {
+      type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    });
     formData.append('files', blob, 'data.docx');
-
-    await axios({
-      url: 'https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      data: { formData: typeof formData },
-    });
-
-    await axios({
-      url: 'https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
-      method: 'POST',
-      headers: { 'content-type': 'multipart/form-data' },
-      data: formData,
-      responseType: 'arraybuffer',
-    });
 
     const result = await axios({
       url: 'https://got.kmarshall.id/forms/chromium/convert/html',
@@ -569,13 +548,6 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
       headers: { 'content-type': 'multipart/form-data' },
       data: formData,
       responseType: 'arraybuffer',
-    });
-
-    await axios({
-      url: '	https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      data: { result },
     });
 
     return result?.data as ArrayBuffer;
