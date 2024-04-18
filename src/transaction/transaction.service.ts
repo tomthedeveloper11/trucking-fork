@@ -533,20 +533,19 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
 
     const unescapedHtml = html.replace(/\\(.)/g, '$1');
     const withoutNewlines = unescapedHtml.replace(/\\n/g, '');
-    console.log('🚀 ~ printSummary ~ withoutNewlines:', withoutNewlines);
 
     const data = new FormData();
     const blob = new Blob([withoutNewlines], { type: 'text/html' });
     data.append('source', blob, 'index.html');
-    console.log('🚀 ~ printSummary ~ data:', data);
-
+    const formdatafile = data.get('source');
+    console.log('🚀 ~ printSummary ~ formdatafile:', formdatafile);
     await axios({
       url: 'https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
       method: 'POST',
       headers: {
         'content-type': 'application/json',
       },
-      data: { data: typeof data },
+      data: { formdatafile },
     });
     await axios({
       url: 'https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
@@ -554,7 +553,7 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
       headers: {
         'content-type': 'multipart/form-data',
       },
-      data,
+      data: formdatafile,
     });
     const result = await axios({
       url: 'https://got.kmarshall.id/forms/chromium/convert/html',
@@ -562,7 +561,7 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
       headers: {
         'content-type': 'multipart/form-data',
       },
-      data,
+      data: formdatafile,
       responseType: 'arraybuffer',
     });
 
