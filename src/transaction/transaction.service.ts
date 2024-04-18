@@ -565,6 +565,7 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
       responseType: 'arraybuffer',
     });
 
+    console.log('🚀 ~ printSummary ~ result:', result);
     return result?.data as ArrayBuffer;
   } catch (error: any) {
     await axios({
