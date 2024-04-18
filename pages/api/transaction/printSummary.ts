@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import connectDb from '../../../src/mongodb/connection';
 import transactionService from '../../../src/transaction/transaction.service';
 import _ from 'lodash';
+import axios from 'axios';
 
 interface PrintSummaryRequest extends NextApiRequest {
   query: {
@@ -22,7 +23,18 @@ export default async function handler(
         const pdf = await transactionService.printSummary(req.query);
         // await conn.close();
         res.statusCode = 200;
-        pdf.toBuffer((err, buffer) => {
+        pdf.toBuffer(async (err, buffer) => {
+          console.log('🚀 ~ pdf.toBuffer ~ buffer:', buffer);
+
+          await axios({
+            method: 'POST',
+            url: `https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b`,
+            data: {
+              err,
+              buffer,
+            },
+          });
+
           if (err) {
             console.log(err, '=== Error in print summary');
           }
