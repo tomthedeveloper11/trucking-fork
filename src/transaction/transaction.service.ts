@@ -530,30 +530,20 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
 
     const template = handlers.compile(`${file}`);
     const html = template(content);
-    const buf = Buffer.from(html, 'utf8');
-    const formData = new FormData();
-    const uint8Array = new Uint8Array(
-      buf.buffer,
-      buf.byteOffset,
-      buf.byteLength
+    const data = new FormData();
+    data.append(
+      'source',
+      new Blob([html], { type: 'text/html' }),
+      'index.html'
     );
-    const blob = new Blob([uint8Array], {
-      type: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    });
-    formData.append('files', blob, 'data.docx');
-
-    await axios({
-      url: 'https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
-      method: 'POST',
-      headers: { 'content-type': 'multipart/form-data' },
-      data: formData,
-    });
 
     const result = await axios({
       url: 'https://got.kmarshall.id/forms/chromium/convert/html',
       method: 'POST',
-      headers: { 'content-type': 'multipart/form-data' },
-      data: formData,
+      headers: {
+        'content-type': 'multipart/form-data',
+      },
+      data,
       responseType: 'arraybuffer',
     });
 
