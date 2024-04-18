@@ -531,28 +531,26 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
     const template = handlers.compile(`${file}`);
     const html = template(content);
 
-    await axios({
-      url: '	https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      data: { html },
-    });
-
     const buf: any = Buffer.from(html, 'utf8');
     await axios({
       url: '	https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      data: { buf, bufData: buf.data },
+      data: { buf },
     });
     const formData = new FormData();
+    const uint8Array = new Uint8Array(
+      buf.buffer,
+      buf.byteOffset,
+      buf.byteLength
+    );
     await axios({
       url: '	https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
       method: 'POST',
       headers: { 'content-type': 'application/json' },
       data: { formData },
     });
-    const blob = new Blob([buf.data], { type: 'multipart/form-data' });
+    const blob = new Blob([uint8Array], { type: 'multipart/form-data' });
     await axios({
       url: '	https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
       method: 'POST',
