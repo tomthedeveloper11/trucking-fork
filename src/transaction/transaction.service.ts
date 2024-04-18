@@ -544,7 +544,14 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
     formData.append('files', blob, 'data.docx');
 
     await axios({
-      url: '	https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
+      url: 'https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      data: { formData: typeof formData },
+    });
+
+    await axios({
+      url: 'https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
       method: 'POST',
       headers: { 'content-type': 'multipart/form-data' },
       data: formData,
