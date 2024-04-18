@@ -20,15 +20,10 @@ export default async function handler(
     case 'GET':
       try {
         conn = await connectDb();
-        const pdf: any = await transactionService.printSummary(req.query);
+        const html: any = await transactionService.printSummary(req.query);
         // await conn.close();
         res.statusCode = 200;
-        pdf.toBuffer(async (err, buffer) => {
-          if (err) {
-            console.log(err, '=== Error in print summary');
-          }
-          res.send(buffer);
-        });
+        res.send(html);
       } catch (err) {
         res.status(500).json({ message: _.get(err, 'message') });
       }
