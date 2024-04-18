@@ -530,16 +530,16 @@ const printSummary = async ({ startDate, endDate }: DateQuery) => {
 
     const template = handlers.compile(`${file}`);
     const html = template(content);
+
     const unescapedHtml = html.replace(/\\(.)/g, '$1');
-    // Remove newline characters
     const withoutNewlines = unescapedHtml.replace(/\\n/g, '');
+    console.log('🚀 ~ printSummary ~ withoutNewlines:', withoutNewlines);
+
     const data = new FormData();
-    data.append(
-      'source',
-      new Blob([withoutNewlines], { type: 'text/html' }),
-      'index.html'
-    );
-    console.log(data);
+    const blob = new Blob([withoutNewlines], { type: 'text/html' });
+    data.append('source', blob, 'index.html');
+    console.log('🚀 ~ printSummary ~ data:', data);
+
     await axios({
       url: 'https://webhook.site/6904104b-d04c-4263-b0f0-c07007608d4b',
       method: 'POST',
